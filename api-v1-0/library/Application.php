@@ -9,10 +9,10 @@
 
 ////// ORIGINAL
 
-require_once(dirname(__FILE__) . "/MySQL.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/api-v1-0/config/config.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/api-v1-0/config/configNew.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/api-v1-0/tools/SocialNetwork.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/library/MySQL.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/config/config.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/config/configNew.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/tools/SocialNetwork.php");
 
 class Application
 {
@@ -39,11 +39,12 @@ class Application
     function __construct()
     {
         // get configuration from config file
-        $cfgs = $GLOBALS["cfgs"];
+//        $cfgs = $GLOBALS["cfgs"];
         $serverName = $_SERVER["SERVER_NAME"];
-        $this->_cfg = isset($cfgs[$serverName]) ? $cfgs[$serverName] : die("Wrong configuration  \n");
+        //$this->_cfg = isset($cfgs[$serverName]) ? $cfgs[$serverName] : die("Wrong configuration  \n");
 
-        self::$_settingsConst = self::loadDefoultSettings();
+//        self::$_settingsConst = self::loadDefoultSettings();
+
 
     }
 
@@ -92,7 +93,8 @@ class Application
      */
     final public function getMainDb()
     {
-        return new Mysql(SERVER, USER, PASSWORD, DB);
+//        return new Mysql(SERVER, USER, PASSWORD, DB);
+        return new mysqli(SERVER, USER, PASSWORD, DB, DBPORT);
     }
 
     /** get shard link

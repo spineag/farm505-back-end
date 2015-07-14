@@ -5,12 +5,12 @@
 /**
  *  config
  */
-define("SERVER","hz-web7.joyrocks.com");
-define("DB","hidden_objects_db");
-//define("USER","birdstown");
-//define("PASSWORD","AWmGLA6Ycdfgkdfjl3hovyIzN");
-define("USER","hiddenobject");
-define("PASSWORD","3=5;3!7Y5~FQ~^l");
+define("SERVER", getenv('IP'));
+define("DB", 'c9');
+define("USER",getenv('C9_USER'));
+define("PASSWORD","");
+define("DBPORT", "3306");
+
 define("MEMCACHED_HOST","localhost");
 define("MEMCACHED_PORT",11211);
 define("MEMCACHED_DICT_TIME", 60);

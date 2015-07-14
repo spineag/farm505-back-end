@@ -47,7 +47,7 @@ class DBStatement
         if ($this->_result)
         {
             $allData = [];
-            while ($row = mysql_fetch_assoc($this->_result))
+            while ($row = mysqli_fetch_assoc($this->_result))
             {
                 $allData[] = $row;
             }
