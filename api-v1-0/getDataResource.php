@@ -6,7 +6,9 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultRespon
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
 
-$resourcesALL = $mainDb->query("SELECT * FROM resource")->fetchAll();
+//$resourcesALL = $mainDb->query("SELECT * FROM resource")->fetchAll();
+$result = $mainDb->select('resource', '*');
+$resourcesALL = $result->fetchAll();
 
 try
 {
@@ -28,7 +30,8 @@ try
 
             switch ($dict['resource_type']) {
                 case 5: // PLANT
-                    $plant = $mainDb->query("SELECT * FROM data_plant WHERE resource_id=".$dict[id])->fetchAll();
+                    $result = $mainDb->select("data_plant", "*", "resource_id='".$dict['id']."'");
+                    $plant = $result->fetch();
                     if (empty($plant)) {
                         $json_data['id'] = 2;
                         throw new Exception("Bad request to DB!");
@@ -47,7 +50,8 @@ try
                 case 7: // INSTRUMENT
                     break;
                 case 8: // RESOURCE
-                    $resource = $mainDb->query("SELECT * FROM data_resource WHERE resource_id=".$dict[id])->fetchAll();
+                    $result = $mainDb->select("data_plant", "*", "resource_id='".$dict['id']."'");
+                    $resource = $result->fetch();
                     if (empty($resource)) {
                         $json_data['id'] = 3;
                         throw new Exception("Bad request to DB!");
@@ -55,14 +59,12 @@ try
                     $resourceItem['build_time'] = $resource['build_time'];
                     $resourceItem['craft_xp'] = $resource['craft_xp'];
                     $resourceItem['cost_skip'] = $resource['cost_skip'];
-                    unset($resource);
                     break;
                 default:
                     break;
             }
+            $resp[] = $resourceItem;
         }
-
-        $resp[] = $resourceItem;
     } else {
         $json_data['id'] = 1;
         throw new Exception("Bad request to DB!");

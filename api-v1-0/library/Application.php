@@ -9,7 +9,7 @@
 
 ////// ORIGINAL
 
-require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/library/MySQL.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/library/OwnMySQLI.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/config/config.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/config/configNew.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/tools/SocialNetwork.php");
@@ -88,20 +88,13 @@ class Application
         return $this->_memcached;
     }
 
-    /**
-     * @return Mysql
-     */
     final public function getMainDb()
     {
-//        return new Mysql(SERVER, USER, PASSWORD, DB);
-        return new mysqli(SERVER, USER, PASSWORD, DB, DBPORT);
+        return new OwnMySQLI(SERVER, USER, PASSWORD, DB);
+//        return new mysqli(SERVER, USER, PASSWORD, DB, DBPORT);
+//        return new mysqli(SERVER, USER, PASSWORD, DB);
     }
 
-    /** get shard link
-     *
-     * @param $userId
-     * @return Mysql|null
-     */
     final public function getShardDb($userId)
     {
         $memcached = $this->getMemcache();
@@ -122,7 +115,7 @@ class Application
 
         if (!empty($dbCfgShard))
         {
-            return new Mysql($dbCfgShard["shard_host"], $dbCfgShard["shard_user"], $dbCfgShard["pass"], $dbCfgShard["database"]);
+            return new OwnMySQLI($dbCfgShard["shard_host"], $dbCfgShard["shard_user"], $dbCfgShard["pass"], $dbCfgShard["database"]);
         }
         else
         {
@@ -435,12 +428,6 @@ class Application
         return $this->getMemcache()->get("sess" . $userSocialId . $appName . $chName);
     }
 
-    /** get user info by user Id
-     *
-     * @param int $channelId
-     * @param int $userSocialId
-     * @return array|bool
-     */
     final public function getUserInfo($channelId = 0, $userSocialId = 0)
     {
         if ($userSocialId > 0)
@@ -449,7 +436,7 @@ class Application
             $result = $mainDb->query("SELECT u.user_id, u.volume, u.music, u.payer, u.tutorial_step, u.is_daily_bonus, u.is_ab_test, count(t.user_id) AS tester, t.megatester AS megatester
                                       FROM users u
                                       LEFT JOIN testers t ON t.user_id = u.user_id
-                                      WHERE u.user_social_id = '" . mysql_real_escape_string($userSocialId) . "' AND u.channel_id = '" . mysql_real_escape_string($channelId) . "';");
+                                      WHERE u.user_social_id = '" . mysqli_real_escape_string($userSocialId) . "' AND u.channel_id = '" . mysqli_real_escape_string($channelId) . "';");
             $result = $result->fetch();
 
             $viewerId = $this->haveViewerId($result["user_id"]);
@@ -458,7 +445,7 @@ class Application
                 $result = $mainDb->query("SELECT u.user_id, u.volume, u.music, u.payer, u.tutorial_step, u.is_daily_bonus, u.is_ab_test, count(t.user_id) AS tester, t.megatester AS megatester
                                           FROM users u
                                           LEFT JOIN testers t ON t.user_id = u.user_id
-                                          WHERE u.user_social_id = '" . mysql_real_escape_string($viewerId) . "' AND u.channel_id = '" . mysql_real_escape_string($channelId) . "';");
+                                          WHERE u.user_social_id = '" . mysqli_real_escape_string($viewerId) . "' AND u.channel_id = '" . mysqli_real_escape_string($channelId) . "';");
                 $result = $result->fetch();
             }
             return $result;
@@ -469,12 +456,6 @@ class Application
         }
     }
 
-    /** get user hearts balance & interval to next generation
-     *
-     * @param $userId
-     * @return array
-     * @throws Exception
-     */
     final public function countHearts($userId)
     {
         $shardDb = $this->getShardDb($userId);
@@ -547,16 +528,12 @@ class Application
         }
     }
 
-    /** get number of day & interval to next day
-     * @param $userId
-     * @return array
-     */
     final public function getDailyBonus($userId) //fixme
     {
         $sqlQuery = "SELECT day_number, update_date FROM " . DB . ".user_daily_bonus
-                            WHERE user_id = '" . mysql_real_escape_string($userId) . "';";
-        $sqlRes = mysql_query($sqlQuery);
-        $data = mysql_fetch_object($sqlRes);
+                            WHERE user_id = '" . mysqli_real_escape_string($userId) . "';";
+        $sqlRes = mysqli_query($sqlQuery);
+        $data = mysqli_fetch_object($sqlRes);
 
         $dayNumber = $data->day_number;
         $updateDate = $data->update_date;

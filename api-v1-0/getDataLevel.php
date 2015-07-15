@@ -15,10 +15,7 @@ $mainDb = $app->getMainDb();
 $result = $mainDb->query("SELECT * FROM data_level");
 $dataLevel = [];
 if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        $dataLevel[] = $row;
-    }
-    $result->close();
+    $dataLevel = $result->fetchAll();
 } else {
     $json_data['id'] = 6;
     throw new Exception("Bad request to DB!");
