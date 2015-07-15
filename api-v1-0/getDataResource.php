@@ -6,9 +6,13 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultRespon
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
 
-//$resourcesALL = $mainDb->query("SELECT * FROM resource")->fetchAll();
 $result = $mainDb->select('resource', '*');
-$resourcesALL = $result->fetchAll();
+if ($result) {
+    $resourcesALL = $result->fetchAll();
+} else {
+    $json_data['id'] = 1;
+    throw new Exception("Bad request to DB!");
+}
 
 try
 {
@@ -66,7 +70,7 @@ try
             $resp[] = $resourceItem;
         }
     } else {
-        $json_data['id'] = 1;
+        $json_data['id'] = 4;
         throw new Exception("Bad request to DB!");
     }
 

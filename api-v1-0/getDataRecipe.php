@@ -2,8 +2,8 @@
 /**
  * Created by IntelliJ IDEA.
  * User: user
- * Date: 7/14/15
- * Time: 4:01 PM
+ * Date: 7/15/15
+ * Time: 11:57 AM
  */
 
 include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
@@ -12,9 +12,9 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultRespon
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
 
-$result = $mainDb->select('data_level', '*');
+$result = $mainDb->select('data_recipe', '*');
 if ($result) {
-    $resourcesALL = $result->fetchAll();
+    $recipeALL = $result->fetchAll();
 } else {
     $json_data['id'] = 1;
     throw new Exception("Bad request to DB!");
@@ -23,9 +23,9 @@ if ($result) {
 try
 {
     $resp = [];
-    if (!empty($dataLevel)) {
-        foreach ($dataLevel as $key => $level) {
-            $resp[] = $level;
+    if (!empty($recipeALL)) {
+        foreach ($recipeALL as $key => $recipe) {
+            $resp[] = $recipe;
         }
     } else {
         $json_data['id'] = 2;
@@ -41,4 +41,3 @@ catch (Exception $e)
     $json_data['message'] = $e;
     echo json_encode($json_data);
 }
-
