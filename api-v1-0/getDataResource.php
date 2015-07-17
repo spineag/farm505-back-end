@@ -36,7 +36,6 @@ try
                 case 5: // PLANT
                     //$result = $mainDb->select("data_plant", "*", "resource_id='".$dict['id']."'");
                     $result = $mainDb->query("SELECT * FROM data_plant WHERE resource_id ='".$dict['id']."'");
-
                     $plant = $result->fetch();
                     if (empty($plant)) {
                         $json_data['id'] = 2;
@@ -55,7 +54,8 @@ try
                 case 7: // INSTRUMENT
                     break;
                 case 8: // RESOURCE
-                    $result = $mainDb->select("data_resource", "*", "resource_id='".$dict['id']."'");
+//                    $result = $mainDb->select("data_resource", "*", "resource_id='".$dict['id']."'");
+                    $result = $mainDb->query("SELECT * FROM data_resource WHERE resource_id ='".$dict['id']."'");
                     $resource = $result->fetch();
                     if (empty($resource)) {
                         $json_data['id'] = 3;

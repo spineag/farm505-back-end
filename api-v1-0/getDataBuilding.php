@@ -32,7 +32,8 @@ try
 
             switch ($dict['build_type']) {
                 case 2: // RIDGE
-                    $result = $mainDb->select("data_ridge", "*", "building_id='".$dict['id']."'");
+//                    $result = $mainDb->select("data_ridge", "*", "building_id='".$dict['id']."'");
+                    $result = $mainDb->query("SELECT * FROM data_ridge WHERE building_id ='".$dict['id']."'");
                     $ridge = $result->fetch();
                     if (empty($ridge)) {
                         $json_data['id'] = 2;
@@ -44,7 +45,8 @@ try
                     unset($ridge);
                     break;
                 case 3: // TREE
-                    $result = $mainDb->select("data_tree", "*", "building_id='".$dict['id']."'");
+//                    $result = $mainDb->select("data_tree", "*", "building_id='".$dict['id']."'");
+                    $result = $mainDb->query("SELECT * FROM data_tree WHERE building_id ='".$dict['id']."'");
                     $tree = $result->fetch();
                     if (empty($tree)) {
                         $json_data['id'] = 3;
@@ -79,7 +81,8 @@ try
                 case 10: // DECOR_POST_FENCE
                     break;
                 case 11: // FABRICA
-                    $result = $mainDb->select("data_fabrica", "*", "building_id='".$dict['id']."'");
+//                    $result = $mainDb->select("data_fabrica", "*", "building_id='".$dict['id']."'");
+                    $result = $mainDb->query("SELECT * FROM data_fabrica WHERE building_id ='".$dict['id']."'");
                     $fabrica = $result->fetch();
                     if (empty($fabrica)) {
                         $json_data['id'] = 11;
@@ -96,7 +99,8 @@ try
                     // додаткового функціоналу немає
                     break;
                 case 13: // AMBAR
-                    $result = $mainDb->select("data_ambar", "*", "building_id='".$dict['id']."'");
+//                    $result = $mainDb->select("data_ambar", "*", "building_id='".$dict['id']."'");
+                    $result = $mainDb->query("SELECT * FROM data_ambar WHERE building_id ='".$dict['id']."'");
                     $ambar = $result->fetch();
                     if (empty($ambar)) {
                         $json_data['id'] = 13;
@@ -111,7 +115,8 @@ try
                     $buildingItem['up_instrument_id_3'] = $ambar['up_instrument_id_3'];
                     break;
                 case 14: // SKLAD
-                    $result = $mainDb->select("data_ambar", "*", "building_id='".$dict['id']."'");
+//                    $result = $mainDb->select("data_ambar", "*", "building_id='".$dict['id']."'");
+                    $result = $mainDb->query("SELECT * FROM data_ambar WHERE building_id ='".$dict['id']."'");
                     $sklad = $result->fetch();
                     if (empty($sklad)) {
                         $json_data['id'] = 13;
@@ -128,7 +133,8 @@ try
                 case 15: // DECOR_TAIL
                     break;
                 case 16: // FARM
-                    $result = $mainDb->select("data_farm", "*", "building_id='".$dict['id']."'");
+//                    $result = $mainDb->select("data_farm", "*", "building_id='".$dict['id']."'");
+                    $result = $mainDb->query("SELECT * FROM data_farm WHERE building_id ='".$dict['id']."'");
                     $farm = $result->fetch();
                     if (empty($farm)) {
                         $json_data['id'] = 16;
