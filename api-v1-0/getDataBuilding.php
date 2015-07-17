@@ -56,7 +56,6 @@ try
                     $buildingItem['currency'] = $tree['currency'];
                     $buildingItem['block_by_level'] = $tree['block_by_level'];
                     $buildingItem['cost_skip'] = $tree['cost_skip'];
-                    $buildingItem['build_time'] = $tree['build_time'];
                     $buildingItem['image_s'] = $tree['image_s'];
                     $buildingItem['image_s_flower'] = $tree['image_s_flower'];
                     $buildingItem['image_s_growed'] = $tree['image_s_growed'];
