@@ -9,7 +9,7 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
     $channelId = 1; // VK
 
     try {
-        $socialUId = (int)$_POST['idSocial'];
+        $socialUId = $_POST['idSocial'];
         // create user if not exist
         $uid = $app->getUserId($channelId, $socialUId);
         if ($uid < 1) {
