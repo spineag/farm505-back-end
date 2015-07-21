@@ -156,7 +156,7 @@ class OwnMySQLI
                 {
                     if (is_array($types) && isset($types[$i]) && $this->verifyData($data[$key], $types[$i]))
                     {
-                        $data[$key] = mysqli_real_escape_string($data[$key], $this->_linkIdentifier);
+                        $data[$key] = mysqli_real_escape_string($this->_linkIdentifier, $data[$key]);
                     }
                     else
                     {
@@ -169,7 +169,7 @@ class OwnMySQLI
         else
         {
             $data = $this->verifyData($data, $types);
-            $data = mysqli_real_escape_string($data, $this->_linkIdentifier);
+            $data = mysql_real_escape_string($this->_linkIdentifier, $data);
         }
         return $data;
     }

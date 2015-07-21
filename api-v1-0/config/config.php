@@ -18,14 +18,19 @@ define("MEMCACHED_DICT_TIME", 60);
 /**
  * game constants
  */
-define("HEARTS_MAX_COUNT",5);
-define("HEARTS_GENERATION_INTERVAL",300); // seconds
-define("START_COINS",1000);               // start number of user's coins
-define("START_BB",10);                    // start number of user's birdbucks
-define("START_HEARTS",5);                 // start number of user's hearts
+define("DEFAULT_AMBAR_MAX",50);
+define("DEFAULT_SKLAD_MAX",50);
+define("DEFAULT_AMBAR_LEVEL",1);
+define("DEFAULT_SKLAD_LEVEL",1);
+define("DEFAULT_HARD_COUNT",50);
+define("DEFAULT_SOFT_COUNT",1000);
+define("DEFAULT_RED_COUNT",1);
+define("DEFAULT_YELLOW_COUNT",1);
+define("DEFAULT_GREEN_COUNT",1);
+define("DEFAULT_BLUE_COUNT",1);
 
 /**
  * secret keys
  */
-define("GAME_SECRET", "54z7gfdtz97nhzNAkavN");
-define("EDITOR_SECRET", "WUipkUud62esAucXIorZ");
+define("GAME_SECRET", "");
+define("EDITOR_SECRET", "");

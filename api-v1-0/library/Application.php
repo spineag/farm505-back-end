@@ -132,54 +132,31 @@ class Application
      * @return int
      * @throws Exception
      */
-    final public function getUserId($channelId, $socialUId, $sex = null, $bDate = null, $chackViewer = true)
+    final public function getUserId($channelId, $socialUId, $chackViewer = false)
     {
         $mainDb = $this->getMainDb();
         $tableName = 'users';
 
-        if ($sex == 1 || $sex == 'female')
-        {
-            $sex = 'f';
-        }
-        elseif ($sex == 2 || $sex == 'male')
-        {
-            $sex = 'm';
-        }
+//        $result = $mainDb->select($tableName, 'user_id', ['user_social_id' => $socialUId, 'channel_id' => $channelId], ['int', 'int']);
+        $result = $mainDb->query("SELECT id FROM users WHERE social_id =".$socialUId);
+        $userId = $result->fetch();
+        if ($userId == false) $userId = 0;
 
-        $result = $mainDb->select($tableName, 'user_id, sex, birthdate', ['user_social_id' => $socialUId, 'channel_id' => $channelId], ['int', 'int']);
-        $userData = $result->fetchObj();
-        $userId = ($userData == false) ? 0 : (int)$userData->user_id;
-
-        if($chackViewer)
-        {
-            $viewerId = $this->haveViewerId($userId);
-            if($viewerId > 0)
-            {
-                $result = $mainDb->select($tableName, 'user_id, sex, birthdate', ['user_social_id' => $viewerId, 'channel_id' => $channelId], ['int', 'int']);
-                $userData = $result->fetchObj();
-                $userId = ($userData == false) ? 0 : (int)$userData->user_id;
-            }
-        }
+//        if($chackViewer)
+//        {
+//            $viewerId = $this->haveViewerId($userId);
+//            if($viewerId > 0)
+//            {
+//                $result = $mainDb->select($tableName, 'user_id', ['user_social_id' => $viewerId, 'channel_id' => $channelId], ['int', 'int']);
+//                $userData = $result->fetchObj();
+//                $userId = ($userData == false) ? 0 : (int)$userData->user_id;
+//            }
+//        }
 
         if ($userId > 0)
         {
-            if (empty($sex))
-            {
-                $sex = $userData->sex;
-            }
-
-            if (empty($bDate))
-            {
-                $bDate = $userData->birthdate;
-            }
-
-            // update user info & last activity date
-            $result = $mainDb->update($tableName, ['last_visit_date' => time(), 'sex' => $sex, 'birthdate' => $bDate], ['user_id' => $userId], ['int', 'str', 'str'], ['int']);
-        }
-        else
-        {
-            //$userId = $this->newUser($channelId, $socialUId, $sex, $bDate);
-            $userId = 0; // fixme it's temporary fix
+            // update user last activity date
+            $result = $mainDb->update($tableName, ['last_visit_date' => time()], ['id' => $userId], ['int', 'int']);
         }
 
         return $userId;
@@ -194,9 +171,9 @@ class Application
         $mainDb = $this->getMainDb();
         $tableName = 'users';
 
-        $result = $mainDb->select($tableName, 'user_social_id', ['user_id' => $userId], ['int']);
+        $result = $mainDb->select($tableName, 'social_id', ['id' => $userId], ['int']);
 
-        $userSocialId = (int)$result->f('user_social_id');
+        $userSocialId = (int)$result->f('social_id');
 
         return $userSocialId;
     }
@@ -209,113 +186,25 @@ class Application
      * @param $bDate
      * @return int
      */
-    final public function newUser($channelId, $socialUId, $sex = 'u', $bDate = '')
+    final public function newUser($channelId, $socialUId, $name = 'Vasia', $lname = 'Pupkin')
     {
         $mainDb = $this->getMainDb();
         $tableName = 'users';
 
         $result = $mainDb->insert( $tableName,
-                                   ['user_social_id' => $socialUId, 'created_date' => time(), 'last_visit_date' => time(), 'sex' => $sex, 'birthdate' => $bDate, 'channel_id' => $channelId, 'tutorial_step' => 1, 'is_ab_test' => 1],
-                                   ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int']);
+                                   ['social_id' => $socialUId, 'created_date' => time(), 'last_visit_date' => time(),
+                                    'name' => $name, 'last_name' => $lname, 'channel_id' => $channelId, 'tutorial_step' => 1,
+                                    'ambar_max' => DEFAULT_AMBAR_MAX, 'sklad_max' => DEFAULT_SKLAD_MAX,
+                                    'ambar_level' => DEFAULT_AMBAR_LEVEL, 'sklad_level' => DEFAULT_SKLAD_LEVEL,
+                                    'hard_count' => DEFAULT_HARD_COUNT, 'soft_count' => DEFAULT_SOFT_COUNT,
+                                    'yellow_count' => DEFAULT_YELLOW_COUNT, 'red_count' => DEFAULT_RED_COUNT,
+                                    'green_count' => DEFAULT_GREEN_COUNT, 'blue_count' => DEFAULT_BLUE_COUNT],
+                                   ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int',
+                                    'int', 'int', 'int', 'int', 'int', 'int']);
 
         if ($result)
         {
             $userId = $this->getUserId($channelId, $socialUId);
-            $shardDb = $this->getShardDb($userId);
-            $isTester = $this->isTester($userId);
-            $isMegaTester = $this->isMegaTester($userId);
-
-            // only for testers
-            if ($isMegaTester)
-            {
-                $shardDb->query("INSERT INTO user_boosters
-                                         (user_id, booster_id, booster_count)
-                                         VALUES
-                                         ('$userId', '1',". DEFAULT_ZOOMS_MEGATESTER ."),
-                                         ('$userId', '2',". DEFAULT_FROZENS_MEGATESTER ."),
-                                         ('$userId', '3',". DEFAULT_LIGHTS_MEGATESTER .");");
-            }
-            else if ($isTester)
-            {
-                $shardDb->query("INSERT INTO user_boosters
-                                         (user_id, booster_id, booster_count)
-                                         VALUES
-                                         ('$userId', '1',". DEFAULT_ZOOMS_TESTER ."),
-                                         ('$userId', '2',". DEFAULT_FROZENS_TESTER ."),
-                                         ('$userId', '3',". DEFAULT_LIGHTS_TESTER .");");
-            }
-            else
-            {
-                $shardDb->query("INSERT INTO user_boosters
-                                         (user_id, booster_id, booster_count)
-                                         VALUES
-                                         ('$userId', '1',". START_BOOSTER_ZOOM_COUNT ."),
-                                         ('$userId', '2',". START_BOOSTER_FROZEN_COUNT ."),
-                                         ('$userId', '3',". START_BOOSTER_LIGHT_COUNT .");");
-            }
-
-            /**
-             * insert empty data to user data tables
-             */
-
-            // user xp
-            $shardDb->insert(
-                'user_xp',
-                ['user_id' => $userId, 'user_xp' => 0],
-                ['int', 'int']
-            );
-
-            // user resources
-            $countRes = $isTester ? DEFAULT_BB_TESTER : START_BB;
-            $countRes = $isMegaTester ? DEFAULT_BB_MEGATESTER : $countRes;
-            $shardDb->insert(
-                'user_resources',
-                ['user_id' => $userId, 'resource_type' => 'resource', 'resource_id' => 1, 'resource_count' => $countRes],
-                ['int', 'str', 'int', 'int']
-            );
-
-            $countRes = $isTester ? DEFAULT_COINS_TESTER : START_COINS;
-            $countRes = $isMegaTester ? DEFAULT_COINS_MEGATESTER : $countRes;
-            $shardDb->insert(
-                'user_resources',
-                ['user_id' => $userId, 'resource_type' => 'resource', 'resource_id' => 2, 'resource_count' => $countRes],
-                ['int', 'str', 'int', 'int']
-            );
-
-            $countRes = $isTester ? DEFAULT_HEARTS_TESTER : START_HEARTS;
-            $countRes = $isMegaTester ? DEFAULT_HEARTS_MEGATESTER : $countRes;
-            $shardDb->insert(
-                'user_hearts',
-                ['user_id' => $userId, 'hearts_count' => $countRes, 'update_date' => time()],
-                ['int', 'int', 'int']
-            );
-
-            // user daily bonus
-            $shardDb->insert(
-                'user_daily_bonus',
-                ['user_id' => $userId, 'day_number' => 1, 'update_date' => time()],
-                ['int', 'int', 'int']
-            );
-
-            // get default sublevel
-            $result = $mainDb->select(
-                'dict_sublevel',
-                'id',
-                ['id_level' => 1],
-                ['int'],
-                'number_sublevel',
-                1
-            );
-            $defSubLevel = $result->f('id');
-
-            if ($defSubLevel > 0)
-            {
-                $shardDb->insert(
-                    'user_level',
-                    ['user_id' => $userId, 'level_id' => 1, 'sublevel_id' => $defSubLevel, 'update_date' => time()],
-                    ['int', 'int', 'int', 'int']
-                );
-            }
             return $userId;
         }
         return 0;
