@@ -201,16 +201,15 @@ class Application
                                     'xp' => 0, 'level' => 1],
                                    ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int',
                                     'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int']);
-        $arr = [31, 32, 33, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118];
-        foreach ($arr as $value) {
-            $result2 = $mainDb->insert('user_resource',
-                ['user_id' => $socialUId, 'resource_id' => $value, 'count' => 1],
-                ['int', 'int', 'int']);
-        }
-
         if ($result)
         {
             $userId = $this->getUserId($channelId, $socialUId);
+            $arr = [31, 32, 33, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118];
+            foreach ($arr as $value) {
+                $result = $mainDb->insert('user_resource',
+                    ['user_id' => $userId, 'resource_id' => $value, 'count' => 1],
+                    ['int', 'int', 'int']);
+            }
             return $userId;
         }
         return 0;
