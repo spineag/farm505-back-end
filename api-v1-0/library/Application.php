@@ -189,9 +189,8 @@ class Application
     final public function newUser($channelId, $socialUId, $name = 'Vasia', $lname = 'Pupkin')
     {
         $mainDb = $this->getMainDb();
-        $tableName = 'users';
 
-        $result = $mainDb->insert( $tableName,
+        $result = $mainDb->insert( 'users',
                                    ['social_id' => $socialUId, 'created_date' => time(), 'last_visit_date' => time(),
                                     'name' => $name, 'last_name' => $lname, 'channel_id' => $channelId, 'tutorial_step' => 1,
                                     'ambar_max' => DEFAULT_AMBAR_MAX, 'sklad_max' => DEFAULT_SKLAD_MAX,
@@ -202,6 +201,12 @@ class Application
                                     'xp' => 0, 'level' => 1],
                                    ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int',
                                     'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int']);
+        $arr = [31, 32, 33, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118];
+        foreach ($arr as $value) {
+            $result2 = $mainDb->insert('user_resource',
+                ['user_id' => $socialUId, 'resource_id' => $value, 'count' => 1],
+                ['int', 'int', 'int']);
+        }
 
         if ($result)
         {
