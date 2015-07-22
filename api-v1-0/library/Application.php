@@ -156,7 +156,7 @@ class Application
         if ($userId > 0)
         {
             // update user last activity date
-            $result = $mainDb->update($tableName, ['last_visit_date' => time()], ['id' => $userId], ['int', 'int']);
+            $result = $mainDb->update($tableName, ['last_visit_date' => time()], ['id' => $userId], ['int'], ['int']);
         }
 
         return $userId;
