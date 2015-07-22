@@ -198,9 +198,10 @@ class Application
                                     'ambar_level' => DEFAULT_AMBAR_LEVEL, 'sklad_level' => DEFAULT_SKLAD_LEVEL,
                                     'hard_count' => DEFAULT_HARD_COUNT, 'soft_count' => DEFAULT_SOFT_COUNT,
                                     'yellow_count' => DEFAULT_YELLOW_COUNT, 'red_count' => DEFAULT_RED_COUNT,
-                                    'green_count' => DEFAULT_GREEN_COUNT, 'blue_count' => DEFAULT_BLUE_COUNT],
+                                    'green_count' => DEFAULT_GREEN_COUNT, 'blue_count' => DEFAULT_BLUE_COUNT,
+                                    'xp' => 0, 'level' => 1],
                                    ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int',
-                                    'int', 'int', 'int', 'int', 'int', 'int']);
+                                    'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int']);
 
         if ($result)
         {

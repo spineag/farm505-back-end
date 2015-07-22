@@ -24,10 +24,10 @@ define("DEFAULT_AMBAR_LEVEL",1);
 define("DEFAULT_SKLAD_LEVEL",1);
 define("DEFAULT_HARD_COUNT",50);
 define("DEFAULT_SOFT_COUNT",1000);
-define("DEFAULT_RED_COUNT",1);
-define("DEFAULT_YELLOW_COUNT",1);
-define("DEFAULT_GREEN_COUNT",1);
-define("DEFAULT_BLUE_COUNT",1);
+define("DEFAULT_RED_COUNT",0);
+define("DEFAULT_YELLOW_COUNT",0);
+define("DEFAULT_GREEN_COUNT",0);
+define("DEFAULT_BLUE_COUNT",0);
 
 /**
  * secret keys
