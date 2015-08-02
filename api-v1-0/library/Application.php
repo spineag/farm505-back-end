@@ -139,7 +139,8 @@ class Application
 
 //        $result = $mainDb->select($tableName, 'user_id', ['user_social_id' => $socialUId, 'channel_id' => $channelId], ['int', 'int']);
         $result = $mainDb->query("SELECT id FROM users WHERE social_id =".$socialUId);
-        $userId = $result->fetch();
+        $arr = $result->fetch();
+        $userId= $arr['id'];
         if ($userId == false) $userId = 0;
 
 //        if($chackViewer)
@@ -210,9 +211,16 @@ class Application
                     ['user_id' => $userId, 'resource_id' => $value, 'count' => 1],
                     ['int', 'int', 'int']);
             }
+            $resultAmbar = $mainDb->insert('user_building',
+                ['user_id' => $userId, 'building_id' => 12, 'in_inventory' => 0, 'pos_x' => 68, 'pos_y' => 52],
+                ['int', 'int', 'int', 'int', 'int']);
+            $resultSklad = $mainDb->insert('user_building',
+                ['user_id' => $userId, 'building_id' => 13, 'in_inventory' => 0, 'pos_x' => 70, 'pos_y' => 48],
+                ['int', 'int', 'int', 'int', 'int']);
+
             return $userId;
         }
-        return 0;
+        return -1;
     }
 
     /** get app data by guid
