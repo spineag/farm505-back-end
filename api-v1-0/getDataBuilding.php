@@ -33,7 +33,7 @@ try
             switch ($dict['build_type']) {
                 case 2: // RIDGE
 //                    $result = $mainDb->select("data_ridge", "*", "building_id='".$dict['id']."'");
-                    $result = $mainDb->query("SELECT * FROM data_ridge WHERE building_id ='".$dict['id']."'");
+                    $result = $mainDb->query("SELECT * FROM data_ridge WHERE building_id =".$dict['id']);
                     $ridge = $result->fetch();
                     if (empty($ridge)) {
                         $json_data['id'] = 2;
@@ -46,7 +46,7 @@ try
                     break;
                 case 3: // TREE
 //                    $result = $mainDb->select("data_tree", "*", "building_id='".$dict['id']."'");
-                    $result = $mainDb->query("SELECT * FROM data_tree WHERE building_id ='".$dict['id']."'");
+                    $result = $mainDb->query("SELECT * FROM data_tree WHERE building_id =".$dict['id']);
                     $tree = $result->fetch();
                     if (empty($tree)) {
                         $json_data['id'] = 3;
@@ -81,7 +81,7 @@ try
                     break;
                 case 11: // FABRICA
 //                    $result = $mainDb->select("data_fabrica", "*", "building_id='".$dict['id']."'");
-                    $result = $mainDb->query("SELECT * FROM data_fabrica WHERE building_id ='".$dict['id']."'");
+                    $result = $mainDb->query("SELECT * FROM data_fabrica WHERE building_id =".$dict['id']);
                     $fabrica = $result->fetch();
                     if (empty($fabrica)) {
                         $json_data['id'] = 11;
@@ -115,10 +115,10 @@ try
                     break;
                 case 14: // SKLAD
 //                    $result = $mainDb->select("data_ambar", "*", "building_id='".$dict['id']."'");
-                    $result = $mainDb->query("SELECT * FROM data_ambar WHERE building_id ='".$dict['id']."'");
+                    $result = $mainDb->query("SELECT * FROM data_ambar WHERE building_id =".$dict['id']);
                     $sklad = $result->fetch();
                     if (empty($sklad)) {
-                        $json_data['id'] = 13;
+                        $json_data['id'] = 14;
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['start_count_resources'] = $sklad['start_count_resources'];
@@ -133,7 +133,7 @@ try
                     break;
                 case 16: // FARM
 //                    $result = $mainDb->select("data_farm", "*", "building_id='".$dict['id']."'");
-                    $result = $mainDb->query("SELECT * FROM data_farm WHERE building_id ='".$dict['id']."'");
+                    $result = $mainDb->query("SELECT * FROM data_farm WHERE building_id =".$dict['id']);
                     $farm = $result->fetch();
                     if (empty($farm)) {
                         $json_data['id'] = 16;
@@ -146,6 +146,80 @@ try
                     $buildingItem['inner_house_y'] = $farm['inner_house_y'];
                     $buildingItem['image_house'] = $farm['image_house'];
                     $buildingItem['max_count'] = $farm['max_count'];
+                    break;
+                case 20: // ORDER
+                    $result = $mainDb->query("SELECT * FROM data_map_building WHERE building_id =".$dict['id']);
+                    $build = $result->fetch();
+                    if (empty($build)) {
+                        $json_data['id'] = 20;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['cost'] = $build['cost'];
+                    $buildingItem['block_by_level'] = $build['block_by_level'];
+                    break;
+                case 21: // MARKET
+                    $result = $mainDb->query("SELECT * FROM data_map_building WHERE building_id =".$dict['id']);
+                    $build = $result->fetch();
+                    if (empty($build)) {
+                        $json_data['id'] = 21;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['cost'] = $build['cost'];
+                    $buildingItem['block_by_level'] = $build['block_by_level'];
+                    break;
+                case 22: // DAILY_BONUS
+                    $result = $mainDb->query("SELECT * FROM data_map_building WHERE building_id =".$dict['id']);
+                    $build = $result->fetch();
+                    if (empty($build)) {
+                        $json_data['id'] = 22;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['cost'] = $build['cost'];
+                    $buildingItem['block_by_level'] = $build['block_by_level'];
+                    break;
+                case 23: // SHOP
+                    $result = $mainDb->query("SELECT * FROM data_map_building WHERE building_id =".$dict['id']);
+                    $build = $result->fetch();
+                    if (empty($build)) {
+                        $json_data['id'] = 23;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['cost'] = $build['cost'];
+                    $buildingItem['block_by_level'] = $build['block_by_level'];
+                    break;
+                case 24: // CAVE
+                    $result = $mainDb->query("SELECT * FROM data_map_building_cave WHERE building_id =".$dict['id']);
+                    $build = $result->fetch();
+                    if (empty($build)) {
+                        $json_data['id'] = 24;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['cost'] = $build['cost'];
+                    $buildingItem['block_by_level'] = $build['block_by_level'];
+                    $buildingItem['image_active'] = $build['image_active'];
+                    $buildingItem['resource_id'] = $build['resource_id'];
+                    $buildingItem['raw_resource_id'] = $build['raw_resource_id'];
+                    $buildingItem['variaty'] = $build['variaty'];
+                    break;
+                case 25: // PAPER
+                    $result = $mainDb->query("SELECT * FROM data_map_building WHERE building_id =".$dict['id']);
+                    $build = $result->fetch();
+                    if (empty($build)) {
+                        $json_data['id'] = 25;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['cost'] = $build['cost'];
+                    $buildingItem['block_by_level'] = $build['block_by_level'];
+                    break;
+                case 26: // TRAIN
+                    $result = $mainDb->query("SELECT * FROM data_map_building WHERE building_id =".$dict['id']);
+                    $build = $result->fetch();
+                    if (empty($build)) {
+                        $json_data['id'] = 26;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['cost'] = $build['cost'];
+                    $buildingItem['block_by_level'] = $build['block_by_level'];
                     break;
                 default:
                     break;
