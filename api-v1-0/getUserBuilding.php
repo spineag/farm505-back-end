@@ -15,7 +15,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $arr = $result->fetchAll();
             foreach ($arr as $value => $dict) {
                 $build = [];
-                $build['d'] = $dict['id'];
+                $build['id'] = $dict['id'];
                 $build['building_id'] = $dict['building_id'];
                 $build['pos_x'] = $dict['pos_x'];
                 $build['pos_y'] = $dict['pos_y'];
@@ -27,7 +27,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             throw new Exception("Bad request to DB!");
         }
 
-        $result = $mainDb->query("SELECT * FROM map_building WHERE user_id =".$_POST['userId']);
+        $result = $mainDb->query("SELECT * FROM map_building");
         if ($result) {
             $arr = $result->fetchAll();
             foreach ($arr as $value => $dict) {
