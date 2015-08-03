@@ -20,6 +20,12 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $build['pos_x'] = $dict['pos_x'];
                 $build['pos_y'] = $dict['pos_y'];
                 $build['in_inventory'] = $dict['in_inventory'];
+                $startBuild = $mainDb->query("SELECT * FROM user_building_open WHERE user_id =".$_POST['userId']." AND building_id =".$dict['building_id']." AND user_db_building_id =".$dict['id']);
+                $date = $startBuild->fetch();
+                if ($date) {
+                    $build['date_start_build'] = $date['date_start_build'];
+                    $build['is_open'] = $date['is_open'];
+                }
                 $resp[] = $build;
             }
         } else {
@@ -35,6 +41,12 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $build['building_id'] = $dict['building_id'];
                 $build['pos_x'] = $dict['pos_x'];
                 $build['pos_y'] = $dict['pos_y'];
+                $startBuild = $mainDb->query("SELECT * FROM user_building_open WHERE user_id =".$_POST['userId']." AND building_id =".$dict['building_id']);
+                $date = $startBuild->fetch();
+                if ($date) {
+                    $build['date_start_build'] = $date['date_start_build'];
+                    $build['is_open'] = $date['is_open'];
+                }
                 $resp[] = $build;
             }
         } else {
