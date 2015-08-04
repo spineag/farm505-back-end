@@ -29,6 +29,7 @@ try
             $buildingItem['image'] = $dict['image'];
             $buildingItem['inner_x'] = $dict['inner_x'];
             $buildingItem['inner_y'] = $dict['inner_y'];
+            $buildingItem['xp_for_build'] = $dict['xp_for_build'];
 
             switch ($dict['build_type']) {
                 case 2: // RIDGE
