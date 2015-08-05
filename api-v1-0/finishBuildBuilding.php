@@ -9,9 +9,12 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->insert('user_building_open',
-            ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId'], 'user_db_building_id' => 0, 'date_start_build' => time(), 'is_open' => 0],
-            ['int', 'int', 'int', 'int', 'int']);
+        $result = $mainDb->update(
+            'user_building_open',
+            ['is_open' => 1],
+            ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId'], 'user_db_building_id' => $_POST['dbId']],
+            ['int'],
+            ['int', 'int', 'int']);
 
         if ($result) {
             $json_data['message'] = '';
