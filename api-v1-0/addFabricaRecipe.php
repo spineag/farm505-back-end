@@ -9,12 +9,16 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
+        $time = time();
         $result = $mainDb->insert('user_recipe_fabrica',
-            ['user_id' => $_POST['userId'], 'user_db_building_id' => $_POST['dbId'], 'recipe_id' => $_POST['recipeId'], 'delay_time' => $_POST['delay'], 'time_start' => time()],
+            ['user_id' => $_POST['userId'], 'user_db_building_id' => $_POST['dbId'], 'recipe_id' => $_POST['recipeId'], 'delay_time' => $_POST['delay'], 'time_start' => $time],
             ['int', 'int', 'int', 'int', 'int']);
 
+        $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =".$_POST['userId']." AND time_start=".$time);
+
         if ($result) {
-            $json_data['message'] = '';
+            $arr= $result->fetch();
+            $json_data['message'] = $arr['id'];
             echo json_encode($json_data);
         } else {
             $json_data['id'] = 2;
