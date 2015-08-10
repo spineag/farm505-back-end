@@ -9,23 +9,20 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $time = time();
-        $result = $mainDb->insert('user_train',
-            ['user_id' => $_POST['userId'], 'state' => 0, 'time_start' => $time],
-            ['int', 'int', 'int']);
+        $result = $mainDb->update(
+            'user_train_pack_item',
+            ['is_full' => 1],
+            ['id' => $_POST['id']],
+            ['int'],
+            ['int']);
 
-        $result = $mainDb->query("SELECT * FROM user_train WHERE user_id =".$_POST['userId']);
-
-        if ($result) {
-            $arr= $result->fetch();
-            $json_data['message'] = $arr['id'];
-            echo json_encode($json_data);
-        } else {
+        if (!$result) {
             $json_data['id'] = 2;
-            $json_data['status'] = 'error';
-            $json_data['message'] = 'bad query';
+            throw new Exception("Bad request to DB!");
         }
 
+        $json_data['message'] = '';
+        echo json_encode($json_data);
     }
     catch (Exception $e)
     {
