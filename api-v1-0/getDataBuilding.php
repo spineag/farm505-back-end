@@ -97,7 +97,13 @@ try
                     unset($fabrica);
                     break;
                 case 12: // WILD
-                    // додаткового функціоналу немає
+                    $result = $mainDb->query("SELECT * FROM data_wild WHERE building_id =".$dict['id']);
+                    $tree = $result->fetch();
+                    if (empty($tree)) {
+                        $json_data['id'] = 12;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['instrument_id'] = $tree['instrument_id'];
                     break;
                 case 13: // AMBAR
 //                    $result = $mainDb->select("data_ambar", "*", "building_id='".$dict['id']."'");
