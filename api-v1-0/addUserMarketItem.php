@@ -16,16 +16,26 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
 //        $result = $mainDb->query("SELECT * FROM user_market_item WHERE user_id =".$_POST['userId']." AND time_start=".$time);
 
+        $result = $mainDb->query("SELECT * FROM user_market_item WHERE user_id =".$_POST['userId']." AND time_start = ".$time);
         if ($result) {
-            $arr= $result->fetch();
-//            $json_data['message'] = $arr['id'];
-            $json_data['message'] = '';
-            echo json_encode($json_data);
+            $u = $result->fetch();
+            $res = [];
+            $res['id'] = $u['id'];
+            $res['buyer_id'] = $u['buyer_id'];
+            $res['time_start'] = $u['time_start'];
+            $res['time_sold'] = $u['time_sold'];
+            $res['cost'] = $u['cost'];
+            $res['resource_id'] = $u['resource_id'];
+            $res['resource_count'] = $u['resource_count'];
+            $res['in_papper'] = $u['in_papper'];
+
         } else {
             $json_data['id'] = 2;
-            $json_data['status'] = 'error';
-            $json_data['message'] = 'bad query';
+            throw new Exception("Bad request to DB!");
         }
+
+        $json_data['message'] = $res;
+        echo json_encode($json_data);
 
     }
     catch (Exception $e)
