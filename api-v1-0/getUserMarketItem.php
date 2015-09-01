@@ -27,6 +27,11 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 $res['resource_id'] = $dict['resource_id'];
                 $res['resource_count'] = $dict['resource_count'];
                 $res['in_papper'] = $dict['in_papper'];
+                if ($dict['buyer_id'] > 0) {
+                    $result2 = $mainDb->query("SELECT * FROM users WHERE id =".$dict['buyer_id']);
+                    $arr = $result2->fetch();
+                    $res['buyer_social_id'] = $arr['social_id'];
+                }
                 $resp[] = $res;
             }
         } else {
