@@ -18,8 +18,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $res['id'] = $dict['id'];
                 $res['user_id'] = $dict['user_id'];
                 $res['cost'] = $dict['cost'];
-                $res['resource_id'] = time() - $dict['resource_id'];
-                $res['resource_count'] = time() - $dict['resource_count'];
+                $res['resource_id'] = $dict['resource_id'];
+                $res['resource_count'] = $dict['resource_count'];
 
                 $result2 = $mainDb->query("SELECT * FROM users WHERE id =".$dict['user_id']);
                 $arr = $result2->fetch();
