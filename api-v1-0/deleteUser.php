@@ -49,6 +49,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             ['user_id' => $_POST['userId']],
             ['int']);
 
+        $result = $mainDb->delete('user_market_item',
+            ['id' => $_POST['userId']],
+            ['int']);
+
         $result = $mainDb->delete('users',
             ['id' => $_POST['userId']],
             ['int']);
