@@ -10,8 +10,9 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
     try {
         $result = $mainDb->query("SELECT count FROM user_resource WHERE user_id =".$_POST['userId']." AND resource_id=".$_POST['resourceId']);
-        if ($result) {
-            $arr = $result->fetch();
+        $arr = $result->fetch();
+        if (count($arr) > 0) {
+            // $arr = $result->fetch();
             $count = $arr['count'];
             $count = (int)$count + (int)$_POST['count'];
             $result = $mainDb->update(
@@ -20,14 +21,23 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 ['user_id' => $_POST['userId'], 'resource_id' => $_POST['resourceId']],
                 ['int'],
                 ['int', 'int']);
+            $text = 'update';
         } else {
             $result = $mainDb->insert('user_resource',
                 ['user_id' => $_POST['userId'], 'resource_id' => $_POST['resourceId'], 'count' => $_POST['count']],
                 ['int', 'int', 'int']);
+            $text = 'insert';
         }
 
-        $json_data['message'] = '';
-        echo json_encode($json_data);
+        if ($result) {
+            $json_data['message'] = $text." ".count($arr);
+            echo json_encode($json_data);
+        } else {
+            $json_data['id'] = 2;
+            $json_data['status'] = 'error';
+            $json_data['message'] = 'bad query';
+            echo json_encode($json_data);
+        }
     }
     catch (Exception $e)
     {
