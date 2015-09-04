@@ -30,7 +30,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         }
 
         if ($result) {
-            $json_data['message'] = $text." ".count($arr);
+            $json_data['message'] = "";
             echo json_encode($json_data);
         } else {
             $json_data['id'] = 2;
