@@ -208,6 +208,7 @@ try
                     $buildingItem['resource_id'] = $build['resource_id'];
                     $buildingItem['raw_resource_id'] = $build['raw_resource_id'];
                     $buildingItem['variaty'] = $build['variaty'];
+                    $buildingItem['build_time'] = $build['build_time'];
                     break;
                 case 25: // PAPER
                     $result = $mainDb->query("SELECT * FROM data_map_building WHERE building_id =".$dict['id']);
@@ -228,6 +229,7 @@ try
                     }
                     $buildingItem['cost'] = $build['cost'];
                     $buildingItem['block_by_level'] = $build['block_by_level'];
+                    $buildingItem['build_time'] = $build['build_time'];
                     break;
                 default:
                     break;
