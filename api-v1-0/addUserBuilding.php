@@ -15,8 +15,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
         $result = $mainDb->query("SELECT id FROM user_building WHERE user_id =".$_POST['userId']." AND building_id=".$_POST['buildingId']);
         if ($result) {
-            $arr = $result->fetch();
-            $json_data['message'] = $arr['id'];
+            $arr = $result->fetchAll();
+            $json_data['message'] = array_pop($arr)['id'];
         } else {
             $json_data['id'] = 2;
             $json_data['status'] = 'error';
