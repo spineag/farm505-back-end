@@ -18,7 +18,11 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $res['id'] = $dict['id'];
                 $res['animal_id'] = $dict['animal_id'];
                 $res['user_db_building_id'] = $dict['user_db_building_id'];
-                $res['time_work'] = time() - $dict['raw_time_start'];
+                if ($dict['raw_time_start'] == 0) {
+                    $res['time_work'] = 0;
+                } else {
+                    $res['time_work'] = time() - $dict['raw_time_start'];
+                }
                 $resp[] = $res;
             }
         } else {
