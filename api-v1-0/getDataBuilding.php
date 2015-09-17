@@ -97,7 +97,13 @@ try
                     unset($fabrica);
                     break;
                 case 12: // WILD
-                    // додаткового функціоналу немає
+                    $result = $mainDb->query("SELECT * FROM data_wild WHERE building_id =".$dict['id']);
+                    $tree = $result->fetch();
+                    if (empty($tree)) {
+                        $json_data['id'] = 12;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['instrument_id'] = $tree['instrument_id'];
                     break;
                 case 13: // AMBAR
 //                    $result = $mainDb->select("data_ambar", "*", "building_id='".$dict['id']."'");
@@ -202,6 +208,7 @@ try
                     $buildingItem['resource_id'] = $build['resource_id'];
                     $buildingItem['raw_resource_id'] = $build['raw_resource_id'];
                     $buildingItem['variaty'] = $build['variaty'];
+                    $buildingItem['build_time'] = $build['build_time'];
                     break;
                 case 25: // PAPER
                     $result = $mainDb->query("SELECT * FROM data_map_building WHERE building_id =".$dict['id']);
@@ -222,6 +229,7 @@ try
                     }
                     $buildingItem['cost'] = $build['cost'];
                     $buildingItem['block_by_level'] = $build['block_by_level'];
+                    $buildingItem['build_time'] = $build['build_time'];
                     break;
                 default:
                     break;

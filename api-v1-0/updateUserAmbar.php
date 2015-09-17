@@ -9,20 +9,28 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->insert('user_building',
-            ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId'], 'in_inventory' => 0, 'pos_x' => $_POST['posX'], 'pos_y' => $_POST['posY']],
-            ['int', 'int', 'int', 'int', 'int']);
-
-        $result = $mainDb->query("SELECT id FROM user_building WHERE user_id =".$_POST['userId']." AND building_id=".$_POST['buildingId']);
-        if ($result) {
-            $arr = $result->fetchAll();
-            $json_data['message'] = array_pop($arr)['id'];
+        if ($_POST['isAmbar'] == 1) {
+            $result = $mainDb->update(
+                'users',
+                ['ambar_max' => $_POST['newMaxCount'], 'ambar_level' => $_POST['newLevel']],
+                ['id' => $_POST['userId']],
+                ['int', 'int'],
+                ['int']);
         } else {
-            $json_data['id'] = 2;
-            $json_data['status'] = 'error';
-            $json_data['message'] = 'bad query';
+            $result = $mainDb->update(
+                'users',
+                ['sklad_max' => $_POST['newMaxCount'], 'sklad_level' => $_POST['newLevel']],
+                ['id' => $_POST['userId']],
+                ['int', 'int'],
+                ['int']);
         }
 
+        if (!$result) {
+            $json_data['id'] = 2;
+            throw new Exception("Bad request to DB!");
+        }
+
+        $json_data['message'] = '';
         echo json_encode($json_data);
     }
     catch (Exception $e)

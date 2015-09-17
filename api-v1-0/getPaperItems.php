@@ -9,20 +9,30 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->insert('user_building',
-            ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId'], 'in_inventory' => 0, 'pos_x' => $_POST['posX'], 'pos_y' => $_POST['posY']],
-            ['int', 'int', 'int', 'int', 'int']);
-
-        $result = $mainDb->query("SELECT id FROM user_building WHERE user_id =".$_POST['userId']." AND building_id=".$_POST['buildingId']);
+        $resp = [];
+        $result = $mainDb->query("SELECT * FROM user_market_item WHERE in_papper = 1 AND buyer_id = 0 ORDER BY RAND() LIMIT 9");
         if ($result) {
             $arr = $result->fetchAll();
-            $json_data['message'] = array_pop($arr)['id'];
+            foreach ($arr as $value => $dict) {
+                $res = [];
+                $res['id'] = $dict['id'];
+                $res['user_id'] = $dict['user_id'];
+                $res['cost'] = $dict['cost'];
+                $res['resource_id'] = $dict['resource_id'];
+                $res['resource_count'] = $dict['resource_count'];
+
+                $result2 = $mainDb->query("SELECT * FROM users WHERE id =".$dict['user_id']);
+                $arr = $result2->fetch();
+                $res['user_social_id'] = $arr['social_id'];
+
+                $resp[] = $res;
+            }
         } else {
             $json_data['id'] = 2;
-            $json_data['status'] = 'error';
-            $json_data['message'] = 'bad query';
+            throw new Exception("Bad request to DB!");
         }
 
+        $json_data['message'] = $resp;
         echo json_encode($json_data);
     }
     catch (Exception $e)
