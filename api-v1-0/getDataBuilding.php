@@ -43,7 +43,7 @@ try
                     $buildingItem['cost'] = $ridge['cost'];
                     $buildingItem['currency'] = $ridge['currency'];
                     $buildingItem['block_by_level'] = $ridge['block_by_level'];
-                    $buildingItem['count_unblock'] = $tree['count_unblock'];
+                    $buildingItem['count_unblock'] = $ridge['count_unblock'];
                     unset($ridge);
                     break;
                 case 3: // TREE
