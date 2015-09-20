@@ -72,6 +72,7 @@ try
                     $buildingItem['inner_position_b'] = $tree['inner_position_b'];
                     $buildingItem['craft_resource_id'] = $tree['craft_resource_id'];
                     $buildingItem['count_craft_resource'] = $tree['count_craft_resource'];
+                    $buildingItem['count_unblock'] = $tree['count_unblock'];
                     $buildingItem['instrument_id'] = $tree['instrument_id'];
                     unset($tree);
                     break;
