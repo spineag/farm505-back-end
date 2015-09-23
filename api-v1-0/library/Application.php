@@ -191,10 +191,10 @@ class Application
                     ['int', 'int', 'int']);
             }
             $resultAmbar = $mainDb->insert('user_building',
-                ['user_id' => $userId, 'building_id' => 12, 'in_inventory' => 0, 'pos_x' => 68, 'pos_y' => 52],
+                ['user_id' => $userId, 'building_id' => 12, 'in_inventory' => 0, 'pos_x' => 33, 'pos_y' => 17],
                 ['int', 'int', 'int', 'int', 'int']);
             $resultSklad = $mainDb->insert('user_building',
-                ['user_id' => $userId, 'building_id' => 13, 'in_inventory' => 0, 'pos_x' => 70, 'pos_y' => 48],
+                ['user_id' => $userId, 'building_id' => 13, 'in_inventory' => 0, 'pos_x' => 35, 'pos_y' => 13],
                 ['int', 'int', 'int', 'int', 'int']);
 
             return $userId;
