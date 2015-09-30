@@ -38,6 +38,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $arr = $result->fetchAll();
             foreach ($arr as $value => $dict) {
                 $build = [];
+                $build['id'] = $dict['id'];
                 $build['building_id'] = $dict['building_id'];
                 $build['pos_x'] = $dict['pos_x'];
                 $build['pos_y'] = $dict['pos_y'];
