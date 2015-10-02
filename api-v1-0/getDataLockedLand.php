@@ -12,6 +12,11 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultRespon
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
 
+$result = $mainDb->query("SELECT unlocked_land FROM users WHERE id = ".$_POST['userId']);
+$u = $result->fetchAll();
+$u = $u[0]['unlocked_land'];
+$arrLocked = explode("&", $u);
+
 $result = $mainDb->select('data_locked_land', '*');
 if ($result) {
     $lands = $result->fetchAll();
@@ -25,6 +30,7 @@ try
     $resp = [];
     if (!empty($lands)) {
         foreach ($lands as $key => $land) {
+            if ( in_array($land['map_building_id'], $arrLocked) ) continue;
             $resp[] = $land;
         }
     } else {
