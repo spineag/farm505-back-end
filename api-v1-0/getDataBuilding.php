@@ -78,10 +78,34 @@ try
                     unset($tree);
                     break;
                 case 4: // DECOR
+                    $result = $mainDb->query("SELECT * FROM data_decor WHERE building_id =".$dict['id']);
+                    $decor = $result->fetch();
+                    if (empty($decor)) {
+                        $json_data['id'] = 4;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['block_by_level'] = $decor['block_by_level'];
+                    $buildingItem['cost'] = $decor['cost'];
                     break;
                 case 9: // DECOR_FULL_FENCE
+                    $result = $mainDb->query("SELECT * FROM data_decor WHERE building_id =".$dict['id']);
+                    $decor = $result->fetch();
+                    if (empty($decor)) {
+                        $json_data['id'] = 9;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['block_by_level'] = $decor['block_by_level'];
+                    $buildingItem['cost'] = $decor['cost'];
                     break;
                 case 10: // DECOR_POST_FENCE
+                    $result = $mainDb->query("SELECT * FROM data_decor WHERE building_id =".$dict['id']);
+                    $decor = $result->fetch();
+                    if (empty($decor)) {
+                        $json_data['id'] = 10;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['block_by_level'] = $decor['block_by_level'];
+                    $buildingItem['cost'] = $decor['cost'];
                     break;
                 case 11: // FABRICA
 //                    $result = $mainDb->select("data_fabrica", "*", "building_id='".$dict['id']."'");
@@ -140,6 +164,14 @@ try
                     $buildingItem['up_instrument_id_3'] = $sklad['up_instrument_id_3'];
                     break;
                 case 15: // DECOR_TAIL
+                    $result = $mainDb->query("SELECT * FROM data_decor WHERE building_id =".$dict['id']);
+                    $decor = $result->fetch();
+                    if (empty($decor)) {
+                        $json_data['id'] = 15;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['block_by_level'] = $decor['block_by_level'];
+                    $buildingItem['cost'] = $decor['cost'];
                     break;
                 case 16: // FARM
 //                    $result = $mainDb->select("data_farm", "*", "building_id='".$dict['id']."'");
