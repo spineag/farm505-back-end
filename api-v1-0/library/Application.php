@@ -171,16 +171,16 @@ class Application
         $mainDb = $this->getMainDb();
 
         $result = $mainDb->insert( 'users',
-                                   ['social_id' => $socialUId, 'created_date' => time(), 'last_visit_date' => time(),
-                                    'name' => $name, 'last_name' => $lname, 'channel_id' => $channelId, 'tutorial_step' => 1,
-                                    'ambar_max' => DEFAULT_AMBAR_MAX, 'sklad_max' => DEFAULT_SKLAD_MAX,
-                                    'ambar_level' => DEFAULT_AMBAR_LEVEL, 'sklad_level' => DEFAULT_SKLAD_LEVEL,
-                                    'hard_count' => DEFAULT_HARD_COUNT, 'soft_count' => DEFAULT_SOFT_COUNT,
-                                    'yellow_count' => DEFAULT_YELLOW_COUNT, 'red_count' => DEFAULT_RED_COUNT,
-                                    'green_count' => DEFAULT_GREEN_COUNT, 'blue_count' => DEFAULT_BLUE_COUNT,
-                                    'xp' => 0, 'level' => 1],
-                                   ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int',
-                                    'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int']);
+            ['social_id' => $socialUId, 'created_date' => time(), 'last_visit_date' => time(),
+                'name' => $name, 'last_name' => $lname, 'channel_id' => $channelId, 'tutorial_step' => 1,
+                'ambar_max' => DEFAULT_AMBAR_MAX, 'sklad_max' => DEFAULT_SKLAD_MAX,
+                'ambar_level' => DEFAULT_AMBAR_LEVEL, 'sklad_level' => DEFAULT_SKLAD_LEVEL,
+                'hard_count' => DEFAULT_HARD_COUNT, 'soft_count' => DEFAULT_SOFT_COUNT,
+                'yellow_count' => DEFAULT_YELLOW_COUNT, 'red_count' => DEFAULT_RED_COUNT,
+                'green_count' => DEFAULT_GREEN_COUNT, 'blue_count' => DEFAULT_BLUE_COUNT,
+                'xp' => 0, 'level' => 1],
+            ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int',
+                'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int']);
         if ($result)
         {
             $userId = $this->getUserId($channelId, $socialUId);
@@ -191,27 +191,31 @@ class Application
                     ['int', 'int', 'int']);
             }
             $resultAmbar = $mainDb->insert('user_building',
-                ['user_id' => $userId, 'building_id' => 12, 'in_inventory' => 0, 'pos_x' => 27, 'pos_y' => 15],
+                ['user_id' => $userId, 'building_id' => 12, 'in_inventory' => 0, 'pos_x' => 68, 'pos_y' => 52],
                 ['int', 'int', 'int', 'int', 'int']);
             $resultSklad = $mainDb->insert('user_building',
-                ['user_id' => $userId, 'building_id' => 13, 'in_inventory' => 0, 'pos_x' => 35, 'pos_y' => 13],
+                ['user_id' => $userId, 'building_id' => 13, 'in_inventory' => 0, 'pos_x' => 70, 'pos_y' => 48],
                 ['int', 'int', 'int', 'int', 'int']);
 
             $arr = [];
-            $result = $mainDb->query("SELECT * FROM users WHERE id =".$userId);
-            $u = $result->fetch();
-            $level = $u['level'];
-            if ($level < 1) $level = 1;
             $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 7 AND block_by_level <=".$level." ORDER BY RAND() LIMIT 1");
             $instrument = $result->fetch();
             if ($instrument['id']) { $arr[] = $instrument['id']; }
-            $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 3 AND block_by_level <=".$level." ORDER BY RAND() LIMIT 2");
-            $trees = $result->fetchAll();
+
+            $result = $mainDb->query("SELECT * FROM data_tree ORDER BY RAND()");
+            $t = $result->fetchAll();
+            $count = 0;
+            foreach ($t as $value => $r) {
+                $tArr = explode('&', $r['block_by_level']);
+                if ($tArr[0] <= $level) {
+                    $arr[] = $r['craft_resource_id'];
+                    $count++;
+                    if ($count >=2) break;
+                }
+            }
+
             $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 5 AND block_by_level <=".$level." ORDER BY RAND() LIMIT 6");
             $plants = $result->fetchAll();
-            foreach ($trees as $value => $p) {
-                $arr[] = $p['id'];
-            }
             foreach ($plants as $value => $p) {
                 $arr[] = $p['id'];
             }
