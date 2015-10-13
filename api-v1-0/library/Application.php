@@ -197,6 +197,32 @@ class Application
                 ['user_id' => $userId, 'building_id' => 13, 'in_inventory' => 0, 'pos_x' => 70, 'pos_y' => 48],
                 ['int', 'int', 'int', 'int', 'int']);
 
+            $arr = [];
+            $result = $mainDb->query("SELECT * FROM users WHERE id =".$userId);
+            $u = $result->fetch();
+            $level = $u['level'];
+            if ($level < 1) $level = 1;
+            $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 7 AND block_by_level <=".$level." ORDER BY RAND() LIMIT 1");
+            $instrument = $result->fetch();
+            if ($instrument['id']) { $arr[] = $instrument['id']; }
+            $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 3 AND block_by_level <=".$level." ORDER BY RAND() LIMIT 2");
+            $trees = $result->fetchAll();
+            $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 5 AND block_by_level <=".$level." ORDER BY RAND() LIMIT 6");
+            $plants = $result->fetchAll();
+            foreach ($trees as $value => $p) {
+                $arr[] = $p['id'];
+            }
+            foreach ($plants as $value => $p) {
+                $arr[] = $p['id'];
+            }
+            for ($i = 0; $i < 6; $i++) {
+                $arr[]= -1;
+            }
+
+            $resultNeighbor = $mainDb->insert('user_neighbor',
+                ['user_id' => $userId, 'last_update' => date('j'), 'resource_id1' => $arr[0], 'resource_id2' => $arr[1], 'resource_id3' => $arr[2], 'resource_id4' => $arr[3], 'resource_id5' => $arr[4], 'resource_id6' => $arr[5]],
+                ['int', 'int', 'int', 'int', 'int', 'int', 'int', 'int']);
+
             return $userId;
         }
         return -1;
