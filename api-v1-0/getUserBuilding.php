@@ -33,11 +33,18 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             throw new Exception("Bad request to DB!");
         }
 
+        $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id = ".$_POST['userId']);
+        $u = $result->fetchAll();
+        $u = $u[0]['unlocked_land'];
+        $arrLocked = explode("&", $u);
+
         $result = $mainDb->query("SELECT * FROM map_building");
         if ($result) {
             $arr = $result->fetchAll();
             foreach ($arr as $value => $dict) {
+                if ( in_array($dict['id'], $arrLocked) ) continue;
                 $build = [];
+                $build['id'] = $dict['id'];
                 $build['building_id'] = $dict['building_id'];
                 $build['pos_x'] = $dict['pos_x'];
                 $build['pos_y'] = $dict['pos_y'];
