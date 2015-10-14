@@ -198,7 +198,7 @@ class Application
                 ['int', 'int', 'int', 'int', 'int']);
 
             $arr = [];
-            $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 7 AND block_by_level <=".$level." ORDER BY RAND() LIMIT 1");
+            $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 7 AND block_by_level <= 1 ORDER BY RAND() LIMIT 1");
             $instrument = $result->fetch();
             if ($instrument['id']) { $arr[] = $instrument['id']; }
 
