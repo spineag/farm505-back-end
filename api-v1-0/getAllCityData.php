@@ -124,11 +124,31 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             throw new Exception("Bad request to DB!");
         }
 
+//recipes
+        $respRecipes = [];
+        $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =".$userId);
+        if ($result) {
+            $arr = $result->fetchAll();
+            foreach ($arr as $value => $dict) {
+                $res = [];
+                $res['id'] = $dict['id'];
+                $res['recipe_id'] = $dict['recipe_id'];
+                $res['user_db_building_id'] = $dict['user_db_building_id'];
+                $res['delay'] = $dict['delay_time'];
+                $res['time_work'] = time() - $dict['time_start'];
+                $respRecipes[] = $res;
+            }
+        } else {
+            $json_data['id'] = 6;
+            throw new Exception("Bad request to DB!");
+        }
+
         $arr = [];
         $arr['building'] = $respBuildings;
         $arr['plant'] = $respPlants;
         $arr['tree'] = $respTrees;
         $arr['animal'] = $respAnimals;
+        $arr['recipe'] = $respRecipes;
         $json_data['message'] = $arr;
         echo json_encode($json_data);
     }
