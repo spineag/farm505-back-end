@@ -170,17 +170,25 @@ class Application
     {
         $mainDb = $this->getMainDb();
 
+        $const = [];
+        $result = $mainDb->query('SELECT * FROM const');
+        $c = $result->fetchAll();
+        for ($i=0; $i<count($c); $i++) {
+            $const[$c[$i]['name']] = $c[$i]['value'];
+        }
+
         $result = $mainDb->insert( 'users',
             ['social_id' => $socialUId, 'created_date' => time(), 'last_visit_date' => time(),
                 'name' => $name, 'last_name' => $lname, 'channel_id' => $channelId, 'tutorial_step' => 1,
-                'ambar_max' => DEFAULT_AMBAR_MAX, 'sklad_max' => DEFAULT_SKLAD_MAX,
-                'ambar_level' => DEFAULT_AMBAR_LEVEL, 'sklad_level' => DEFAULT_SKLAD_LEVEL,
-                'hard_count' => DEFAULT_HARD_COUNT, 'soft_count' => DEFAULT_SOFT_COUNT,
-                'yellow_count' => DEFAULT_YELLOW_COUNT, 'red_count' => DEFAULT_RED_COUNT,
-                'green_count' => DEFAULT_GREEN_COUNT, 'blue_count' => DEFAULT_BLUE_COUNT,
+                'ambar_max' => $const['AMBAR_MAX'], 'sklad_max' => $const['SKLAD_MAX'],
+                'ambar_level' => 1, 'sklad_level' => 1,
+                'hard_count' => $const['HARD_COUNT'], 'soft_count' => $const['SOFT_COUNT'],
+                'yellow_count' => $const['YELLOW_COUNT'], 'red_count' => $const['RED_COUNT'],
+                'green_count' => $const['GREEN_COUNT'], 'blue_count' => $const['BLUE_COUNT'],
                 'xp' => 0, 'level' => 1],
             ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int',
                 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int']);
+
         if ($result)
         {
             $userId = $this->getUserId($channelId, $socialUId);
@@ -191,10 +199,10 @@ class Application
                     ['int', 'int', 'int']);
             }
             $resultAmbar = $mainDb->insert('user_building',
-                ['user_id' => $userId, 'building_id' => 12, 'in_inventory' => 0, 'pos_x' => 68, 'pos_y' => 52],
+                ['user_id' => $userId, 'building_id' => 12, 'in_inventory' => 0, 'pos_x' => $const['AMBAR_POS_X'], 'pos_y' => $const['AMBAR_POS_Y']],
                 ['int', 'int', 'int', 'int', 'int']);
             $resultSklad = $mainDb->insert('user_building',
-                ['user_id' => $userId, 'building_id' => 13, 'in_inventory' => 0, 'pos_x' => 70, 'pos_y' => 48],
+                ['user_id' => $userId, 'building_id' => 13, 'in_inventory' => 0, 'pos_x' => $const['SKLAD_POS_X'], 'pos_y' => $const['SKLAD_POS_Y']],
                 ['int', 'int', 'int', 'int', 'int']);
 
             $arr = [];
