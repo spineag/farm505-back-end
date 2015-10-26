@@ -9,11 +9,19 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
+        $arrRemoved=[];
+        $result = $mainDb->query("SELECT wild_db_id FROM user_removed_wild WHERE user_id = ".$_POST['userId']);
+        $u = $result->fetchAll();
+        foreach ($u as $value => $dict) {
+            $arrRemoved[] = $dict['wild_db_id'];
+        }
+
         $resp = [];
         $result = $mainDb->query("SELECT * FROM data_map_wild");
         if ($result) {
             $arr = $result->fetchAll();
             foreach ($arr as $value => $dict) {
+                if ( in_array($dict['id'], $arrRemoved) ) continue;
                 $build = [];
                 $build['id'] = $dict['id'];
                 $build['building_id'] = $dict['wild_id'];

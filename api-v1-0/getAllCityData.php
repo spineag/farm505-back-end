@@ -25,6 +25,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 $build['building_id'] = $dict['building_id'];
                 $build['pos_x'] = $dict['pos_x'];
                 $build['pos_y'] = $dict['pos_y'];
+                $build['is_flip'] = $dict['is_flip'];
                 $startBuild = $mainDb->query("SELECT * FROM user_building_open WHERE user_id =".$userId." AND building_id =".$dict['building_id']." AND user_db_building_id =".$dict['id']);
                 $date = $startBuild->fetch();
                 if ($date) {
@@ -143,12 +144,40 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             throw new Exception("Bad request to DB!");
         }
 
+//wild
+        $arrRemoved=[];
+        $result = $mainDb->query("SELECT wild_db_id FROM user_removed_wild WHERE user_id = ".$userId);
+        $u = $result->fetchAll();
+        foreach ($u as $value => $dict) {
+            $arrRemoved[] = $dict['wild_db_id'];
+        }
+
+        $respWilds = [];
+        $result = $mainDb->query("SELECT * FROM data_map_wild");
+        if ($result) {
+            $arr = $result->fetchAll();
+            foreach ($arr as $value => $dict) {
+                if ( in_array($dict['id'], $arrRemoved) ) continue;
+                $build = [];
+                $build['id'] = $dict['id'];
+                $build['building_id'] = $dict['wild_id'];
+                $build['pos_x'] = $dict['pos_x'];
+                $build['pos_y'] = $dict['pos_y'];
+                $build['is_flip'] = $dict['is_flip'];
+                $respWilds[] = $build;
+            }
+        } else {
+            $json_data['id'] = 2;
+            throw new Exception("Bad request to DB!");
+        }
+
         $arr = [];
         $arr['building'] = $respBuildings;
         $arr['plant'] = $respPlants;
         $arr['tree'] = $respTrees;
         $arr['animal'] = $respAnimals;
         $arr['recipe'] = $respRecipes;
+        $arr['wild'] = $respWilds;
         $json_data['message'] = $arr;
         echo json_encode($json_data);
     }
