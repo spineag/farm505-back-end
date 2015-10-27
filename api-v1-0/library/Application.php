@@ -215,7 +215,7 @@ class Application
             $count = 0;
             foreach ($t as $value => $r) {
                 $tArr = explode('&', $r['block_by_level']);
-                if ($tArr[0] <= $level) {
+                if ($tArr[0] <= 1) {
                     $arr[] = $r['craft_resource_id'];
                     $count++;
                     if ($count >=2) break;
