@@ -22,7 +22,9 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $arr = $result->fetch();
             if ($arr['last_update'] <> date('j')) {
                 $arr2 = [];
-                $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 7 AND block_by_level <=".$level." ORDER BY RAND() LIMIT 1");
+                $arrIns = [2, 3, 4, 7, 8, 9];
+                $arrInsIds = implode(',', array_values($arrIns));
+                $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 7 AND block_by_level <=".$level." AND id NOT IN (".$arrInsIds.") ORDER BY RAND() LIMIT 1");
                 $instrument = $result->fetch();
                 if ($instrument['id']) { $arr2[] = $instrument['id']; }
 
