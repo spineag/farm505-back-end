@@ -31,6 +31,9 @@ try
             $resourceItem['cost_max'] = $dict['cost_max'];
             $resourceItem['cost_min'] = $dict['cost_min'];
             $resourceItem['cost_hard'] = $dict['cost_hard'];
+            $resourceItem['visitor_price'] = $dict['visitor_price'];
+            $resourceItem['order_price'] = $dict['order_price'];
+            $resourceItem['order_xp'] = $dict['order_xp'];
             $resourceItem['block_by_level'] = $dict['block_by_level'];
 
             switch ($dict['resource_type']) {
