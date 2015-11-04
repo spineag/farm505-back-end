@@ -25,6 +25,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $user['xp'] = $u['xp'];
         $user['is_tester'] = $u['is_tester'];
         $user['count_cats'] = $u['count_cats'];
+        $user['scale'] = $u['scale'];
 
         $json_data['message'] = $user;
         echo json_encode($json_data);
