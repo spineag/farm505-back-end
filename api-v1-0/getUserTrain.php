@@ -18,7 +18,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
         if (empty($arr)) {
             $count = 3;
             $result = $mainDb->insert('user_train_pack',
-                ['user_id' => $_POST['userId'], 'count_xp' => rand(20, 70) * 5, 'count_money' => rand(20, 80) * 5],
+                ['user_id' => $userId, 'count_xp' => rand(20, 70) * 5, 'count_money' => rand(20, 80) * 5],
                 ['int', 'int', 'int']);
             $result = $mainDb->query("SELECT * FROM user_train_pack WHERE user_id =".$userId);
             if (!$result) {
