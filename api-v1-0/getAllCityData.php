@@ -60,6 +60,11 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                     $build['time_build_building'] = (int)time() - (int)$date['date_start_build'];
                     $build['is_open'] = $date['is_open'];
                 }
+                if ($build['building_id'] == 49) {
+                    $tr = $mainDb->query("SELECT * FROM user_train WHERE user_id =".$userId);
+                    $train = $tr->fetch();
+                    $build['train_state'] = $train['state'];
+                }
                 $respBuildings[] = $build;
             }
         } else {
