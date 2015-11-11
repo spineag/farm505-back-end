@@ -126,6 +126,7 @@ try
                     $buildingItem['cost_skip'] = $fabrica['cost_skip'];
                     $buildingItem['build_time'] = $fabrica['build_time'];
                     $buildingItem['block_by_level'] = $fabrica['block_by_level'];
+                    $buildingItem['count_cell'] = $fabrica['count_cell'];
                     unset($fabrica);
                     break;
                 case 12: // WILD
