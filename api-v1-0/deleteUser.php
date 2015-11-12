@@ -58,6 +58,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 //            ['user_id' => $_POST['userId']],
 //            ['int']);
         $result = $mainDb->query('DELETE FROM user_train WHERE user_id='.$_POST['userId']);
+        $result = $mainDb->query('DELETE FROM user_removed_wild WHERE user_id='.$_POST['userId']);
 
 //        $result = $mainDb->delete('user_market_item',
 //            ['id' => $_POST['userId']],
