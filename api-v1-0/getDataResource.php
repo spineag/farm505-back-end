@@ -35,6 +35,7 @@ try
             $resourceItem['order_price'] = $dict['order_price'];
             $resourceItem['order_xp'] = $dict['order_xp'];
             $resourceItem['block_by_level'] = $dict['block_by_level'];
+            $resourceItem['order_type'] = $dict['order_type'];
 
             switch ($dict['resource_type']) {
                 case 5: // PLANT
