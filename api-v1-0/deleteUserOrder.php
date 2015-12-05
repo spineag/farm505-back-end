@@ -9,25 +9,19 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =".$_POST['userId']." AND user_db_building_id =".$_POST['buildDbId']);
+        $result = $mainDb->delete('user_order',
+            ['user_id' => $_POST['userId'], 'id' => $_POST['dbId']],
+            ['int', 'int']);
+
         if ($result) {
-            $arr = $result->fetchAll();
-            foreach ($arr as $value => $dict) {
-                $result = $mainDb->update(
-                    'user_recipe_fabrica',
-                    ['delay_time' => $dict['delay_time'] - $_POST['leftTime']],
-                    ['id' => $dict['id']],
-                    ['int'],
-                    ['int']);
-            }
+            $json_data['message'] = '';
+            echo json_encode($json_data);
         } else {
             $json_data['id'] = 2;
             throw new Exception("Bad request to DB!");
         }
-
-        $json_data['message'] = '';
-        echo json_encode($json_data);
     }
+
     catch (Exception $e)
     {
         $json_data['status'] = 'error';

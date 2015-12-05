@@ -9,24 +9,22 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =".$_POST['userId']." AND user_db_building_id =".$_POST['buildDbId']);
+        $result = $mainDb->insert('user_order',
+            ['user_id' => $_POST['userId'], 'ids' => $_POST['ids'], 'counts' => $_POST['counts'], 'xp' => $_POST['xp'], 'coins' => $_POST['coins'], 'add_coupone' => $_POST['addCoupone']],
+            ['int', 'str', 'str', 'int', 'int', 'int']);
+
+        $result = $mainDb->query("SELECT * FROM user_order WHERE user_id =".$_POST['userId']." AND ids=".$_POST['ids']." AND counts=".$_POST['counts']);
+
         if ($result) {
-            $arr = $result->fetchAll();
-            foreach ($arr as $value => $dict) {
-                $result = $mainDb->update(
-                    'user_recipe_fabrica',
-                    ['delay_time' => $dict['delay_time'] - $_POST['leftTime']],
-                    ['id' => $dict['id']],
-                    ['int'],
-                    ['int']);
-            }
+            $arr= $result->fetch();
+            $json_data['message'] = $arr['id'];
+            echo json_encode($json_data);
         } else {
             $json_data['id'] = 2;
-            throw new Exception("Bad request to DB!");
+            $json_data['status'] = 'error';
+            $json_data['message'] = 'bad query';
         }
 
-        $json_data['message'] = '';
-        echo json_encode($json_data);
     }
     catch (Exception $e)
     {
