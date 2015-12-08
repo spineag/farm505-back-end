@@ -10,8 +10,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
     try {
         $result = $mainDb->insert('user_building',
-            ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId'], 'in_inventory' => 0, 'pos_x' => $_POST['posX'], 'pos_y' => $_POST['posY']],
-            ['int', 'int', 'int', 'int', 'int']);
+            ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId'], 'in_inventory' => 0, 'pos_x' => $_POST['posX'], 'pos_y' => $_POST['posY'], 'count_cell' => $_POST['countCell']],
+            ['int', 'int', 'int', 'int', 'int', 'int']);
 
         $result = $mainDb->query("SELECT id FROM user_building WHERE user_id =".$_POST['userId']." AND building_id=".$_POST['buildingId']);
         if ($result) {
