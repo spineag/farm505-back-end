@@ -21,6 +21,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $res['xp'] = $dict['xp'];
                 $res['coins'] = $dict['coins'];
                 $res['add_coupone'] = $dict['add_coupone'];
+                $res['left_time'] = (int)$dict['start_time'] - time();
+                if ($res['left_time'] < 0) $res['left_time'] = 0;
                 $resp[] = $res;
             }
         } else {
