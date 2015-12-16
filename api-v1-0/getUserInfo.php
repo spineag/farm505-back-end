@@ -23,6 +23,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $user['red_count'] = $u['red_count'];
         $user['blue_count'] = $u['blue_count'];
         $user['xp'] = $u['xp'];
+        $user['level'] = $u['level'];
         $user['is_tester'] = $u['is_tester'];
         $user['count_cats'] = $u['count_cats'];
         $user['scale'] = $u['scale'];

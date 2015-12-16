@@ -20,6 +20,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $res['user_db_building_id'] = $dict['user_db_building_id'];
                 $res['time_work'] = time() - $dict['time_start'];
                 $res['time_start'] = $dict['time_start'];
+                $res['fixed_user_id'] = $dict['fixed_user_id'];
                 $resp[] = $res;
             }
         } else {
