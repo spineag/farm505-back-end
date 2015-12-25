@@ -11,9 +11,9 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     try {
         $result = $mainDb->update(
             'user_tree',
-            ['state' => $_POST['state'], 'time_start' => time()],
+            ['state' => $_POST['state'], 'time_start' => time(), 'crafted_count' => 0],
             ['id' => $_POST['id']],
-            ['int', 'int'],
+            ['int', 'int', 'int'],
             ['int']);
 
         if (!$result) {

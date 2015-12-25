@@ -9,27 +9,31 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $resp = [];
-        $result = $mainDb->query("SELECT * FROM user_tree WHERE user_id =".$_POST['userId']);
+        $result = $mainDb->query("SELECT * FROM user_tree WHERE id =".$_POST['id']);
         if ($result) {
-            $arr = $result->fetchAll();
-            foreach ($arr as $value => $dict) {
-                $res = [];
-                $res['id'] = $dict['id'];
-                $res['state'] = $dict['state'];
-                $res['user_db_building_id'] = $dict['user_db_building_id'];
-                $res['time_work'] = time() - $dict['time_start'];
-                $res['time_start'] = $dict['time_start'];
-                $res['fixed_user_id'] = $dict['fixed_user_id'];
-                $res['crafted_count'] = $dict['crafted_count'];
-                $resp[] = $res;
+            $arr = $result->fetch();
+            if ($arr['state'] == $_POST['state']) {
+                $count = (int)$arr['crafted_count'] + 1;
+                $result = $mainDb->update(
+                    'user_tree',
+                    ['crafted_count' => $count],
+                    ['id' => $_POST['id']],
+                    ['int'],
+                    ['int']);
+                if (!$result) {
+                    $json_data['id'] = 4;
+                    throw new Exception("Bad request to DB at update!");
+                }
+            } else {
+                $json_data['id'] = 3;
+                throw new Exception("different tree state");
             }
         } else {
             $json_data['id'] = 2;
             throw new Exception("Bad request to DB!");
         }
 
-        $json_data['message'] = $resp;
+        $json_data['message'] = '';
         echo json_encode($json_data);
     }
     catch (Exception $e)
