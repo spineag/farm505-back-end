@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -13,18 +13,19 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         if ($result) {
             $arr = $result->fetchAll();
             foreach ($arr as $value => $dict) {
-                $result = $mainDb->update(
-                    'user_recipe_fabrica',
-                    ['delay_time' => $dict['delay_time'] - $_POST['leftTime']],
-                    ['id' => $dict['id']],
-                    ['int'],
-                    ['int']);
+                // $result = $mainDb->update(
+                // 'user_recipe_fabrica',
+                // ['delay_time' => $dict['delay_time'] - $_POST['leftTime']],
+                // ['id' => $dict['id']],
+                // ['int'],
+                // ['int']);
+                $result = $mainDb->query('UPDATE user_recipe_fabrica SET delay_time='.($dict['delay_time']-$_POST['leftTime']).' WHERE id='.$dict['id']);
             }
         } else {
             $json_data['id'] = 2;
             throw new Exception("Bad request to DB!");
         }
-
+        
         $json_data['message'] = '';
         echo json_encode($json_data);
     }

@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -9,14 +9,9 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->insert('data_map_wild',
-            ['wild_id' => $_POST['wildId'], 'pos_x' => $_POST['posX'], 'pos_y' => $_POST['posY']],
-            ['int', 'int', 'int']);
-
-        $result = $mainDb->query("SELECT id FROM data_map_wild WHERE wild_id =".$_POST['wildId']." AND pos_x=".$_POST['posX']." AND pos_y=".$_POST['posY'] );
+        $result = $mainDb->queryWithAnswerId('INSERT INTO data_map_wild SET wild_id='.$_POST['wildId'].', pos_x='.$_POST['posX'].', pos_y='.$_POST['posY']);    
         if ($result) {
-            $arr = $result->fetch();
-            $json_data['message'] = $arr['id'];
+            $json_data['message'] = $result[1];
         } else {
             $json_data['id'] = 2;
             $json_data['status'] = 'error';

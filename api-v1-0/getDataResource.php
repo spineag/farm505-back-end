@@ -1,12 +1,13 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
 
-$result = $mainDb->select('resource', '*');
+// $result = $mainDb->select('resource', '*');
+$result = $mainDb->query("SELECT * FROM resource");
 if ($result) {
     $resourcesALL = $result->fetchAll();
 } else {
@@ -36,7 +37,8 @@ try
             $resourceItem['order_xp'] = $dict['order_xp'];
             $resourceItem['block_by_level'] = $dict['block_by_level'];
             $resourceItem['order_type'] = $dict['order_type'];
-
+            $resourceItem['descript'] = $dict['descript'];
+            
             switch ($dict['resource_type']) {
                 case 5: // PLANT
                     //$result = $mainDb->select("data_plant", "*", "resource_id='".$dict['id']."'");
@@ -49,12 +51,6 @@ try
                     $resourceItem['build_time'] = $plant['build_time'];
                     $resourceItem['craft_xp'] = $plant['craft_xp'];
                     $resourceItem['cost_skip'] = $plant['cost_skip'];
-                    $resourceItem['image1'] = $plant['image1'];
-                    $resourceItem['image2'] = $plant['image2'];
-                    $resourceItem['image3'] = $plant['image3'];
-                    $resourceItem['image4'] = $plant['image4'];
-                    $resourceItem['image_harvested'] = $plant['image_harvested'];
-                    $resourceItem['inner_positions'] = $plant['inner_positions'];
                     break;
                 case 7: // INSTRUMENT
                     break;

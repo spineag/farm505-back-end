@@ -1,12 +1,14 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
 
-$result = $mainDb->select('data_cat', '*');
+// $result = $mainDb->select('data_cat', '*');
+$result = $mainDb->query("SELECT * FROM data_cat");
+
 if ($result) {
     $cats = $result->fetchAll();
 } else {

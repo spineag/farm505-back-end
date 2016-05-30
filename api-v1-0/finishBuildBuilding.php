@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -9,13 +9,24 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->update(
-            'user_building_open',
-            ['is_open' => 1],
-            ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId'], 'user_db_building_id' => $_POST['dbId']],
-            ['int'],
-            ['int', 'int', 'int']);
-
+        if ((int)$_POST['buildingId'] == 47 || (int)$_POST['buildingId'] == 49) {
+            //  $result = $mainDb->update(
+            // 'user_building_open',
+            // ['is_open' => 1],
+            // ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId']],
+            // ['int'],
+            // ['int', 'int']);
+            $result = $mainDb->query('UPDATE user_building_open SET is_open=1 WHERE building_id='.$_POST['buildingId'].' AND user_id = '.$_POST['userId']);
+        } else {
+            // $result = $mainDb->update(
+            // 'user_building_open',
+            // ['is_open' => 1],
+            // ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId'], 'user_db_building_id' => $_POST['dbId']],
+            // ['int'],
+            // ['int', 'int', 'int']);
+            $result = $mainDb->query('UPDATE user_building_open SET is_open=1 WHERE building_id='.$_POST['buildingId'].' AND user_id = '.$_POST['userId'].' AND user_db_building_id='.$_POST['dbId']);
+        }
+            
         if ($result) {
             $json_data['message'] = '';
             echo json_encode($json_data);

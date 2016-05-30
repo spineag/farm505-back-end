@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -9,9 +9,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->insert('user_building_open',
-            ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId'], 'user_db_building_id' => $_POST['dbId'], 'date_start_build' => time(), 'is_open' => 0],
-            ['int', 'int', 'int', 'int', 'int']);
+        // $result = $mainDb->insert('user_building_open',
+        //     ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId'], 'user_db_building_id' => $_POST['dbId'], 'date_start_build' => time(), 'is_open' => 0],
+        //     ['int', 'int', 'int', 'int', 'int']);
+        $result = $mainDb->query('INSERT INTO user_building_open SET user_id='.$_POST['userId'].', user_db_building_id='.$_POST['dbId'].', building_id='.$_POST['buildingId'].', is_open=0, date_start_build='.time());    
 
         if ($result) {
             $json_data['message'] = '';

@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -9,13 +9,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->update(
-            'user_animal',
-            ['raw_time_start' => 0],
-            ['id' => $_POST['animalDbId']],
-            ['int'],
-            ['int']);
-
+        $result = $mainDb->query('UPDATE user_animal SET raw_time_start=0 WHERE id='.$_POST['animalDbId']);
         if (!$result) {
             $json_data['id'] = 2;
             throw new Exception("Bad request to DB!");

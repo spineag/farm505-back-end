@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -10,15 +10,9 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
     try {
         $time = time();
-        $result = $mainDb->insert('user_plant_ridge',
-            ['user_id' => $_POST['userId'], 'user_db_building_id' => $_POST['dbId'], 'plant_id' => $_POST['plantId'], 'time_start' => $time],
-            ['int', 'int', 'int', 'int']);
-
-        $result = $mainDb->query("SELECT * FROM user_plant_ridge WHERE user_id =".$_POST['userId']." AND time_start=".$time);
-
+        $result = $mainDb->queryWithAnswerId('INSERT INTO user_plant_ridge SET user_id='.$_POST['userId'].', user_db_building_id='.$_POST['dbId'].', plant_id='.$_POST['plantId'].', time_start='.$time);    
         if ($result) {
-            $arr= $result->fetch();
-            $json_data['message'] = $arr['id'];
+            $json_data['message'] = $result[1];
             echo json_encode($json_data);
         } else {
             $json_data['id'] = 2;

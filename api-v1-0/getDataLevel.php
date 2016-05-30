@@ -6,17 +6,18 @@
  * Time: 4:01 PM
  */
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
 
-$result = $mainDb->select('data_level', '*');
+$result = $mainDb->query("SELECT * FROM data_level");
+$dataLevel = [];
 if ($result) {
-    $resourcesALL = $result->fetchAll();
+    $dataLevel = $result->fetchAll();
 } else {
-    $json_data['id'] = 1;
+    $json_data['id'] = 6;
     throw new Exception("Bad request to DB!");
 }
 
@@ -28,7 +29,7 @@ try
             $resp[] = $level;
         }
     } else {
-        $json_data['id'] = 2;
+        $json_data['id'] = 1;
         throw new Exception("Bad request to DB!");
     }
 

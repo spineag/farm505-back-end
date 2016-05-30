@@ -9,10 +9,10 @@
 
 ////// ORIGINAL
 
-require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/library/OwnMySQLI.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/config/config.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/config/configNew.php");
-require_once($_SERVER['DOCUMENT_ROOT'] . "/public/api-v1-0/tools/SocialNetwork.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/php/api-v1-0/library/OwnMySQLI.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/php/api-v1-0/config/config.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/php/api-v1-0/config/configNew.php");
+require_once($_SERVER['DOCUMENT_ROOT'] . "/php/api-v1-0/tools/SocialNetwork.php");
 
 class Application
 {
@@ -181,37 +181,79 @@ class Application
             ['social_id' => $socialUId, 'created_date' => time(), 'last_visit_date' => time(),
                 'name' => $name, 'last_name' => $lname, 'channel_id' => $channelId, 'tutorial_step' => 1,
                 'ambar_max' => $const['AMBAR_MAX'], 'sklad_max' => $const['SKLAD_MAX'],
-                'ambar_level' => 1, 'sklad_level' => 1,
+                'ambar_level' => 1, 'sklad_level' => 1, 'count_cats' => 5,
                 'hard_count' => $const['HARD_COUNT'], 'soft_count' => $const['SOFT_COUNT'],
                 'yellow_count' => $const['YELLOW_COUNT'], 'red_count' => $const['RED_COUNT'],
                 'green_count' => $const['GREEN_COUNT'], 'blue_count' => $const['BLUE_COUNT'],
                 'xp' => 0, 'level' => 1],
-            ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int',
-                'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int']);
-
+            ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int', 'int',
+                'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int']);
+                
         if ($result)
         {
             $userId = $this->getUserId($channelId, $socialUId);
-            $arr = [31, 32, 33, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118];
+            $arr = [31, 32, 21, 118];
             foreach ($arr as $value) {
                 $result = $mainDb->insert('user_resource',
-                    ['user_id' => $userId, 'resource_id' => $value, 'count' => 1],
+                    ['user_id' => $userId, 'resource_id' => $value, 'count' => 3],
                     ['int', 'int', 'int']);
             }
+
+            // add ridges and plant on them
+            $resultRidge = $mainDb->insert('user_building',
+                ['user_id' => $userId, 'building_id' => 11, 'in_inventory' => 0, 'pos_x' => 21, 'pos_y' => 33, 'is_flip' => 0, 'count_cell' => 0],
+                ['int', 'int', 'int', 'int', 'int', 'int', 'int']);
+            $resultRidge = $mainDb->insert('user_building',
+                ['user_id' => $userId, 'building_id' => 11, 'in_inventory' => 0, 'pos_x' => 23, 'pos_y' => 33, 'is_flip' => 0, 'count_cell' => 0],
+                ['int', 'int', 'int', 'int', 'int', 'int', 'int']);
+            $resultRidge = $mainDb->insert('user_building',
+                ['user_id' => $userId, 'building_id' => 11, 'in_inventory' => 0, 'pos_x' => 25, 'pos_y' => 33, 'is_flip' => 0, 'count_cell' => 0],
+                ['int', 'int', 'int', 'int', 'int', 'int', 'int']);
+            $resultRidge = $mainDb->query("SELECT * FROM user_building WHERE building_id = 11 AND user_id =".$userId);
+            if ($resultRidge) {
+                $arr = $resultRidge->fetchAll();
+                foreach ($arr as $value => $dict) { 
+                    // $result = $mainDb->insert('user_building_open',
+                    //     ['user_id' => $userId, 'building_id' => 11, 'user_db_building_id' => $dict['id'], 'data_start_build' => time(), 'is_open' => 1],
+                    //     ['int', 'int', 'int', 'int', 'int']);
+                    $result = $mainDb->insert('user_plant_ridge',
+                        ['user_id' => $userId, 'plant_id' => 31, 'user_db_building_id' => $dict['id'], 'time_start' => time()-12000],
+                        ['int', 'int', 'int', 'int']);
+                }
+            }
+            
+            // add farm and chickens    
+            $resultFarm = $mainDb->insert('user_building',
+                ['user_id' => $userId, 'building_id' => 14, 'in_inventory' => 0, 'pos_x' => 22, 'pos_y' => 11, 'is_flip' => 0, 'count_cell' => 0],
+                ['int', 'int', 'int', 'int', 'int', 'int', 'int']);
+            $resultFarm = $mainDb->query("SELECT * FROM user_building WHERE building_id = 14 AND user_id =".$userId);    
+            if ($resultFarm) {
+                $arr = $resultFarm->fetch();
+                $resultAnimal = $mainDb->insert('user_animal',
+                        ['user_id' => $userId, 'animal_id' => 1, 'user_db_building_id' => $arr['id'], 'raw_time_start' => 0],
+                        ['int', 'int', 'int', 'int']);
+                $resultAnimal = $mainDb->insert('user_animal',
+                        ['user_id' => $userId, 'animal_id' => 1, 'user_db_building_id' => $arr['id'], 'raw_time_start' => 0],
+                        ['int', 'int', 'int', 'int']);
+                $resultAnimal = $mainDb->insert('user_animal',
+                        ['user_id' => $userId, 'animal_id' => 1, 'user_db_building_id' => $arr['id'], 'raw_time_start' => 0],
+                        ['int', 'int', 'int', 'int']);
+            }    
+                
             $resultAmbar = $mainDb->insert('user_building',
                 ['user_id' => $userId, 'building_id' => 12, 'in_inventory' => 0, 'pos_x' => $const['AMBAR_POS_X'], 'pos_y' => $const['AMBAR_POS_Y']],
                 ['int', 'int', 'int', 'int', 'int']);
             $resultSklad = $mainDb->insert('user_building',
                 ['user_id' => $userId, 'building_id' => 13, 'in_inventory' => 0, 'pos_x' => $const['SKLAD_POS_X'], 'pos_y' => $const['SKLAD_POS_Y']],
                 ['int', 'int', 'int', 'int', 'int']);
-
+            
             $arr = [];
             $arrIns = [2, 3, 4, 7, 8, 9];
-            $arrInsIds = implode(',', array_values($arrIns));
-            $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 7 AND block_by_level <=".$level." AND id NOT IN (".$arrInsIds.") ORDER BY RAND() LIMIT 1");
-            $instrument = $result->fetch();
-            if ($instrument['id']) { $arr[] = $instrument['id']; }
-
+                $arrInsIds = implode(',', array_values($arrIns));
+                $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 7 AND block_by_level <=1 AND id NOT IN (".$arrInsIds.") ORDER BY RAND() LIMIT 1");
+                $instrument = $result->fetch();
+                if ($instrument['id']) { $arr[] = $instrument['id']; }
+    
             $result = $mainDb->query("SELECT * FROM data_tree ORDER BY RAND()");
             $t = $result->fetchAll();
             $count = 0;
@@ -223,8 +265,8 @@ class Application
                     if ($count >=2) break;
                 }
             }
-
-            $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 5 AND block_by_level <=".$level." ORDER BY RAND() LIMIT 6");
+   
+            $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 5 AND block_by_level <= 1 ORDER BY RAND() LIMIT 6");
             $plants = $result->fetchAll();
             foreach ($plants as $value => $p) {
                 $arr[] = $p['id'];
@@ -498,7 +540,8 @@ class Application
         } else {
             $level = 1;
         }
-        $result = $mainDb->query("SELECT id FROM resource WHERE block_by_level <=".$level." AND url <> 'instrumentAtlas'");
+        $url = 'instrumentAtlas';
+        $result = $mainDb->query("SELECT id FROM resource WHERE block_by_level <=".$level." AND url <>".$url);
         if ($result) {
             $arr = $result->fetchAll();
             return array_rand($arr, 1);

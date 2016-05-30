@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
     $app = Application::getInstance();
@@ -17,7 +17,7 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
             $json_data['id'] = 3;
             throw new Exception("U are not an available user");
         }
-
+        
         // create user if not exist
         $uid = $app->getUserId($channelId, $socialUId);
         if ($uid < 1) {

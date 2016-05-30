@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -14,12 +14,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $arr = $result->fetch();
             $count = $arr['xp'];
             $count = (int)$count + (int)$_POST['count'];
-            $result = $mainDb->update(
-                'users',
-                ['xp' => $count],
-                ['id' => $_POST['userId']],
-                ['int'],
-                ['int']);
+            $result = $mainDb->query('UPDATE users SET xp='.$count.' WHERE id='.$_POST['userId']);
         } else {
             $json_data['id'] = 2;
             throw new Exception("Bad request to DB!");

@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -21,7 +21,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         if ($result) {
             $arr = $result->fetchAll();
             foreach ($arr as $value => $dict) {
-                if ( in_array($dict['id'], $arrRemoved) ) continue;
+                 if ( in_array($dict['id'], $arrRemoved) ) continue;
                 $build = [];
                 $build['id'] = $dict['id'];
                 $build['building_id'] = $dict['wild_id'];

@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -39,7 +39,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                         if ($count >=2) break;
                     }
                 }
-
+   
                 $result = $mainDb->query("SELECT id FROM resource WHERE resource_type = 5 AND block_by_level <=".$level." ORDER BY RAND() LIMIT 6");
                 $plants = $result->fetchAll();
                 foreach ($plants as $value => $p) {
@@ -50,11 +50,11 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 }
 
                 $resultNeighbor = $mainDb->update('user_neighbor',
-                    ['last_update' => date('j'), 'resource_id1' => $arr2[0], 'resource_id2' => $arr2[1], 'resource_id3' => $arr2[2], 'resource_id4' => $arr2[3], 'resource_id5' => $arr2[4], 'resource_id6' => $arr2[5]],
-                    ['user_id' => $_POST['userId']],
-                    ['int', 'int', 'int', 'int', 'int', 'int', 'int'],
-                    ['int']);
-
+                ['last_update' => date('j'), 'resource_id1' => $arr2[0], 'resource_id2' => $arr2[1], 'resource_id3' => $arr2[2], 'resource_id4' => $arr2[3], 'resource_id5' => $arr2[4], 'resource_id6' => $arr2[5]],
+                ['user_id' => $_POST['userId']],
+                ['int', 'int', 'int', 'int', 'int', 'int', 'int'],
+                ['int']);
+                
                 $result = $mainDb->query("SELECT * FROM user_neighbor WHERE user_id =".$_POST['userId']);
                 if ($result) {
                     $arr = $result->fetch();

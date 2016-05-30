@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     $app = Application::getInstance();
@@ -15,7 +15,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
 
 // buildings
         $respBuildings = [];
-        $result = $mainDb->query("SELECT * FROM user_building WHERE user_id =".$userId);
+        $result = $mainDb->query("SELECT * FROM user_building WHERE in_inventory = 0 AND user_id =".$userId);
         if ($result) {
             $arr = $result->fetchAll();
             foreach ($arr as $value => $dict) {
@@ -128,7 +128,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
         } else {
             $json_data['id'] = 5;
             throw new Exception("Bad request to DB!");
-        }
+        }      
 
 //recipes
         $respRecipes = [];
@@ -148,7 +148,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             $json_data['id'] = 6;
             throw new Exception("Bad request to DB!");
         }
-
+        
 //wild
         $arrRemoved=[];
         $result = $mainDb->query("SELECT wild_db_id FROM user_removed_wild WHERE user_id = ".$userId);
@@ -156,7 +156,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
         foreach ($u as $value => $dict) {
             $arrRemoved[] = $dict['wild_db_id'];
         }
-
+        
         $respWilds = [];
         $result = $mainDb->query("SELECT * FROM data_map_wild");
         if ($result) {
@@ -175,7 +175,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             $json_data['id'] = 2;
             throw new Exception("Bad request to DB!");
         }
-
+        
         $arr = [];
         $arr['building'] = $respBuildings;
         $arr['plant'] = $respPlants;

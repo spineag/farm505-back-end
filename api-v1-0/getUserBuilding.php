@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -34,7 +34,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $json_data['id'] = 2;
             throw new Exception("Bad request to DB!");
         }
-
+        
         $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id = ".$_POST['userId']);
         $u = $result->fetchAll();
         $u = $u[0]['unlocked_land'];

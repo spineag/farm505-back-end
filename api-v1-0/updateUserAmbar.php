@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -10,19 +10,21 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
     try {
         if ($_POST['isAmbar'] == 1) {
-            $result = $mainDb->update(
-                'users',
-                ['ambar_max' => $_POST['newMaxCount'], 'ambar_level' => $_POST['newLevel']],
-                ['id' => $_POST['userId']],
-                ['int', 'int'],
-                ['int']);
+            // $result = $mainDb->update(
+            //     'users',
+            //     ['ambar_max' => $_POST['newMaxCount'], 'ambar_level' => $_POST['newLevel']],
+            //     ['id' => $_POST['userId']],
+            //     ['int', 'int'],
+            //     ['int']);
+            $result = $mainDb->query('UPDATE users SET ambar_max='.$_POST['newMaxCount'].', ambar_level='.$_POST['newLevel'].' WHERE id='.$_POST['userId']);
         } else {
-            $result = $mainDb->update(
-                'users',
-                ['sklad_max' => $_POST['newMaxCount'], 'sklad_level' => $_POST['newLevel']],
-                ['id' => $_POST['userId']],
-                ['int', 'int'],
-                ['int']);
+            // $result = $mainDb->update(
+            //     'users',
+            //     ['sklad_max' => $_POST['newMaxCount'], 'sklad_level' => $_POST['newLevel']],
+            //     ['id' => $_POST['userId']],
+            //     ['int', 'int'],
+            //     ['int']);
+            $result = $mainDb->query('UPDATE users SET sklad_max='.$_POST['newMaxCount'].', sklad_level='.$_POST['newLevel'].' WHERE id='.$_POST['userId']);
         }
 
         if (!$result) {

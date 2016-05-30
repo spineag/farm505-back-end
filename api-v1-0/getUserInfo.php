@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -23,11 +23,20 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $user['red_count'] = $u['red_count'];
         $user['blue_count'] = $u['blue_count'];
         $user['xp'] = $u['xp'];
-        $user['level'] = $u['level'];
+        $user['daily_bonus_day'] = date("d", $u['daily_bonus_day']);
+        $user['count_daily_bonus'] = $u['count_daily_bonus'];
         $user['is_tester'] = $u['is_tester'];
         $user['count_cats'] = $u['count_cats'];
         $user['scale'] = $u['scale'];
-
+        $user['time_paper'] = $u['time_paper'];
+        $user['tutorial_step'] = $u['tutorial_step'];
+        $user['market_cell'] = $u['market_cell'];
+        $user['in_papper'] = $u['in_papper'];
+        $user['chest_day'] = date("d", $u['chest_day']);
+        $user['count_chest'] = $u['count_chest'];
+        $user['cut_scene'] = $u['cut_scene'];
+        $user['notification_new'] = $u['notification_new'];
+        
         $json_data['message'] = $user;
         echo json_encode($json_data);
     }

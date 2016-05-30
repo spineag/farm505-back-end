@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -9,13 +9,13 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->update(
-            'user_tree',
-            ['state' => $_POST['state'], 'time_start' => time(), 'crafted_count' => 0],
-            ['id' => $_POST['id']],
-            ['int', 'int', 'int'],
-            ['int']);
-
+        // $result = $mainDb->update(
+        //     'user_tree',
+        //     ['state' => $_POST['state'], 'time_start' => time(), 'crafted_count' => 0],
+        //     ['id' => $_POST['id']],
+        //     ['int', 'int', 'int'],
+        //     ['int']);
+        $result = $mainDb->query('UPDATE user_tree SET state='.$_POST['state'].', time_start='.time().', crafted_count=0 WHERE id='.$_POST['id']);
         if (!$result) {
             $json_data['id'] = 2;
             throw new Exception("Bad request to DB!");

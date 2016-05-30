@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -9,10 +9,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->delete('user_order',
-            ['user_id' => $_POST['userId'], 'id' => $_POST['dbId']],
-            ['int', 'int']);
-
+        // $result = $mainDb->delete('user_order',
+        //     ['user_id' => $_POST['userId'], 'id' => $_POST['dbId']],
+        //     ['int', 'int']);
+$result = $mainDb->query('DELETE FROM user_order WHERE id='.$_POST['dbId'].' AND user_id = '.$_POST['userId']);
         if ($result) {
             $json_data['message'] = '';
             echo json_encode($json_data);

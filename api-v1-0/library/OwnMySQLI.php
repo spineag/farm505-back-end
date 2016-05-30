@@ -73,11 +73,6 @@ class DBStatementI
         return 0;
     }
 
-    public function lastInsertID()
-    {
-        return mysqli_insert_id();
-    }
-
     public function numAffectedRows()
     {
         if ($this->_result)
@@ -251,6 +246,30 @@ class OwnMySQLI
         }
         return new DBStatementI($result);
     }
+    
+    public function queryWithAnswerId($query)
+    {
+        mysqli_select_db($this->_linkIdentifier, $this->_database);
+        if (static::$_debug)
+        {
+            echo $query . "<br />\n";
+        }
+        $result = mysqli_query($this->_linkIdentifier, $query);
+        if($result === false)
+        {
+            mysqli_close($this->_linkIdentifier);
+            @$this->_connections[$this->_params['key']] = $this->_linkIdentifier = mysqli_connect("p:".$this->_params['host'], $this->_params['user'], $this->_params['pass']);
+            mysqli_select_db($this->_linkIdentifier, $this->_params['database']);
+
+            $result = mysqli_query($this->_linkIdentifier, $query);
+
+            if($result === false)
+            {
+                die("Query:<i> ".$query."</i> ".mysqli_error($this->_linkIdentifier));
+            }
+        }
+        return [new DBStatementI($result), mysqli_insert_id($this->_linkIdentifier)];
+    }
 
     public function select($from, $cols = '*', $where = [], $wheretypes = [], $orderBy = '', $limit = '', $like = false, $operand = 'AND')
     {
@@ -369,5 +388,12 @@ class OwnMySQLI
         }
 
         return $this->query($query);
+    }
+    
+    public function normalString($s)
+    {
+        $s = settype( $s, 'string');
+        $s = mysqli_real_escape_string($this->_linkIdentifier, $s);
+        return $s;
     }
 }

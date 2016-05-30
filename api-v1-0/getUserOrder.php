@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -22,6 +22,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $res['coins'] = $dict['coins'];
                 $res['add_coupone'] = $dict['add_coupone'];
                 $res['start_time'] = $dict['start_time'];
+                $res['place'] = $dict['place'];
                 $resp[] = $res;
             }
         } else {

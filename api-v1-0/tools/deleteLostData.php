@@ -3,17 +3,17 @@
 include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
 
-$app = Application::getInstance();
-$mainDb = $app->getMainDb();
-$channelId = 1; // VK
+    $app = Application::getInstance();
+    $mainDb = $app->getMainDb();
+    $channelId = 1; // VK
 
 // $result = $mainDb->query("SELECT * FROM users ORDER BY id DESC LIMIT 1");
 $result = $mainDb->query("SELECT id FROM users");
 $a = $result->fetchAll();
 $arrIds = [];
 foreach ($a as $value => $dict) {
-    $arrIds[] = $dict['id'];
-}
+                $arrIds[] = $dict['id'];
+        }
 $maxID = $arrIds[count($arrIds)-1];
 
 for ($i=0; $i<$maxID; $i++) {   // последнее значение $maxID очевидно, что можно не проверять, так как для него не нужно удалять

@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -9,12 +9,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->update(
-            'user_building',
-            ['count_cell' => $_POST['count']],
-            [ 'id' => $_POST['dbId'], 'user_id' => $_POST['userId']],
-            ['int'],
-            ['int', 'int']);
+        $result = $mainDb->query('UPDATE user_building SET count_cell = '.$_POST['count'].' WHERE id='.$_POST['dbId'].' AND user_id = '.$_POST['userId']);
 
         if (!$result) {
             $json_data['id'] = 2;

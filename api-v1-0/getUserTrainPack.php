@@ -1,39 +1,84 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
-if (isset($_POST['userId']) && !empty($_POST['userId'])) {
+if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     $app = Application::getInstance();
     $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
+    $result = $mainDb->query("SELECT * FROM users WHERE social_id =".$_POST['userSocialId']);
+    $arr = $result->fetch();
+    $userId = $arr['id'];
+    $userLevel = $arr['level'];
+
     try {
-        $result = $mainDb->query("SELECT * FROM user_train_pack WHERE user_id =".$_POST['userId']);
+        $result = $mainDb->query("SELECT * FROM user_train_pack WHERE user_id =".$userId);
         $arr = $result->fetch();
         if (empty($arr)) {
-            $count = 3;
+            $result = $mainDb->query("SELECT resource_id, big_count, small_count FROM data_train_resource");
+            $arrTrainResource = $result->fetchAll();
+            for ($i=0; $i<count($arrTrainResource); $i++) {
+                $arr[] = $arrTrainResource[$i]['resource_id'];
+            };
+            $result = $mainDb->query("SELECT id, order_price, order_xp FROM resource WHERE block_by_level <=".$userLevel." AND id IN (" .implode(',', array_map('intval', $arr)). ") ORDER BY RAND() LIMIT 3");
+            $arrDataResource = $result->fetchAll();
+            $arr = [];
+            for ($i=0; $i<3; $i++) {
+                $arrInfo = [];
+                $arrInfo['id'] = $arrDataResource[$i]['id'];
+                $arrInfo['order_price'] = $arrDataResource[$i]['order_price'];
+                $arrInfo['order_xp'] = $arrDataResource[$i]['order_xp'];
+                for ($k=0; $k<count($arrTrainResource); $k++) {
+                    if ($arrTrainResource[$k]['resource_id'] == $arrInfo['id']) {
+                        $arrInfo['big_count'] = $arrTrainResource[$k]['big_count'];
+                        $arrInfo['small_count'] = $arrTrainResource[$k]['small_count'];
+                        break;
+                    }
+                }
+                $arr[] = $arrInfo;
+            }
+            
+            //find the result XPCount and COINSCount
+            $tempArr=[];
+            foreach($arr as $key=>$arrT){
+                $tempArr[$key]=$arrT['order_xp'];
+            }
+            array_multisort($tempArr, SORT_NUMERIC, $arr);
+            $XPCount = (int)$arr[1]['order_xp'] + (int)$arr[2]['order_xp'];
+            $COINSCount = (int)$arr[1]['order_price'] + (int)$arr[2]['order_price'];
+            
             $result = $mainDb->insert('user_train_pack',
-                ['user_id' => $_POST['userId'], 'count_xp' => rand(20, 70) * 5, 'count_money' => rand(20, 80) * 5],
+                ['user_id' => $userId, 'count_xp' => $XPCount, 'count_money' => $COINSCount],
                 ['int', 'int', 'int']);
-            $result = $mainDb->query("SELECT * FROM user_train_pack WHERE user_id =".$_POST['userId']);
+            $result = $mainDb->query("SELECT id FROM user_train_pack WHERE user_id =".$userId);
             if (!$result) {
                 $json_data['status'] = 'error';
                 $json_data['message'] = 3;
                 echo json_encode($json_data);
             }
-            $arr = $result->fetch();
-            for ($i = 1; $i <= $count; $i++) {
-                $resId = $app->getRandomResource($_POST['userId']);
-                $count_resource = rand(2, 10);
-                $count_xp = rand(10, 50) * 5;
-                $count_money = rand(10, 80) * 5;
-                for ($k = 1; $k <= 3; $k++) {
+            $pack = $result->fetch();
+            if ($userLevel >= 20) {
+                $countCells = 4;
+            } else {
+                $countCells = 3;
+            }
+            for ($i = 0; $i < 3; $i++) {
+                if ($userLevel >= 20) {
+                        $countResource = rand(1,$arr[$i]['big_count']);
+                    } else {
+                        $countResource = rand(1, $arr[$i]['small_count']);
+                    }
+                for ($k = 0; $k < $countCells; $k++) {
                     $result = $mainDb->insert('user_train_pack_item',
-                        ['user_id' => $_POST['userId'], 'user_train_pack_id' => $arr['id'], 'resource_id' => $resId, 'count_resource' => $count_resource, 'count_xp' => $count_xp, 'count_money' => $count_money, 'is_full' => 0],
+                        ['user_id' => $userId, 'user_train_pack_id' => $pack['id'], 'resource_id' => $arr[$i]['id'], 'count_resource' => $countResource, 'count_xp' => $arr[$i]['order_xp']*$countResource, 'count_money' => $arr[$i]['order_price']*$countResource, 'is_full' => 0],
                         ['int', 'int', 'int', 'int', 'int', 'int', 'int']);
                 }
             }
+            
+            $result = $mainDb->query("SELECT * FROM user_train_pack WHERE user_id =".$userId);
+            $arr = $result->fetch();
         }
 
         $pack = [];
@@ -41,7 +86,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $pack['count_xp'] = $arr['count_xp'];
         $pack['count_money'] = $arr['count_money'];
         $pack['items'] = [];
-        $result = $mainDb->query("SELECT * FROM user_train_pack_item WHERE user_id =".$_POST['userId']." AND user_train_pack_id=".$arr['id']);
+        $result = $mainDb->query("SELECT * FROM user_train_pack_item WHERE user_id =".$userId." AND user_train_pack_id=".$arr['id']);
         $arr = $result->fetchAll();
         if (!empty($arr)) {
             foreach ($arr as $key => $d) {

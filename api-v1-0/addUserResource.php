@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -12,32 +12,24 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $result = $mainDb->query("SELECT count FROM user_resource WHERE user_id =".$_POST['userId']." AND resource_id=".$_POST['resourceId']);
         $arr = $result->fetch();
         if (count($arr) > 0) {
-            // $arr = $result->fetch();
             $count = $arr['count'];
             $count = (int)$count + (int)$_POST['count'];
-            $result = $mainDb->update(
-                'user_resource',
-                ['count' => $count],
-                ['user_id' => $_POST['userId'], 'resource_id' => $_POST['resourceId']],
-                ['int'],
-                ['int', 'int']);
-            $text = 'update';
+            $result = $mainDb->query('UPDATE user_resource SET count = '.$count.' WHERE user_id='.$_POST['userId'].' AND resource_id = '.$_POST['resourceId']);            
+            $text = 'update';    
         } else {
-            $result = $mainDb->insert('user_resource',
-                ['user_id' => $_POST['userId'], 'resource_id' => $_POST['resourceId'], 'count' => $_POST['count']],
-                ['int', 'int', 'int']);
-            $text = 'insert';
+            $result = $mainDb->query('INSERT INTO user_resource SET user_id='.$_POST['userId'].', resource_id='.$_POST['resourceId'].', count='.$_POST['count']);    
+            $text = 'insert';    
         }
 
         if ($result) {
-            $json_data['message'] = "";
+            $json_data['message'] = '';
             echo json_encode($json_data);
         } else {
             $json_data['id'] = 2;
             $json_data['status'] = 'error';
-            $json_data['message'] = 'bad query';
+            $json_data['message'] = 'bad query:: '.$text;
             echo json_encode($json_data);
-        }
+        } 
     }
     catch (Exception $e)
     {

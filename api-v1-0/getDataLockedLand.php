@@ -6,8 +6,8 @@
  * Time: 11:57 AM
  */
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
@@ -17,7 +17,8 @@ $u = $result->fetchAll();
 $u = $u[0]['unlocked_land'];
 $arrLocked = explode("&", $u);
 
-$result = $mainDb->select('data_locked_land', '*');
+// $result = $mainDb->select('data_locked_land', '*');
+$result = $mainDb->query("SELECT * FROM data_locked_land");
 if ($result) {
     $lands = $result->fetchAll();
 } else {

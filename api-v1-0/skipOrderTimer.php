@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -9,18 +9,18 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->update(
-            'user_order',
-            ['start_time' => time() - 30*60],
-            ['id' => $_POST['dbId']],
-            ['int'],
-            ['int']);
-
+        // $result = $mainDb->update(
+        //         'user_order',
+        //         ['start_time' => time() - 30*60],
+        //         ['id' => $_POST['dbId']],
+        //         ['int'],
+        //         ['int']);
+       $result = $mainDb->query('UPDATE user_order SET start_time='.(time()-30*60).' WHERE id='.$_POST['dbId']);
         if (!$result) {
             $json_data['id'] = 2;
             throw new Exception("Bad request to DB!");
         }
-
+        
         $json_data['message'] = '';
         echo json_encode($json_data);
     }

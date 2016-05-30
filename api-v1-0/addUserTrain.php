@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -10,15 +10,9 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
     try {
         $time = time();
-        $result = $mainDb->insert('user_train',
-            ['user_id' => $_POST['userId'], 'state' => 0, 'time_start' => $time],
-            ['int', 'int', 'int']);
-
-        $result = $mainDb->query("SELECT * FROM user_train WHERE user_id =".$_POST['userId']);
-
+        $result = $mainDb->queryWithAnswerId('INSERT INTO user_train SET user_id='.$_POST['userId'].', state=0, time_start='.$time);    
         if ($result) {
-            $arr= $result->fetch();
-            $json_data['message'] = $arr['id'];
+            $json_data['message'] = $result[1];
             echo json_encode($json_data);
         } else {
             $json_data['id'] = 2;

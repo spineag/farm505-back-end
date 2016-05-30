@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -9,14 +9,9 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->insert('user_building',
-            ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId'], 'in_inventory' => 0, 'pos_x' => $_POST['posX'], 'pos_y' => $_POST['posY'], 'count_cell' => $_POST['countCell']],
-            ['int', 'int', 'int', 'int', 'int', 'int']);
-
-        $result = $mainDb->query("SELECT id FROM user_building WHERE user_id =".$_POST['userId']." AND building_id=".$_POST['buildingId']);
+        $result = $mainDb->queryWithAnswerId('INSERT INTO user_building SET user_id='.$_POST['userId'].', building_id='.$_POST['buildingId'].', in_inventory=0, pos_x='.$_POST['posX'].', pos_y='.$_POST['posY'].', count_cell='.$_POST['countCell']);    
         if ($result) {
-            $arr = $result->fetchAll();
-            $json_data['message'] = array_pop($arr)['id'];
+            $json_data['message'] = $result[1];
         } else {
             $json_data['id'] = 2;
             $json_data['status'] = 'error';

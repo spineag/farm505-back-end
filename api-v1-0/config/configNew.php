@@ -6,19 +6,19 @@ global $cfgs;
 
 
 $cfgs = array($_SERVER["SERVER_NAME"] =>
-    array("db" => array("host" => getenv('IP'),
-        "database" => getenv('C9_USER'),
-        "user" => "spineag",
+    array("db" => array("host" => '148.251.121.199', //getenv('IP'),
+        "database" => 'farm',
+        "user" => "root",
         "pass" => ""),
 
-        "address" => "farm505-spineag.c9.io",
+        "address" => "505.ninja",
 //        "support_email" => "vksupport@joyrocks.com",
 
         "sn" => array("channel" => 1,
             "socialNetworkClass" => "VKSocialNetwork",
             "local_path" => "local",
             // Social network specific values
-            "api_id" => 4677235,//4510768,
+            "api_id" => 5448769, //4677235,
 //            "api_editor_id" => 4493900,
 //            "secret_key" => "UrT1ucQusLCzTUGwwMIb")),
             "secret_key" => ""),

@@ -1,12 +1,14 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
 
-$result = $mainDb->select('building', '*');
+// $result = $mainDb->select('building', '*');
+$result = $mainDb->query("SELECT * FROM building");
+
 if ($result) {
     $buildingsALL = $result->fetchAll();
 } else {
@@ -32,6 +34,16 @@ try
             $buildingItem['xp_for_build'] = $dict['xp_for_build'];
 
             switch ($dict['build_type']) {
+                case 1: // CHEST
+                    $result = $mainDb->query("SELECT * FROM data_map_building WHERE building_id =".$dict['id']);
+                    $chest = $result->fetch();
+                    if (empty($chest)) {
+                        $json_data['id'] = 1;
+                        throw new Exception("Bad request to DB!");
+                    }
+                    $buildingItem['cost'] = $chest['cost'];
+                    $buildingItem['block_by_level'] = $chest['block_by_level'];
+                    break;
                 case 2: // RIDGE
 //                    $result = $mainDb->select("data_ridge", "*", "building_id='".$dict['id']."'");
                     $result = $mainDb->query("SELECT * FROM data_ridge WHERE building_id =".$dict['id']);
@@ -58,19 +70,6 @@ try
                     $buildingItem['currency'] = $tree['currency'];
                     $buildingItem['block_by_level'] = $tree['block_by_level'];
                     $buildingItem['cost_skip'] = $tree['cost_skip'];
-                    $buildingItem['image_s'] = $tree['image_s'];
-                    $buildingItem['image_s_flower'] = $tree['image_s_flower'];
-                    $buildingItem['image_s_growed'] = $tree['image_s_growed'];
-                    $buildingItem['image_m'] = $tree['image_m'];
-                    $buildingItem['image_m_flower'] = $tree['image_m_flower'];
-                    $buildingItem['image_m_growed'] = $tree['image_m_growed'];
-                    $buildingItem['image_b'] = $tree['image_b'];
-                    $buildingItem['image_b_flower'] = $tree['image_b_flower'];
-                    $buildingItem['image_b_growed'] = $tree['image_b_growed'];
-                    $buildingItem['image_dead'] = $tree['image_dead'];
-                    $buildingItem['inner_position_s'] = $tree['inner_position_s'];
-                    $buildingItem['inner_position_m'] = $tree['inner_position_m'];
-                    $buildingItem['inner_position_b'] = $tree['inner_position_b'];
                     $buildingItem['craft_resource_id'] = $tree['craft_resource_id'];
                     $buildingItem['count_craft_resource'] = $tree['count_craft_resource'];
                     $buildingItem['count_unblock'] = $tree['count_unblock'];
@@ -252,6 +251,7 @@ try
                     $buildingItem['raw_resource_id'] = $build['raw_resource_id'];
                     $buildingItem['variaty'] = $build['variaty'];
                     $buildingItem['build_time'] = $build['build_time'];
+                    $buildingItem['cost_skip'] = $build['cost_skip'];
                     break;
                 case 25: // PAPER
                     $result = $mainDb->query("SELECT * FROM data_map_building WHERE building_id =".$dict['id']);
@@ -273,6 +273,7 @@ try
                     $buildingItem['cost'] = $build['cost'];
                     $buildingItem['block_by_level'] = $build['block_by_level'];
                     $buildingItem['build_time'] = $build['build_time'];
+                    $buildingItem['cost_skip'] = $build['cost_skip'];
                     break;
                 default:
                     break;

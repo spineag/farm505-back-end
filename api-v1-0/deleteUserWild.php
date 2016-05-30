@@ -1,7 +1,7 @@
 <?php
 
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.php');
-include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
@@ -10,11 +10,12 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
     try {
         $time = time();
-        $result = $mainDb->insert('user_removed_wild',
-            ['user_id' => $_POST['userId'], 'wild_db_id' => $_POST['dbId']],
-            ['int', 'int']);
+        // $result = $mainDb->insert('user_removed_wild',
+        //     ['user_id' => $_POST['userId'], 'wild_db_id' => $_POST['dbId']],
+        //     ['int', 'int']);
+        $result = $mainDb->query('INSERT INTO user_removed_wild SET user_id='.$_POST['userId'].', wild_db_id='.$_POST['dbId']);    
 
-        if ($result) {
+       if ($result) {
             $json_data['message'] = '';
             echo json_encode($json_data);
         } else {
