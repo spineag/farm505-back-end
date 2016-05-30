@@ -5,7 +5,76 @@
     <!--<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">-->
     <title>Умелые лапки</title>
 
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/swfobject.js"></script>
+    <script type="text/javascript" src="/js/FarmNinja.js"></script>
+    <!--<script type="text/javascript" src="/js/Main.js"></script>-->
+    <!--<script>-->
+      <!--var $_GET = function (variable)-->
+      <!--{-->
+        <!--var query = document.location.search.substring(1);-->
+        <!--var vars = query.split("&");-->
+        <!--for (var i = 0; i < vars.length; i++)-->
+        <!--{-->
+          <!--var pair = vars[i].split("=");-->
+          <!--if (pair[0] == variable)-->
+          <!--{-->
+            <!--return decodeURIComponent(pair[1]);-->
+          <!--}-->
+        <!--}-->
+        <!--return 'unknown';-->
+      <!--};-->
+    <!--</script>-->
+    <!--<script type="text/javascript">-->
+<!--//      var URL = document.location.toString().split('?');-->
+      <!--var SN_CONFIG = {-->
+        <!--social: 1,-->
+        <!--sn: 'vk',-->
+        <!--user_id: $_GET('viewer_id'),-->
+        <!--flashvars: {-->
+<!--//          data: (URL[1] ? '&' + URL[1] : ''),-->
+          <!--channel: 1,-->
+          <!--protocol: (document.location.protocol == 'https:') ? 'https' : 'http'-->
+        <!--},-->
+        <!--params: {-->
+          <!--allowFullscreen: "true",-->
+          <!--allowScriptAccess: "always",-->
+          <!--wmode: "opaque",-->
+          <!--flashvars: this.flashvars-->
+        <!--},-->
+        <!--attributes: {-->
+          <!--id: "farm_game",-->
+          <!--name: "farm_game"-->
+        <!--},-->
+<!--//        ref_place: $_GET('referrer'),-->
+<!--//        analytics: {-->
+<!--//          app_id: '7bfaa789-1276-4e53-aab3-648aad1a2374',-->
+<!--//          channel_id: 'd3a603c8-0175-4893-8c30-c3f13a2d7741'-->
+<!--//        },-->
+        <!--serverUrl: '//505.ninja/'-->
+      <!--};-->
+    <!--</script>-->
+    <!--<script type="text/javascript">-->
+      <!--var FARM505 = new SN(SN_CONFIG.social);-->
+    <!--</script>-->
   <body>
-    <h1>Hello! I'm here!</h1>
+  <div id="gameContainer">
+    <div id="flash_container">
+      <div id="loader">
+        <img src="/images/ajax-loader.gif"/>
+      </div>
+      <div id="no_player">
+        <h1>Update Flash Player!</h1>
+        <p>
+          <a target="_blank" href="http://www.adobe.com/go/getflashplayer">
+            <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+  <script>
+     FarmNinja.init();
+  </script>
   </body>
 </html>
