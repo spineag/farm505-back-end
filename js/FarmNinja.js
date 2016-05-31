@@ -16,7 +16,7 @@ var FarmNinja = {
         {
             allowFullscreen: "true",
             allowScriptAccess: "always",
-            wmode: "window",
+            wmode: "direct",
             flashvars: flashvars
         };
         var attributes =
