@@ -36,7 +36,9 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $user['count_chest'] = $u['count_chest'];
         $user['cut_scene'] = $u['cut_scene'];
         $user['notification_new'] = $u['notification_new'];
-        
+        $user['wall_order_item_time'] = date("d", $u['wall_order_item_time']);
+        $user['wall_train_item'] = date("d", $u['wall_train_item']);
+
         $json_data['message'] = $user;
         echo json_encode($json_data);
     }
