@@ -267,22 +267,9 @@ var SN = function (social)
  * @type {{init: init, callbackFn: callbackFn}}
  */
 var BirdsTown = {
-
     init: function() {
-        //if(typeof SN_CONFIG.swf === "undefined")
-        //{
-        //    BT.load_jsonp(SN_CONFIG.serverUrl + 'get_game.php', {user_id: SN_CONFIG.user_id}, 'BirdsTown.embed');
-        //    //logStatus = "swf undefined embed";
-        //}
-        //else
-        //{
             this.embed();
-            //logStatus = "swf manual embed";
-        //}
-        FARM505.play();
-        //if (SN_CONFIG.sn == 'fb') {
-        //   // _MauDauFB.init();
-        //}
+            FARM505.play();
     },
     embed: function()
     {
