@@ -15,6 +15,7 @@ var FarmNinja = {
         var params =
         {
             allowFullscreen: "true",
+            allowFullScreenInteractive: "true",
             allowScriptAccess: "always",
             wmode: "direct",
             flashvars: flashvars
