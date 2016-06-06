@@ -9,7 +9,8 @@ var FarmNinja = {
         {
             data: (url[1] ? '&' + url[1] : ''),
             protocol: (document.location.protocol == 'https:') ? 'https' : 'http',
-            channel: this.channel
+            channel: this.channel,
+            gacid: this.getUserGAcid()
         };
 
         var params =
@@ -54,5 +55,23 @@ var FarmNinja = {
             '</div>' +
             '</div>');
         this.init();
+    },
+
+    getUserGAcid: function () {
+        var match = document.cookie.match('(?:^|;)\\s*_ga=([^;]*)');
+        var raw = (match) ? decodeURIComponent(match[1]) : null;
+        if (raw) {
+            match = raw.match(/(\d+\.\d+)$/);
+        } else return 'unknown';
+        var gacid = (match) ? match[1] : null;
+        if (gacid) {
+            return gacid;
+        } else return 'unknown';
+    },
+
+    getUserGAcidForAS: function () {
+        var gacid = this.getUserGAcid();
+        var flash =	document.getElementById("farm_game");
+        flash.sendGAcidToAS(gacid);
     }
-}
+};
