@@ -5,7 +5,56 @@
     <!--<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">-->
     <title>Умелые лапки</title>
 
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/swfobject.js"></script>
+    <script type="text/javascript" src="/js/FarmNinja.js"></script>
+
+    <link type="text/css" href="/css/Main.css" rel="stylesheet"/>
+
+    <!--&lt;!&ndash; Google Analytics &ndash;&gt;-->
+    <!--<script>-->
+      <!--(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){-->
+                <!--(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),-->
+              <!--m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)-->
+      <!--})(window,document,'script','//www.google-analytics.com/analytics.js','ga');-->
+
+      <!--ga('create', 'UA-78805451-1', 'auto');-->
+      <!--ga('send', 'pageview');-->
+    <!--</script>-->
+    <!--&lt;!&ndash; End Google Analytics &ndash;&gt;-->
+
+    <!-- Google Analytics -->
+    <script>
+      function initGA() {
+        window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) };
+        ga.l = +new Date;
+        ga('create', 'UA-78805451-1', 'auto');
+        ga('send', 'pageview');
+      }
+    </script>
+    <script async src='//www.google-analytics.com/analytics.js' onload='initGA()'></script>
+    <!-- End Google Analytics -->
+
+  </head>
+
   <body>
-    <h1>Hello! I'm here!</h1>
+  <div id="gameContainer">
+    <div id="flash_container">
+      <div id="loader">
+        <img src="/images/ajax-loader.gif"/>
+      </div>
+      <div id="no_player">
+        <h1>Update Flash Player!</h1>
+        <p>
+          <a target="_blank" href="http://www.adobe.com/go/getflashplayer">
+            <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+  <script>
+     FarmNinja.init();
+  </script>
   </body>
 </html>
