@@ -21,7 +21,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     }
     catch (Exception $e)
     {
-        $json_data['status'] = 'error';
+        $json_data['status'] = 's082';
         $json_data['message'] = $e->getMessage();
         echo json_encode($json_data);
     }
@@ -29,7 +29,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 'error';
+    $json_data['status'] = 's083';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }

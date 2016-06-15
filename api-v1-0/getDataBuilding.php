@@ -290,7 +290,7 @@ try
 }
 catch (Exception $e)
 {
-    $json_data['status'] = 'error';
+    $json_data['status'] = 's075';
     $json_data['message'] = $e;
     echo json_encode($json_data);
 }

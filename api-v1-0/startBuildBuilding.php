@@ -19,14 +19,14 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             $json_data['id'] = 2;
-            $json_data['status'] = 'error';
+            $json_data['status'] = 's167';
             $json_data['message'] = 'bad query';
         }
 
     }
     catch (Exception $e)
     {
-        $json_data['status'] = 'error';
+        $json_data['status'] = 's168';
         $json_data['message'] = $e->getMessage();
         echo json_encode($json_data);
     }
@@ -34,7 +34,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 'error';
+    $json_data['status'] = 's169';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }

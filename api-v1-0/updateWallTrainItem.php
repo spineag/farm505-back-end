@@ -16,7 +16,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         //     ['id' => $_POST['userId']],
         //     ['int'],
         //     ['int']);
-        $result = $mainDb->query('UPDATE users SET wall_train_item'.$time.' WHERE id='.$_POST['userId']);
+        $result = $mainDb->query('UPDATE users SET wall_train_item = '.$time.' WHERE id = '.$_POST['userId']);
         if (!$result) {
             $json_data['id'] = 2;
             throw new Exception("Bad request to DB!");
@@ -27,7 +27,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     }
     catch (Exception $e)
     {
-        $json_data['status'] = 'error';
+        $json_data['status'] = 's200';
         $json_data['message'] = $e->getMessage();
         echo json_encode($json_data);
     }
@@ -35,7 +35,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 'error';
+    $json_data['status'] = 's201';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }
