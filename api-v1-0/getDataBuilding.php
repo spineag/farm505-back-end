@@ -32,6 +32,7 @@ try
             $buildingItem['inner_x'] = $dict['inner_x'];
             $buildingItem['inner_y'] = $dict['inner_y'];
             $buildingItem['xp_for_build'] = $dict['xp_for_build'];
+            $buildingItem['visible'] = $dict['visible'];
 
             switch ($dict['build_type']) {
                 case 1: // CHEST
