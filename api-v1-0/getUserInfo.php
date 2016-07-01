@@ -28,6 +28,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $user['is_tester'] = $u['is_tester'];
         $user['count_cats'] = $u['count_cats'];
         $user['scale'] = $u['scale'];
+        $user['music'] = $u['music'];
+        $user['sound'] = $u['sound'];
         $user['time_paper'] = $u['time_paper'];
         $user['tutorial_step'] = $u['tutorial_step'];
         $user['market_cell'] = $u['market_cell'];
