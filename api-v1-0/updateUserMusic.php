@@ -9,7 +9,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        $result = $mainDb->query('UPDATE users SET music ='.$_POST['music'].' WHERE id='.$_POST['userId']);
+        $result = $mainDb->query('UPDATE users SET musics ='.$_POST['music'].' WHERE id='.$_POST['userId']);
         if (!$result) {
             $json_data['id'] = 2;
             throw new Exception("Bad request to DB!");
@@ -28,7 +28,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 's181';
+    $json_data['status'] = 's207';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }
