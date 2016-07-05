@@ -26,7 +26,7 @@ $result = $mainDb->query('UPDATE user_tree SET state='.$_POST['state'].', fixed_
     }
     catch (Exception $e)
     {
-        $json_data['status'] = 'error';
+        $json_data['status'] = 's115';
         $json_data['message'] = $e->getMessage();
         echo json_encode($json_data);
     }
@@ -34,7 +34,7 @@ $result = $mainDb->query('UPDATE user_tree SET state='.$_POST['state'].', fixed_
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 'error';
+    $json_data['status'] = 's116';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }

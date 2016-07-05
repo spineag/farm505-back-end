@@ -10,12 +10,12 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
     try {
         // $result = $mainDb->update(
-        //     'users',
-        //     ['count_chest' => $_POST['count'], 'chest_day' => time()],
-        //     ['id' => $_POST['userId']],
-        //     ['int', 'int'],
+        //     'user_tree',
+        //     ['state' => $_POST['state'], 'time_start' => time(), 'crafted_count' => 0],
+        //     ['id' => $_POST['id']],
+        //     ['int', 'int', 'int'],
         //     ['int']);
-        $result = $mainDb->query('UPDATE users SET count_chest='.$_POST['count'].', chest_day='.time().' WHERE id='.$_POST['userId']);
+        $result = $mainDb->query('UPDATE user_tree SET crafted_count='.$_POST['craftedCount'].' WHERE id='.$_POST['id']);
         if (!$result) {
             $json_data['id'] = 2;
             throw new Exception("Bad request to DB!");
@@ -26,7 +26,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     }
     catch (Exception $e)
     {
-        $json_data['status'] = 's202';
+        $json_data['status'] = 's176';
         $json_data['message'] = $e->getMessage();
         echo json_encode($json_data);
     }
@@ -34,7 +34,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 's203';
+    $json_data['status'] = 's177';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }

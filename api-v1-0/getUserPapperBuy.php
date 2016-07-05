@@ -20,6 +20,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $res['resource_count'] = $dict['resource_count'];
                 $res['xp'] = $dict['xp'];
                 $res['cost'] = $dict['cost'];
+                $res['type_resource'] = $dict['type_resource'];
                 $res['time_to_new'] = $dict['time_to_new'];
                 $res['visible'] = $dict['visible'];
                 $resp[] = $res;
@@ -34,7 +35,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     }
     catch (Exception $e)
     {
-        $json_data['status'] = 'error';
+        $json_data['status'] = 's100';
         $json_data['message'] = $e->getMessage();
         echo json_encode($json_data);
     }
@@ -42,7 +43,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 'error';
+    $json_data['status'] = 's101';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }

@@ -54,7 +54,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 ['int', 'int', 'int']);
             $result = $mainDb->query("SELECT id FROM user_train_pack WHERE user_id =".$userId);
             if (!$result) {
-                $json_data['status'] = 'error';
+                $json_data['status'] = 's108';
                 $json_data['message'] = 3;
                 echo json_encode($json_data);
             }
@@ -106,7 +106,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     }
     catch (Exception $e)
     {
-        $json_data['status'] = 'error';
+        $json_data['status'] = 's109';
         $json_data['message'] = $e->getMessage();
         echo json_encode($json_data);
     }
@@ -114,7 +114,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 'error';
+    $json_data['status'] = 's110';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }

@@ -28,6 +28,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $user['is_tester'] = $u['is_tester'];
         $user['count_cats'] = $u['count_cats'];
         $user['scale'] = $u['scale'];
+        $user['music'] = $u['musics'];
+        $user['sound'] = $u['sounds'];
         $user['time_paper'] = $u['time_paper'];
         $user['tutorial_step'] = $u['tutorial_step'];
         $user['market_cell'] = $u['market_cell'];
@@ -36,13 +38,15 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $user['count_chest'] = $u['count_chest'];
         $user['cut_scene'] = $u['cut_scene'];
         $user['notification_new'] = $u['notification_new'];
-        
+        $user['wall_order_item_time'] = date("d", $u['wall_order_item_time']);
+        $user['wall_train_item'] = date("d", $u['wall_train_item']);
+
         $json_data['message'] = $user;
         echo json_encode($json_data);
     }
     catch (Exception $e)
     {
-        $json_data['status'] = 'error';
+        $json_data['status'] = 's092';
         $json_data['message'] = $e->getMessage();
         echo json_encode($json_data);
     }
@@ -50,7 +54,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 'error';
+    $json_data['status'] = 's093';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }
