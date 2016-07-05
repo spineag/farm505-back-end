@@ -24,7 +24,7 @@ class vkapi {
     function api($method,$params=false) {
         if (!$params) $params = array();
         $params['api_id'] = $this->app_id;
-        $params['v'] = '3.0';
+        $params['v'] = '5.52';
         $params['method'] = $method;
         $params['timestamp'] = time();
         $params['format'] = 'json';
