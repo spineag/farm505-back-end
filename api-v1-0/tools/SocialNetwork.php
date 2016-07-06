@@ -138,7 +138,7 @@ class VKSocialNetwork implements SocialNetworkInterface
 //
 //            return true;
 //        }
-        return $this->getSocialObject()->api('secure.sendNotification', array('timestamp'=>time(), 'uids'=>$socialNetworkUid, 'message'=>$message));
+        return $this->getSocialObject()->api('secure.sendNotification', array('timestamp'=>time(), 'user_ids'=>$socialNetworkUid, 'message'=>$message));
     }
 
     public function getJavaScript()

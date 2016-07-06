@@ -39,9 +39,9 @@ class Application
     function __construct()
     {
         // get configuration from config file
-//        $cfgs = $GLOBALS["cfgs"];
+        $cfgs = $GLOBALS["cfgs"];
         $serverName = $_SERVER["SERVER_NAME"];
-        //$this->_cfg = isset($cfgs[$serverName]) ? $cfgs[$serverName] : die("Wrong configuration  \n");
+        $this->_cfg = isset($cfgs[$serverName]) ? $cfgs[$serverName] : die("Wrong configuration  \n");
 
 //        self::$_settingsConst = self::loadDefoultSettings();
 

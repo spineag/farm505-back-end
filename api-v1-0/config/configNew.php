@@ -20,8 +20,7 @@ $cfgs = array($_SERVER["SERVER_NAME"] =>
             // Social network specific values
             "api_id" => 5448769, //4677235,
 //            "api_editor_id" => 4493900,
-//            "secret_key" => "UrT1ucQusLCzTUGwwMIb")),
-            "secret_key" => ""),
+            "secret_key" => "pbJkDGDmNCcheNo6dZDe"),
 
 //        "memcached" => array("servers" => array("host" => "localhost",
 //            "port" => 11211 ),

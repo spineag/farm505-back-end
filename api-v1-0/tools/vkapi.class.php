@@ -46,6 +46,7 @@ class vkapi {
         curl_close($curl);
 
         return json_decode($res, true);
+
     }
 
     function params($params) {
