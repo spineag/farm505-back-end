@@ -8,22 +8,13 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="/js/swfobject.js"></script>
     <script type="text/javascript" src="/js/FarmNinja.js"></script>
+    <script type="text/javascript" src="/js/Main.js"></script>
+    <script type="text/javascript">
+      var sn = new SN(1);
+    </script>
 
     <link type="text/css" href="/css/Main.css" rel="stylesheet"/>
 
-    <!--&lt;!&ndash; Google Analytics &ndash;&gt;-->
-    <!--<script>-->
-      <!--(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){-->
-                <!--(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),-->
-              <!--m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)-->
-      <!--})(window,document,'script','//www.google-analytics.com/analytics.js','ga');-->
-
-      <!--ga('create', 'UA-78805451-1', 'auto');-->
-      <!--ga('send', 'pageview');-->
-    <!--</script>-->
-    <!--&lt;!&ndash; End Google Analytics &ndash;&gt;-->
-
-    <!-- Google Analytics -->
     <script>
       function initGA() {
         window.ga = window.ga || function () { (ga.q = ga.q || []).push(arguments) };
@@ -33,28 +24,35 @@
       }
     </script>
     <script async src='//www.google-analytics.com/analytics.js' onload='initGA()'></script>
-    <!-- End Google Analytics -->
-
   </head>
 
   <body>
-  <div id="gameContainer">
-    <div id="flash_container">
-      <div id="loader">
-        <img src="/images/ajax-loader.gif"/>
-      </div>
-      <div id="no_player">
-        <h1>Update Flash Player!</h1>
-        <p>
-          <a target="_blank" href="http://www.adobe.com/go/getflashplayer">
-            <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
-          </a>
-        </p>
+    <nav>
+      <ul>
+        <li><a href="#" class="one" onclick = 'sn.showInviteBox();'></a></li>
+        <li><a href="https://vk.com/club110081720" class="two" target="_blank"></a></li>
+        <li><a href="https://vk.com/topic-110081720_33661659" class="three" target="_blank"></a></li>
+        <li><a href="https://vk.com/topic-110081720_33530828" class="four" target="_blank"></a></li>
+      </ul>
+    </nav>
+
+    <div id="gameContainer">
+      <div id="flash_container">
+        <div id="loader">
+          <img src="/images/ajax-loader.gif"/>
+        </div>
+        <div id="no_player">
+          <h1>Update Flash Player!</h1>
+          <p>
+            <a target="_blank" href="http://www.adobe.com/go/getflashplayer">
+              <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
+            </a>
+          </p>
+        </div>
       </div>
     </div>
-  </div>
-  <script>
-     FarmNinja.init();
-  </script>
+    <script>
+       FarmNinja.init();
+    </script>
   </body>
 </html>
