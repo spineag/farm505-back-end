@@ -31,8 +31,10 @@ var FarmNinja = {
 
     callbackFn: function (e) {
         if (!e.success) {
-            $('#ajaxLoader').css('display', 'none');
-            $('#noFlash').find('center').css('display', 'block');
+            console.log('bad with load swf');
+            $('#loader').css('display', 'none');
+            // $('#noFlash').find('center').css('display', 'block');
+            $('#no_player').css('display', 'block');
         }
         else {
             document.getElementById("farm_game").style.display = "block";
@@ -46,12 +48,9 @@ var FarmNinja = {
             '<img src="/images/ajax-loader.gif" />' +
             '</div>' +
             '<div id="no_player">' +
-            '<h1>Update Flash Player!</h1>' +
-            '<p>' +
             '<a target="_blank" href="http://www.adobe.com/go/getflashplayer">' +
-            '<img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />' +
+            '<img src="https://505.ninja/images/up_flash.jpg" alt="Get Adobe Flash player" />' +
             '</a>' +
-            '</p>' +
             '</div>' +
             '</div>');
         this.init();
