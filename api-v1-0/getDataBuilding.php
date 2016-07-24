@@ -88,6 +88,7 @@ try
                     $buildingItem['cost'] = $decor['cost'];
                     $buildingItem['delta_cost'] = $decor['delta_cost'];
                     $buildingItem['currency'] = $decor['currency_type'];
+                    $buildingItem['filter'] = $decor['filter_type'];
                     break;
                 case 9: // DECOR_FULL_FENCE
                     $result = $mainDb->query("SELECT * FROM data_decor WHERE building_id =".$dict['id']);
