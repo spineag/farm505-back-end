@@ -8,21 +8,23 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
-    try {
-        $result = $mainDb->query('UPDATE user_building SET count_cell = '.$_POST['count'].' WHERE id='.$_POST['dbId'].' AND user_id = '.$_POST['userId']);
-
-        if (!$result) {
-            $json_data['id'] = 2;
-            throw new Exception("Bad request to DB!");
+    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+        try {
+            $result = $mainDb->query('UPDATE user_building SET count_cell = ' . $_POST['count'] . ' WHERE id=' . $_POST['dbId'] . ' AND user_id = ' . $_POST['userId']);
+            if (!$result) {
+                $json_data['id'] = 2;
+                throw new Exception("Bad request to DB!");
+            }
+            $json_data['message'] = '';
+            echo json_encode($json_data);
+        } catch (Exception $e) {
+            $json_data['status'] = 's001';
+            $json_data['message'] = $e->getMessage();
+            echo json_encode($json_data);
         }
-
-        $json_data['message'] = '';
-        echo json_encode($json_data);
-    }
-    catch (Exception $e)
-    {
-        $json_data['status'] = 's001';
-        $json_data['message'] = $e->getMessage();
+    } else {
+        $json_data['id'] = 13;
+        $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }
 }

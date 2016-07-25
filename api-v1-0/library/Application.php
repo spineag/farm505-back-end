@@ -284,6 +284,17 @@ class Application
         return -1;
     }
 
+    final public function checkSessionKey($userId, $sessionKey) {
+        $result = $this->getMainDb()->query("SELECT session_key FROM users WHERE id=".$userId);
+        if (!$result) return false;
+        $arr = $result->fetch();
+        if ($sessionKey == $arr['session_key']) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     final public function getAppId($appGuid)
     {
         if ($appGuid != '')
