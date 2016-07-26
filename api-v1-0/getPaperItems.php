@@ -24,6 +24,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $result2 = $mainDb->query("SELECT * FROM users WHERE id =".$dict['user_id']);
                 $arr = $result2->fetch();
                 $res['user_social_id'] = $arr['social_id'];
+                $res['level'] = $arr['level'];
 
                 $resp[] = $res;
             }

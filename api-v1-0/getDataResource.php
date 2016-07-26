@@ -30,7 +30,6 @@ try
             $resourceItem['currency'] = $dict['currency'];
             $resourceItem['cost_default'] = $dict['cost_default'];
             $resourceItem['cost_max'] = $dict['cost_max'];
-            $resourceItem['cost_min'] = $dict['cost_min'];
             $resourceItem['cost_hard'] = $dict['cost_hard'];
             $resourceItem['visitor_price'] = $dict['visitor_price'];
             $resourceItem['order_price'] = $dict['order_price'];
