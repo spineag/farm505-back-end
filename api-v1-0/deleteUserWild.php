@@ -8,27 +8,33 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
-    try {
-        $time = time();
-        // $result = $mainDb->insert('user_removed_wild',
-        //     ['user_id' => $_POST['userId'], 'wild_db_id' => $_POST['dbId']],
-        //     ['int', 'int']);
-        $result = $mainDb->query('INSERT INTO user_removed_wild SET user_id='.$_POST['userId'].', wild_db_id='.$_POST['dbId']);    
+    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+        try {
+            $time = time();
+            // $result = $mainDb->insert('user_removed_wild',
+            //     ['user_id' => $_POST['userId'], 'wild_db_id' => $_POST['dbId']],
+            //     ['int', 'int']);
+            $result = $mainDb->query('INSERT INTO user_removed_wild SET user_id='.$_POST['userId'].', wild_db_id='.$_POST['dbId']);
 
-       if ($result) {
-            $json_data['message'] = '';
-            echo json_encode($json_data);
-        } else {
-            $json_data['id'] = 2;
-            $json_data['status'] = 's062';
-            $json_data['message'] = 'bad query';
+           if ($result) {
+                $json_data['message'] = '';
+                echo json_encode($json_data);
+            } else {
+                $json_data['id'] = 2;
+                $json_data['status'] = 's062';
+                $json_data['message'] = 'bad query';
+            }
+
         }
-
-    }
-    catch (Exception $e)
-    {
-        $json_data['status'] = 's063';
-        $json_data['message'] = $e->getMessage();
+        catch (Exception $e)
+        {
+            $json_data['status'] = 's063';
+            $json_data['message'] = $e->getMessage();
+            echo json_encode($json_data);
+        }
+    } else {
+        $json_data['id'] = 13;
+        $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }
 }

@@ -8,31 +8,37 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
-    try {
-        $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =".$_POST['userId']." AND user_db_building_id =".$_POST['buildDbId']);
-        if ($result) {
-            $arr = $result->fetchAll();
-            foreach ($arr as $value => $dict) {
-                // $result = $mainDb->update(
-                // 'user_recipe_fabrica',
-                // ['delay_time' => $dict['delay_time'] - $_POST['leftTime']],
-                // ['id' => $dict['id']],
-                // ['int'],
-                // ['int']);
-                $result = $mainDb->query('UPDATE user_recipe_fabrica SET delay_time='.($dict['delay_time']-$_POST['leftTime']).' WHERE id='.$dict['id']);
+    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+        try {
+            $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =".$_POST['userId']." AND user_db_building_id =".$_POST['buildDbId']);
+            if ($result) {
+                $arr = $result->fetchAll();
+                foreach ($arr as $value => $dict) {
+                    // $result = $mainDb->update(
+                    // 'user_recipe_fabrica',
+                    // ['delay_time' => $dict['delay_time'] - $_POST['leftTime']],
+                    // ['id' => $dict['id']],
+                    // ['int'],
+                    // ['int']);
+                    $result = $mainDb->query('UPDATE user_recipe_fabrica SET delay_time='.($dict['delay_time']-$_POST['leftTime']).' WHERE id='.$dict['id']);
+                }
+            } else {
+                $json_data['id'] = 2;
+                throw new Exception("Bad request to DB!");
             }
-        } else {
-            $json_data['id'] = 2;
-            throw new Exception("Bad request to DB!");
+
+            $json_data['message'] = '';
+            echo json_encode($json_data);
         }
-        
-        $json_data['message'] = '';
-        echo json_encode($json_data);
-    }
-    catch (Exception $e)
-    {
-        $json_data['status'] = 's153';
-        $json_data['message'] = $e->getMessage();
+        catch (Exception $e)
+        {
+            $json_data['status'] = 's153';
+            $json_data['message'] = $e->getMessage();
+            echo json_encode($json_data);
+        }
+    } else {
+        $json_data['id'] = 13;
+        $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }
 }

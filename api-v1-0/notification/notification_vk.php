@@ -1,5 +1,7 @@
 <?php
-include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+//include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
+include_once('../library/Application.php');
+//include_once('http://505.ninja/php/api-v1-0/library/Application.php');
 
 $mainDb = Application::getInstance()->getMainDb();
 $socialNetwork = Application::getInstance()->getSocialNetwork();

@@ -30,6 +30,7 @@ img {
 nav {
     display: block;
     margin: 0;
+    margin-bottom: 1px;
     padding: 0;
     background-image: url(/images/iframe/iframe_top.png) ;
     background-repeat: no-repeat;
