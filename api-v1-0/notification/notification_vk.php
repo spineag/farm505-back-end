@@ -8,8 +8,8 @@ $socialNetwork = Application::getInstance()->getSocialNetwork();
 
 $vkTimeRestriction = time() - 2592000; // 1 Month
 $vkTimeOffline = time () - 86400; // 1 day
-//$db = $mainDb->query("SELECT social_id FROM users WHERE last_visit_date > ".$vkTimeRestriction." AND last_visit_date < ".$vkTimeOffline." ORDER BY RAND() DESC LIMIT 10000");
-$db = $mainDb->query("SELECT social_id FROM users WHERE last_visit_date > ".$vkTimeRestriction." ORDER BY RAND() DESC LIMIT 10000");
+$db = $mainDb->query("SELECT social_id FROM users WHERE last_visit_date > ".$vkTimeRestriction." AND last_visit_date < ".$vkTimeOffline." ORDER BY RAND() DESC LIMIT 10000");
+//$db = $mainDb->query("SELECT social_id FROM users WHERE last_visit_date > ".$vkTimeRestriction." ORDER BY RAND() DESC LIMIT 10000");
 while ($r = $db->fetch())
 {
     $users[] = $r['social_id'];
