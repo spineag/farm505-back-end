@@ -10,13 +10,13 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
 
     try {
         $socialUId = $_POST['idSocial'];
-        //check is user available for game
-        $result = $mainDb->query("SELECT * FROM available_users WHERE social_id =".$socialUId);
-        $arr = $result->fetch();
-        if (!$arr['id']) {
-            $json_data['id'] = 3;
-            throw new Exception("U are not an available user");
-        }
+//        //check is user available for game
+//        $result = $mainDb->query("SELECT * FROM available_users WHERE social_id =".$socialUId);
+//        $arr = $result->fetch();
+//        if (!$arr['id']) {
+//            $json_data['id'] = 3;
+//            throw new Exception("U are not an available user");
+//        }
         
         // create user if not exist
         $uid = $app->getUserId($channelId, $socialUId);
