@@ -15,6 +15,7 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
         $arr = $result->fetch();
         if (!$arr['id']) {
             $json_data['id'] = 3;
+            $json_data['status'] = 's327';
             throw new Exception("U are not an available user");
         }
         
@@ -24,6 +25,7 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
             $uid = $app->newUser($channelId, $socialUId, $_POST['name'], $_POST['lastName']);
             if ($uid < 0) {
                 $json_data['id'] = 2;
+                $json_data['status'] = 's328';
                 throw new Exception("Bad request to DB!");
             }
         }

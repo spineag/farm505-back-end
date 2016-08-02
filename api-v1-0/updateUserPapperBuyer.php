@@ -20,6 +20,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $result = $mainDb->query('UPDATE user_papper_buy SET resource_id='.$_POST['resourceId'].', resource_count='.$_POST['resourceCount'].', xp='.$_POST['xp'].', cost='.$_POST['cost'].', time_to_new='.$time.', visible='.$_POST['visible'].', type_resource ='.$_POST['typeResource'].' WHERE user_id='.$_POST['userId'].' AND buyer_id='.$_POST['buyerId']);
             if (!$result) {
                 $json_data['id'] = 2;
+                $json_data['status'] = 's339';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -34,6 +35,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         }
     } else {
         $json_data['id'] = 13;
+        $json_data['status'] = 's221';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }

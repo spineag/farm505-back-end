@@ -19,6 +19,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $result = $mainDb->query('UPDATE user_tree SET crafted_count='.$_POST['craftedCount'].' WHERE id='.$_POST['id']);
             if (!$result) {
                 $json_data['id'] = 2;
+                $json_data['status'] = 's332';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -33,6 +34,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         }
     } else {
         $json_data['id'] = 13;
+        $json_data['status'] = 's221';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }

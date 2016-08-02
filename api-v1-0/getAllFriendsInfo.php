@@ -37,6 +37,7 @@ if (isset($_POST['userSocialIds']) && !empty($_POST['userSocialIds'])) {
         // }
     } else {
         $json_data['id'] = 13;
+        $json_data['status'] = 's221';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }

@@ -20,6 +20,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $result = $mainDb->query('UPDATE users SET cut_scene="'.$_POST['cutScene'].'" WHERE id='.$_POST['userId']);
             if (!$result) {
                 $json_data['id'] = 2;
+                $json_data['status'] = 's333';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -34,6 +35,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         }
     } else {
         $json_data['id'] = 13;
+        $json_data['status'] = 's221';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }

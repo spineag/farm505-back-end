@@ -12,6 +12,7 @@ if ($result) {
     $resourcesALL = $result->fetchAll();
 } else {
     $json_data['id'] = 1;
+    $json_data['status'] = 's293';
     throw new Exception("Bad request to DB!");
 }
 
@@ -45,6 +46,7 @@ try
                     $plant = $result->fetch();
                     if (empty($plant)) {
                         $json_data['id'] = 2;
+                        $json_data['status'] = 's294';
                         throw new Exception("Bad request to DB!");
                     }
                     $resourceItem['build_time'] = $plant['build_time'];
@@ -59,6 +61,7 @@ try
                     $resource = $result->fetch();
                     if (empty($resource)) {
                         $json_data['id'] = 3;
+                        $json_data['status'] = 's295';
                         throw new Exception("Bad request to DB!");
                     }
                     $resourceItem['build_time'] = $resource['build_time'];
@@ -72,6 +75,7 @@ try
         }
     } else {
         $json_data['id'] = 4;
+        $json_data['status'] = 's296';
         throw new Exception("Bad request to DB!");
     }
 

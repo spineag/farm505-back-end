@@ -18,6 +18,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $result = $mainDb->query('UPDATE user_order SET place= '.$_POST['place'].' WHERE id='.$_POST['id']);
         if (!$result) {
             $json_data['id'] = 2;
+            $json_data['status'] = 's338';
             throw new Exception("Bad request to DB!");
         }
 

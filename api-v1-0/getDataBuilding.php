@@ -13,6 +13,7 @@ if ($result) {
     $buildingsALL = $result->fetchAll();
 } else {
     $json_data['id'] = 1;
+    $json_data['status'] = 's261';
     throw new Exception("Bad request to DB!");
 }
 
@@ -40,6 +41,7 @@ try
                     $chest = $result->fetch();
                     if (empty($chest)) {
                         $json_data['id'] = 1;
+                        $json_data['status'] = 's262';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['cost'] = $chest['cost'];
@@ -51,6 +53,7 @@ try
                     $ridge = $result->fetch();
                     if (empty($ridge)) {
                         $json_data['id'] = 2;
+                        $json_data['status'] = 's263';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['cost'] = $ridge['cost'];
@@ -65,6 +68,7 @@ try
                     $tree = $result->fetch();
                     if (empty($tree)) {
                         $json_data['id'] = 3;
+                        $json_data['status'] = 's264';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['cost'] = $tree['cost'];
@@ -82,6 +86,7 @@ try
                     $decor = $result->fetch();
                     if (empty($decor)) {
                         $json_data['id'] = 4;
+                        $json_data['status'] = 's265';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['block_by_level'] = $decor['block_by_level'];
@@ -95,6 +100,7 @@ try
                     $decor = $result->fetch();
                     if (empty($decor)) {
                         $json_data['id'] = 9;
+                        $json_data['status'] = 's266';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['block_by_level'] = $decor['block_by_level'];
@@ -108,6 +114,7 @@ try
                     $decor = $result->fetch();
                     if (empty($decor)) {
                         $json_data['id'] = 10;
+                        $json_data['status'] = 's267';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['block_by_level'] = $decor['block_by_level'];
@@ -121,6 +128,7 @@ try
                     $fabrica = $result->fetch();
                     if (empty($fabrica)) {
                         $json_data['id'] = 11;
+                        $json_data['status'] = 's268';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['cost'] = $fabrica['cost'];
@@ -136,6 +144,7 @@ try
                     $tree = $result->fetch();
                     if (empty($tree)) {
                         $json_data['id'] = 12;
+                        $json_data['status'] = 's269';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['instrument_id'] = $tree['instrument_id'];
@@ -146,6 +155,7 @@ try
                     $ambar = $result->fetch();
                     if (empty($ambar)) {
                         $json_data['id'] = 13;
+                        $json_data['status'] = 's270';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['start_count_resources'] = $ambar['start_count_resources'];
@@ -162,6 +172,7 @@ try
                     $sklad = $result->fetch();
                     if (empty($sklad)) {
                         $json_data['id'] = 14;
+                        $json_data['status'] = 's271';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['start_count_resources'] = $sklad['start_count_resources'];
@@ -177,6 +188,7 @@ try
                     $decor = $result->fetch();
                     if (empty($decor)) {
                         $json_data['id'] = 15;
+                        $json_data['status'] = 's272';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['block_by_level'] = $decor['block_by_level'];
@@ -191,6 +203,7 @@ try
                     $farm = $result->fetch();
                     if (empty($farm)) {
                         $json_data['id'] = 16;
+                        $json_data['status'] = 's273';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['cost'] = $farm['cost'];
@@ -206,6 +219,7 @@ try
                     $build = $result->fetch();
                     if (empty($build)) {
                         $json_data['id'] = 20;
+                        $json_data['status'] = 's274';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['cost'] = $build['cost'];
@@ -216,6 +230,7 @@ try
                     $build = $result->fetch();
                     if (empty($build)) {
                         $json_data['id'] = 21;
+                        $json_data['status'] = 's275';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['cost'] = $build['cost'];
@@ -226,6 +241,7 @@ try
                     $build = $result->fetch();
                     if (empty($build)) {
                         $json_data['id'] = 22;
+                        $json_data['status'] = 's276';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['cost'] = $build['cost'];
@@ -236,6 +252,7 @@ try
                     $build = $result->fetch();
                     if (empty($build)) {
                         $json_data['id'] = 23;
+                        $json_data['status'] = 's277';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['cost'] = $build['cost'];
@@ -246,6 +263,7 @@ try
                     $build = $result->fetch();
                     if (empty($build)) {
                         $json_data['id'] = 24;
+                        $json_data['status'] = 's278';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['cost'] = $build['cost'];
@@ -262,6 +280,7 @@ try
                     $build = $result->fetch();
                     if (empty($build)) {
                         $json_data['id'] = 25;
+                        $json_data['status'] = 's279';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['cost'] = $build['cost'];
@@ -272,6 +291,7 @@ try
                     $build = $result->fetch();
                     if (empty($build)) {
                         $json_data['id'] = 26;
+                        $json_data['status'] = 's280';
                         throw new Exception("Bad request to DB!");
                     }
                     $buildingItem['cost'] = $build['cost'];
@@ -286,6 +306,7 @@ try
         }
     } else {
         $json_data['id'] = 4;
+        $json_data['status'] = 's281';
         throw new Exception("Bad request to DB!");
     }
 

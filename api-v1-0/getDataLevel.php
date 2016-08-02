@@ -18,6 +18,7 @@ if ($result) {
     $dataLevel = $result->fetchAll();
 } else {
     $json_data['id'] = 6;
+    $json_data['status'] = 's286';
     throw new Exception("Bad request to DB!");
 }
 
@@ -30,6 +31,7 @@ try
         }
     } else {
         $json_data['id'] = 1;
+        $json_data['status'] = 's287';
         throw new Exception("Bad request to DB!");
     }
 

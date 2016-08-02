@@ -37,6 +37,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 }
             } else {
                 $json_data['id'] = 2;
+                $json_data['status'] = 's251';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -70,6 +71,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 }
             } else {
                 $json_data['id'] = 2;
+                $json_data['status'] = 's252';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -88,6 +90,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 }
             } else {
                 $json_data['id'] = 3;
+                $json_data['status'] = 's253';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -106,6 +109,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 }
             } else {
                 $json_data['id'] = 4;
+                $json_data['status'] = 's254';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -128,6 +132,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 }
             } else {
                 $json_data['id'] = 5;
+                $json_data['status'] = 's255';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -147,6 +152,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 }
             } else {
                 $json_data['id'] = 6;
+                $json_data['status'] = 's256';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -174,6 +180,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 }
             } else {
                 $json_data['id'] = 2;
+                $json_data['status'] = 's257';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -195,6 +202,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
         }
     } else {
         $json_data['id'] = 13;
+        $json_data['status'] = 's221';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }

@@ -18,6 +18,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             $json_data['id'] = 2;
+            $json_data['status'] = 's316';
             throw new Exception("Bad request to DB!");
         }
     }

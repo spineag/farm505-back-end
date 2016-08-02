@@ -11,6 +11,7 @@ if ($result) {
     $data = $result->fetchAll();
 } else {
     $json_data['id'] = 2;
+    $json_data['status'] = 's290';
     throw new Exception("Bad request to DB!");
 }
 

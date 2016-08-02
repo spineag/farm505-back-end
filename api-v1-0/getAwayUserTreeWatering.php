@@ -10,14 +10,23 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
         try {
-            $result = $mainDb->query("SELECT * FROM users_tree WHERE social_id =".$_POST['awayId']." AND user_db_building_id = ".$_POST['userDbBuildingId']);
-            $u = $result->fetch();
-            $user = [];
+            // trees
+            $respTrees = [];
+            $result = $mainDb->query("SELECT * FROM user_tree WHERE id = ".$_POST['id']); //user_id =".$userId);
+            if ($result) {
+                $arr = $result->fetch();
+                    $res = [];
+                    $res['id'] = $arr['id'];
+                    $res['user_db_building_id'] = $arr['user_db_building_id'];
+                    $res['time_work'] = time() - $arr['time_start'];
+                    $res['state'] = $arr['state'];
 
-            $user['state'] = $u['state'];
-//            $user['social_id'] = $u['social_id'];
-
-            $json_data['message'] = $user;
+            } else {
+                $json_data['id'] = 4;
+                $json_data['status'] = 's258';
+                throw new Exception("Bad request to DB!");
+            }
+            $json_data['message'] = $res;
             echo json_encode($json_data);
         }
         catch (Exception $e)
@@ -28,6 +37,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
         }
     } else {
         $json_data['id'] = 13;
+        $json_data['status'] = 's221';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }
