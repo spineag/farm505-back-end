@@ -21,15 +21,17 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $res['cost'] = $dict['cost'];
                     $res['resource_id'] = $dict['resource_id'];
                     $res['resource_count'] = $dict['resource_count'];
-
-                    $result2 = $mainDb->query("SELECT * FROM users WHERE id =".$dict['user_id']);
-                    $arr = $result2->fetch();
-                    $res['user_social_id'] = $arr['social_id'];
+                
+                $result2 = $mainDb->query("SELECT * FROM users WHERE id =".$dict['user_id']);
+                $arr = $result2->fetch();
+                $res['user_social_id'] = $arr['social_id'];
+                $res['level'] = $arr['level'];
 
                     $resp[] = $res;
                 }
             } else {
                 $json_data['id'] = 2;
+                $json_data['status'] = 's297';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -44,6 +46,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         }
     } else {
         $json_data['id'] = 13;
+        $json_data['status'] = 's221';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }

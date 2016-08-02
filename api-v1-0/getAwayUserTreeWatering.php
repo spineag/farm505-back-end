@@ -3,39 +3,35 @@
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
-if (isset($_POST['userId']) && !empty($_POST['userId'])) {
+if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     $app = Application::getInstance();
     $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
         try {
-            $resp = [];
-            $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =".$_POST['userId']);
+            // trees
+            $respTrees = [];
+            $result = $mainDb->query("SELECT * FROM user_tree WHERE id = ".$_POST['id']); //user_id =".$userId);
             if ($result) {
-                $arr = $result->fetchAll();
-                foreach ($arr as $value => $dict) {
+                $arr = $result->fetch();
                     $res = [];
-                    $res['id'] = $dict['id'];
-                    $res['recipe_id'] = $dict['recipe_id'];
-                    $res['user_db_building_id'] = $dict['user_db_building_id'];
-                    $res['delay'] = $dict['delay_time'];
-                    $res['time_work'] = time() - $dict['time_start'];
-                    $res['time_start'] = $dict['time_start'];
-                    $resp[] = $res;
-                }
+                    $res['id'] = $arr['id'];
+                    $res['user_db_building_id'] = $arr['user_db_building_id'];
+                    $res['time_work'] = time() - $arr['time_start'];
+                    $res['state'] = $arr['state'];
+
             } else {
-                $json_data['id'] = 2;
-                $json_data['status'] = 's302';
+                $json_data['id'] = 4;
+                $json_data['status'] = 's258';
                 throw new Exception("Bad request to DB!");
             }
-
-            $json_data['message'] = $resp;
+            $json_data['message'] = $res;
             echo json_encode($json_data);
         }
         catch (Exception $e)
         {
-            $json_data['status'] = 's090';
+            $json_data['status'] = 's229';
             $json_data['message'] = $e->getMessage();
             echo json_encode($json_data);
         }
@@ -49,7 +45,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 's091';
+    $json_data['status'] = 's230';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }

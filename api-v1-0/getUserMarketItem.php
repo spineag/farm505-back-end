@@ -61,6 +61,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 }
             } else {
                 $json_data['id'] = 2;
+                $json_data['status'] = 's303';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -77,6 +78,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     } else {
         $result = $mainDb->query('UPDATE users SET test='.$_POST['sessionKey'].' WHERE id='.$_POST['userId']);
         $json_data['id'] = 13;
+        $json_data['status'] = 's221';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }

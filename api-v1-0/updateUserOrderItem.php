@@ -9,23 +9,25 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     try {
-        // $result = $mainDb->delete('data_outgame_tile',
-        //     ['pos_x' => $_POST['posX'], 'pos_y' => $_POST['posY']],
-        //     ['int',  'int']);
-        $result = $mainDb->query('DELETE FROM data_outgame_tile WHERE pos_x='.$_POST['posX'].' AND pos_y='.$_POST['posY']);
-        if ($result) {
-            $json_data['message'] = '';
-            echo json_encode($json_data);
-        } else {
+        // $result = $mainDb->update(
+        //     'user_train_pack_item',
+        //     ['is_full' => 1],
+        //     ['id' => $_POST['id']],
+        //     ['int'],
+        //     ['int']);
+        $result = $mainDb->query('UPDATE user_order SET place= '.$_POST['place'].' WHERE id='.$_POST['id']);
+        if (!$result) {
             $json_data['id'] = 2;
-            $json_data['status'] = 's315';
+            $json_data['status'] = 's338';
             throw new Exception("Bad request to DB!");
         }
-    }
 
+        $json_data['message'] = '';
+        echo json_encode($json_data);
+    }
     catch (Exception $e)
     {
-        $json_data['status'] = 's123';
+        $json_data['status'] = 's209';
         $json_data['message'] = $e->getMessage();
         echo json_encode($json_data);
     }
@@ -33,7 +35,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 's124';
+    $json_data['status'] = 's210';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }

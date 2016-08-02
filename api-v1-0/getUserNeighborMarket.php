@@ -16,6 +16,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $level = $arr['level'];
             } else {
                 $json_data['id'] = 3;
+                $json_data['status'] = 's304';
                 throw new Exception("Bad request to DB!");
             }
             $result = $mainDb->query("SELECT * FROM user_neighbor WHERE user_id =".$_POST['userId']);
@@ -61,11 +62,13 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                         $arr = $result->fetch();
                     } else {
                         $json_data['id'] = 3;
+                        $json_data['status'] = 's305';
                         throw new Exception("Bad request to DB!");
                     }
                 }
             } else {
                 $json_data['id'] = 2;
+                $json_data['status'] = 's306';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -80,6 +83,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         }
     } else {
         $json_data['id'] = 13;
+        $json_data['status'] = 's221';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }

@@ -6,6 +6,14 @@ body {
     background: transparent;
 }
 
+#line1px {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background: #ffc801;
+    height: 1px;
+}
+
 #gameContainer {
     margin: 0 auto;
     padding: 0;
@@ -23,14 +31,13 @@ img {
 }
 #no_player {
     display: none;
-    padding-top: 0px;
-    height: 0px;
+    padding-top: 0;
+    height: 0;
 }
 
 nav {
     display: block;
     margin: 0;
-    margin-bottom: 1px;
     padding: 0;
     background-image: url(/images/iframe/iframe_top.png) ;
     background-repeat: no-repeat;
@@ -39,8 +46,8 @@ nav {
 }
 ul {
     list-style: none;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     overflow: hidden;
     width: 1000px;
 }

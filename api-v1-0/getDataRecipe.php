@@ -18,6 +18,7 @@ if ($result) {
     $recipeALL = $result->fetchAll();
 } else {
     $json_data['id'] = 1;
+    $json_data['status'] = 's291';
     throw new Exception("Bad request to DB!");
 }
 
@@ -30,6 +31,7 @@ try
         }
     } else {
         $json_data['id'] = 2;
+        $json_data['status'] = 's292';
         throw new Exception("Bad request to DB!");
     }
 

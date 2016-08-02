@@ -13,6 +13,7 @@ if ($result) {
     $cats = $result->fetchAll();
 } else {
     $json_data['id'] = 1;
+    $json_data['status'] = 's284';
     throw new Exception("Bad request to DB!");
 }
 
@@ -29,6 +30,7 @@ try
         }
     } else {
         $json_data['id'] = 1;
+        $json_data['status'] = 's285';
         throw new Exception("Bad request to DB!");
     }
 

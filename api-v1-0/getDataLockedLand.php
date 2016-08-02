@@ -23,6 +23,7 @@ if ($result) {
     $lands = $result->fetchAll();
 } else {
     $json_data['id'] = 1;
+    $json_data['status'] = 's288';
     throw new Exception("Bad request to DB!");
 }
 
@@ -36,6 +37,7 @@ try
         }
     } else {
         $json_data['id'] = 2;
+        $json_data['status'] = 's289';
         throw new Exception("Bad request to DB!");
     }
 

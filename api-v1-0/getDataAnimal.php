@@ -19,6 +19,7 @@ if ($result) {
     $animalALL = $result->fetchAll();
 } else {
     $json_data['id'] = 1;
+    $json_data['status'] = 's259';
     throw new Exception("Bad request to DB!");
 }
 
@@ -31,6 +32,7 @@ try
         }
     } else {
         $json_data['id'] = 2;
+        $json_data['status'] = 's260';
         throw new Exception("Bad request to DB!");
     }
 

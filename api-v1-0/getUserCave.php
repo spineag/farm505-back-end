@@ -11,22 +11,19 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
         try {
             $resp = [];
-            $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =".$_POST['userId']);
+            $result = $mainDb->query("SELECT * FROM user_cave WHERE user_id =".$_POST['userId']);
             if ($result) {
                 $arr = $result->fetchAll();
                 foreach ($arr as $value => $dict) {
                     $res = [];
                     $res['id'] = $dict['id'];
-                    $res['recipe_id'] = $dict['recipe_id'];
-                    $res['user_db_building_id'] = $dict['user_db_building_id'];
-                    $res['delay'] = $dict['delay_time'];
-                    $res['time_work'] = time() - $dict['time_start'];
-                    $res['time_start'] = $dict['time_start'];
+                    $res['resource_id'] = $dict['resource_id'];
+                    $res['count_item'] = $dict['count_item'];
                     $resp[] = $res;
                 }
             } else {
                 $json_data['id'] = 2;
-                $json_data['status'] = 's302';
+                $json_data['status'] = 's301';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -35,7 +32,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         }
         catch (Exception $e)
         {
-            $json_data['status'] = 's090';
+            $json_data['status'] = 's227';
             $json_data['message'] = $e->getMessage();
             echo json_encode($json_data);
         }
@@ -49,7 +46,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 's091';
+    $json_data['status'] = 's228';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }

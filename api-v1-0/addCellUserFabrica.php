@@ -13,6 +13,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $result = $mainDb->query('UPDATE user_building SET count_cell = ' . $_POST['count'] . ' WHERE id=' . $_POST['dbId'] . ' AND user_id = ' . $_POST['userId']);
             if (!$result) {
                 $json_data['id'] = 2;
+                $json_data['status'] = 's231';
                 throw new Exception("Bad request to DB!");
             }
             $json_data['message'] = '';
@@ -24,6 +25,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         }
     } else {
         $json_data['id'] = 13;
+        $json_data['status'] = 's221';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }

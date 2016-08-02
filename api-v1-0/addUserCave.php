@@ -10,20 +10,19 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
         try {
-            $result = $mainDb->queryWithAnswerId('INSERT INTO user_building SET user_id='.$_POST['userId'].', building_id='.$_POST['buildingId'].', in_inventory=0, pos_x='.$_POST['posX'].', pos_y='.$_POST['posY'].', count_cell='.$_POST['countCell']);
+            $time = time();
+            $result = $mainDb->queryWithAnswerId('INSERT INTO user_cave SET user_id='.$_POST['userId'].', resource_id='.$_POST['resourceId'].', count_item= '.$_POST['count']);
             if ($result) {
                 $json_data['message'] = $result[1];
+                echo json_encode($json_data);
             } else {
                 $json_data['id'] = 2;
-                $json_data['status'] = 's011';
+                $json_data['status'] = 's222';
                 $json_data['message'] = 'bad query';
             }
 
-            echo json_encode($json_data);
-        }
-        catch (Exception $e)
-        {
-            $json_data['status'] = 's012';
+        } catch (Exception $e) {
+            $json_data['status'] = 's223';
             $json_data['message'] = $e->getMessage();
             echo json_encode($json_data);
         }
@@ -37,7 +36,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 's013';
+    $json_data['status'] = 's224';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }

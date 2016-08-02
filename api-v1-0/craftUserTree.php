@@ -18,14 +18,17 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $result = $mainDb->query('UPDATE user_tree SET crafted_count = '.$count.' WHERE id='.$_POST['id']);
                     if (!$result) {
                         $json_data['id'] = 4;
-                        throw new Exception("Bad request to DB at update!");
+                        $json_data['status'] = 's245';
+                            throw new Exception("Bad request to DB at update!");
                     }
                 } else {
                     $json_data['id'] = 3;
-                    throw new Exception("different tree state");
+                    $json_data['status'] = 's246';
+                        throw new Exception("different tree state");
                 }
             } else {
                 $json_data['id'] = 2;
+                $json_data['status'] = 's247';
                 throw new Exception("Bad request to DB!");
             }
 
@@ -40,6 +43,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         }
     } else {
         $json_data['id'] = 13;
+        $json_data['status'] = 's221';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }
