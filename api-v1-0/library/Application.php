@@ -94,6 +94,10 @@ class Application
 //        return new mysqli(SERVER, USER, PASSWORD, DB, DBPORT);
 //        return new mysqli(SERVER, USER, PASSWORD, DB);
     }
+    
+    final public function md5Secret() {
+        return '505';
+    }
 
     final public function getShardDb($userId)
     {
