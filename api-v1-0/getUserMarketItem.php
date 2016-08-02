@@ -75,6 +75,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             echo json_encode($json_data);
         }
     } else {
+        $result = $mainDb->query('UPDATE users SET test='.$_POST['sessionKey'].' WHERE id='.$_POST['userId']);
         $json_data['id'] = 13;
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
