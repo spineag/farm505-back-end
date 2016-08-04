@@ -9,32 +9,40 @@ if (isset($_POST['userSocialIds']) && !empty($_POST['userSocialIds'])) {
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
-        $ids = explode("&",$_POST['userSocialIds']);
-        $ids = join(',',$ids);
-        $result = $mainDb->query("SELECT social_id, level FROM users WHERE social_id IN (".$ids.")");
-        $arr = $result->fetchAll();
+        $m = md5($_POST['userId'].$_POST['userSocialId'].$app->md5Secret());
+        if ($m != $_POST['hash']) {
+            $json_data['id'] = 6;
+            $json_data['status'] = 's376';
+            $json_data['message'] = 'wrong hash';
+            echo json_encode($json_data);
+        } else {
+            $ids = explode("&", $_POST['userSocialIds']);
+            $ids = join(',', $ids);
+            $result = $mainDb->query("SELECT social_id, level FROM users WHERE social_id IN (" . $ids . ")");
+            $arr = $result->fetchAll();
 
-        $json_data['message'] = $arr;
-        echo json_encode($json_data);
+            $json_data['message'] = $arr;
+            echo json_encode($json_data);
 
 
-        // try {
-        //     $result = $mainDb->query("SELECT * FROM users WHERE social_id =".$_POST['userSocialId']);
-        //     $u = $result->fetch();
-        //     $user = [];
+            // try {
+            //     $result = $mainDb->query("SELECT * FROM users WHERE social_id =".$_POST['userSocialId']);
+            //     $u = $result->fetch();
+            //     $user = [];
 
-        //     $user['level'] = $u['level'];
-        //     $user['social_id'] = $u['social_id'];
+            //     $user['level'] = $u['level'];
+            //     $user['social_id'] = $u['social_id'];
 
-        //     $json_data['message'] = $user;
-        //     echo json_encode($json_data);
-        // }
-        // catch (Exception $e)
-        // {
-        //     $json_data['status'] = 'error';
-        //     $json_data['message'] = $e->getMessage();
-        //     echo json_encode($json_data);
-        // }
+            //     $json_data['message'] = $user;
+            //     echo json_encode($json_data);
+            // }
+            // catch (Exception $e)
+            // {
+            //     $json_data['status'] = 'error';
+            //     $json_data['message'] = $e->getMessage();
+            //     echo json_encode($json_data);
+            // }
+        }
     } else {
         $json_data['id'] = 13;
         $json_data['status'] = 's221';

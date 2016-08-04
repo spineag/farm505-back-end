@@ -9,22 +9,27 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
-        try {
-        $result = $mainDb->query('UPDATE user_neighbor SET resource_id'.$_POST['itemId'].'=-1 WHERE user_id = '.$_POST['userId']);
-            if (!$result) {
-                $json_data['id'] = 2;
-                $json_data['status'] = 's238';
-                throw new Exception("Bad request to DB!");
-            }
+        $m = md5($_POST['userId'].$_POST['itemId'].$app->md5Secret());
+        if ($m != $_POST['hash']) {
+            $json_data['id'] = 6;
+            $json_data['status'] = 's367';
+            $json_data['message'] = 'wrong hash';
+            echo json_encode($json_data);
+            try {
+                $result = $mainDb->query('UPDATE user_neighbor SET resource_id' . $_POST['itemId'] . '=-1 WHERE user_id = ' . $_POST['userId']);
+                if (!$result) {
+                    $json_data['id'] = 2;
+                    $json_data['status'] = 's238';
+                    throw new Exception("Bad request to DB!");
+                }
 
-            $json_data['message'] = '';
-            echo json_encode($json_data);
-        }
-        catch (Exception $e)
-        {
-            $json_data['status'] = 's042';
-            $json_data['message'] = $e->getMessage();
-            echo json_encode($json_data);
+                $json_data['message'] = '';
+                echo json_encode($json_data);
+            } catch (Exception $e) {
+                $json_data['status'] = 's042';
+                $json_data['message'] = $e->getMessage();
+                echo json_encode($json_data);
+            }
         }
     } else {
         $json_data['id'] = 13;

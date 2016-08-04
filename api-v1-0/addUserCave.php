@@ -9,22 +9,30 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
-        try {
-            $time = time();
-            $result = $mainDb->queryWithAnswerId('INSERT INTO user_cave SET user_id='.$_POST['userId'].', resource_id='.$_POST['resourceId'].', count_item= '.$_POST['count']);
-            if ($result) {
-                $json_data['message'] = $result[1];
-                echo json_encode($json_data);
-            } else {
-                $json_data['id'] = 2;
-                $json_data['status'] = 's222';
-                $json_data['message'] = 'bad query';
-            }
-
-        } catch (Exception $e) {
-            $json_data['status'] = 's223';
-            $json_data['message'] = $e->getMessage();
+        $m = md5($_POST['userId'].$_POST['resourceId'].$_POST['count'].$app->md5Secret());
+        if ($m != $_POST['hash']) {
+            $json_data['id'] = 6;
+            $json_data['status'] = 's355';
+            $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
+        } else {
+            try {
+                $time = time();
+                $result = $mainDb->queryWithAnswerId('INSERT INTO user_cave SET user_id=' . $_POST['userId'] . ', resource_id=' . $_POST['resourceId'] . ', count_item= ' . $_POST['count']);
+                if ($result) {
+                    $json_data['message'] = $result[1];
+                    echo json_encode($json_data);
+                } else {
+                    $json_data['id'] = 2;
+                    $json_data['status'] = 's222';
+                    $json_data['message'] = 'bad query';
+                }
+
+            } catch (Exception $e) {
+                $json_data['status'] = 's223';
+                $json_data['message'] = $e->getMessage();
+                echo json_encode($json_data);
+            }
         }
     } else {
         $json_data['id'] = 13;

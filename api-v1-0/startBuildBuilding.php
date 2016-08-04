@@ -9,27 +9,30 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
-        try {
-            // $result = $mainDb->insert('user_building_open',
-            //     ['user_id' => $_POST['userId'], 'building_id' => $_POST['buildingId'], 'user_db_building_id' => $_POST['dbId'], 'date_start_build' => time(), 'is_open' => 0],
-            //     ['int', 'int', 'int', 'int', 'int']);
-            $result = $mainDb->query('INSERT INTO user_building_open SET user_id='.$_POST['userId'].', user_db_building_id='.$_POST['dbId'].', building_id='.$_POST['buildingId'].', is_open=0, date_start_build='.time());
-
-            if ($result) {
-                $json_data['message'] = '';
-                echo json_encode($json_data);
-            } else {
-                $json_data['id'] = 2;
-                $json_data['status'] = 's167';
-                $json_data['message'] = 'bad query';
-            }
-
-        }
-        catch (Exception $e)
-        {
-            $json_data['status'] = 's168';
-            $json_data['message'] = $e->getMessage();
+        $m = md5($_POST['userId'].$_POST['buildingId'].$_POST['dbId'].$app->md5Secret());
+        if ($m != $_POST['hash']) {
+            $json_data['id'] = 6;
+            $json_data['status'] = 's391';
+            $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
+        } else {
+            try {
+                $result = $mainDb->query('INSERT INTO user_building_open SET user_id=' . $_POST['userId'] . ', user_db_building_id=' . $_POST['dbId'] . ', building_id=' . $_POST['buildingId'] . ', is_open=0, date_start_build=' . time());
+
+                if ($result) {
+                    $json_data['message'] = '';
+                    echo json_encode($json_data);
+                } else {
+                    $json_data['id'] = 2;
+                    $json_data['status'] = 's167';
+                    $json_data['message'] = 'bad query';
+                }
+
+            } catch (Exception $e) {
+                $json_data['status'] = 's168';
+                $json_data['message'] = $e->getMessage();
+                echo json_encode($json_data);
+            }
         }
     } else {
         $json_data['id'] = 13;

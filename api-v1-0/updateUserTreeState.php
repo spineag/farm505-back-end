@@ -9,28 +9,28 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
-        try {
-            // $result = $mainDb->update(
-            //     'user_tree',
-            //     ['state' => $_POST['state'], 'time_start' => time(), 'crafted_count' => 0],
-            //     ['id' => $_POST['id']],
-            //     ['int', 'int', 'int'],
-            //     ['int']);
-            $result = $mainDb->query('UPDATE user_tree SET state='.$_POST['state'].', time_start='.time().', crafted_count=0 WHERE id='.$_POST['id']);
-            if (!$result) {
-                $json_data['id'] = 2;
-                $json_data['status'] = 's344';
-                throw new Exception("Bad request to DB!");
-            }
+        $m = md5($_POST['userId'].$_POST['id'].$_POST['state'].$app->md5Secret());
+        if ($m != $_POST['hash']) {
+            $json_data['id'] = 6;
+            $json_data['status'] = 's407';
+            $json_data['message'] = 'wrong hash';
+            echo json_encode($json_data);
+        } else {
+            try {
+                $result = $mainDb->query('UPDATE user_tree SET state=' . $_POST['state'] . ', time_start=' . time() . ', crafted_count=0 WHERE id=' . $_POST['id']);
+                if (!$result) {
+                    $json_data['id'] = 2;
+                    $json_data['status'] = 's344';
+                    throw new Exception("Bad request to DB!");
+                }
 
-            $json_data['message'] = '';
-            echo json_encode($json_data);
-        }
-        catch (Exception $e)
-        {
-            $json_data['status'] = 's194';
-            $json_data['message'] = $e->getMessage();
-            echo json_encode($json_data);
+                $json_data['message'] = '';
+                echo json_encode($json_data);
+            } catch (Exception $e) {
+                $json_data['status'] = 's194';
+                $json_data['message'] = $e->getMessage();
+                echo json_encode($json_data);
+            }
         }
     } else {
         $json_data['id'] = 13;
