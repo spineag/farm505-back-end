@@ -9,10 +9,10 @@ if (isset($_POST['userSocialIds']) && !empty($_POST['userSocialIds'])) {
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
-        $m = md5($_POST['userId'].$_POST['userSocialId'].$app->md5Secret());
+        $m = md5($_POST['userId'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
-            $json_data['status'] = 's376';
+            $json_data['status'] = 's415';
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {

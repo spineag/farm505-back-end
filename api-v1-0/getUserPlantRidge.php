@@ -9,9 +9,16 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+        $m = md5($_POST['userId'].$app->md5Secret());
+        if ($m != $_POST['hash']) {
+            $json_data['id'] = 6;
+            $json_data['status'] = 's419';
+            $json_data['message'] = 'wrong hash';
+            echo json_encode($json_data);
+        } else {
         try {
             $resp = [];
-            $result = $mainDb->query("SELECT * FROM user_plant_ridge WHERE user_id =".$_POST['userId']);
+            $result = $mainDb->query("SELECT * FROM user_plant_ridge WHERE user_id =" . $_POST['userId']);
             if ($result) {
                 $arr = $result->fetchAll();
                 foreach ($arr as $value => $dict) {
@@ -31,12 +38,11 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
             $json_data['message'] = $resp;
             echo json_encode($json_data);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $json_data['status'] = 's102';
             $json_data['message'] = $e->getMessage();
             echo json_encode($json_data);
+        }
         }
     } else {
         $json_data['id'] = 13;
