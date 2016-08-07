@@ -120,6 +120,7 @@ try
                     $buildingItem['block_by_level'] = $decor['block_by_level'];
                     $buildingItem['cost'] = $decor['cost'];
                     $buildingItem['delta_cost'] = $decor['delta_cost'];
+                    $buildingItem['filter'] = $decor['filter_type'];
                     $buildingItem['currency'] = $decor['currency_type'];
                     break;
                 case 11: // FABRICA
