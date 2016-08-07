@@ -124,7 +124,7 @@ class VKSocialNetwork implements SocialNetworkInterface
 
     public function setUserLevel($socialNetworkUid, $socialNetworkLevel)
     {
-        return $this->getSocialObject()->api('secure.setUserLevel', array('uid'=>$socialNetworkUid, 'level'=>$socialNetworkLevel));
+        return $this->getSocialObject()->api('secure.setUserLevel', array('user_id'=>$socialNetworkUid, 'level'=>$socialNetworkLevel));
     }
 
     public function sendNotification($socialNetworkUid, $message)
