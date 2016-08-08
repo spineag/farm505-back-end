@@ -9,7 +9,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
-        $m = md5($_POST['userId'].$_POST['ids'].$_POST['counts'].$_POST['xp'].$_POST['coins'].$app->md5Secret());
+        $m = md5($_POST['userId'].$_POST['buyerId'].$_POST['resourceId'].$_POST['resourceCount'].$_POST['xp'].$_POST['cost'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
             $json_data['status'] = 's359';
