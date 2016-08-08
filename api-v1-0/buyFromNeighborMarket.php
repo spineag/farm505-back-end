@@ -15,6 +15,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $json_data['status'] = 's367';
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
+        } else {
             try {
                 $result = $mainDb->query('UPDATE user_neighbor SET resource_id' . $_POST['itemId'] . '=-1 WHERE user_id = ' . $_POST['userId']);
                 if (!$result) {
