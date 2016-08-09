@@ -12,6 +12,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         
         $result = $mainDb->query('DELETE FROM user_animal WHERE user_id='.$_POST['userId']);
 
+        $result = $mainDb->query('DELETE FROM user_cave WHERE user_id='.$_POST['userId']);
+
         $result = $mainDb->query('DELETE FROM user_plant_ridge WHERE user_id='.$_POST['userId']);
 
         $result = $mainDb->query('DELETE FROM user_recipe_fabrica WHERE user_id='.$_POST['userId']);
