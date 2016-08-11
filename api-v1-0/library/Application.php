@@ -185,7 +185,7 @@ class Application
             ['social_id' => $socialUId, 'created_date' => time(), 'last_visit_date' => time(),
                 'name' => $name, 'last_name' => $lname, 'channel_id' => $channelId, 'tutorial_step' => 1,
                 'ambar_max' => $const['AMBAR_MAX'], 'sklad_max' => $const['SKLAD_MAX'],
-                'ambar_level' => 1, 'sklad_level' => 1, 'count_cats' => 5,
+                'ambar_level' => 1, 'sklad_level' => 1, 'count_cats' => 3,
                 'hard_count' => $const['HARD_COUNT'], 'soft_count' => $const['SOFT_COUNT'],
                 'yellow_count' => $const['YELLOW_COUNT'], 'red_count' => $const['RED_COUNT'],
                 'green_count' => $const['GREEN_COUNT'], 'blue_count' => $const['BLUE_COUNT'],
