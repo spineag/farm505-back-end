@@ -11,27 +11,30 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
+$memcache = $app->getMemcache();
 
-$result = $mainDb->query("SELECT * FROM data_buy_money");
-if ($result) {
-    $dataMoney = $result->fetchAll();
-} else {
-    $json_data['id'] = 6;
-    $json_data['status'] = 's282';
-    throw new Exception("Bad request to DB!");
-}
-
-try
-{
-    $resp = [];
-    if (!empty($dataMoney)) {
-        foreach ($dataMoney as $key => $m) {
-            $resp[] = $m;
+try {
+    $resp = $memcache->get('getDataBuyMoney');
+    if (!$resp) {
+        $result = $mainDb->query("SELECT * FROM data_buy_money");
+        if ($result) {
+            $dataMoney = $result->fetchAll();
+        } else {
+            $json_data['id'] = 6;
+            $json_data['status'] = 's282';
+            throw new Exception("Bad request to DB!");
         }
-    } else {
-        $json_data['id'] = 1;
-        $json_data['status'] = 's283';
-        throw new Exception("Bad request to DB!");
+        $resp = [];
+        if (!empty($dataMoney)) {
+            foreach ($dataMoney as $key => $m) {
+                $resp[] = $m;
+            }
+        } else {
+            $json_data['id'] = 1;
+            $json_data['status'] = 's283';
+            throw new Exception("Bad request to DB!");
+        }
+        $memcache->set('getDataBuyMoney', $resp, false, 300);
     }
 
     $json_data['message'] = $resp;

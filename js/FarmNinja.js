@@ -1,7 +1,27 @@
 var FarmNinja = {
     user_sid: false,
     swf: {},
-    version: 1,
+    version: -1,
+
+    getVersion: function() {
+        $.ajax({
+            type:'post',
+            url:'../php/api-v1-0/getVersionClient.php',
+            response:'text',
+            success:function (v) {
+                FarmNinja.setVersion(v);
+            },
+            errrep:true,
+            error:function(num) {
+                // ....!!!
+            }
+        })
+    },
+
+    setVersion: function(v) {
+        this.version = v;
+        this.init();
+    },
 
     init: function () {
         var url = document.location.toString().split('?');
@@ -26,7 +46,8 @@ var FarmNinja = {
             id: "farm_game",
             name: "farm_game"
         };
-        swfobject.embedSWF('/client/farm505.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
+            swfobject.embedSWF('/client/farm'+this.version+'.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
+            // swfobject.embedSWF('/client/farm505.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
     },
 
     callbackFn: function (e) {

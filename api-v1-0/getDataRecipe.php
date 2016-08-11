@@ -11,28 +11,30 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
+$memcache = $app->getMemcache();
 
-// $result = $mainDb->select('data_recipe', '*');
-$result = $mainDb->query("SELECT * FROM data_recipe");
-if ($result) {
-    $recipeALL = $result->fetchAll();
-} else {
-    $json_data['id'] = 1;
-    $json_data['status'] = 's291';
-    throw new Exception("Bad request to DB!");
-}
-
-try
-{
-    $resp = [];
-    if (!empty($recipeALL)) {
-        foreach ($recipeALL as $key => $recipe) {
-            $resp[] = $recipe;
+try {
+    $resp = $memcache->get('getDataRecipe');
+    if (!$resp) {
+        $result = $mainDb->query("SELECT * FROM data_recipe");
+        if ($result) {
+            $recipeALL = $result->fetchAll();
+        } else {
+            $json_data['id'] = 1;
+            $json_data['status'] = 's291';
+            throw new Exception("Bad request to DB!");
         }
-    } else {
-        $json_data['id'] = 2;
-        $json_data['status'] = 's292';
-        throw new Exception("Bad request to DB!");
+        $resp = [];
+        if (!empty($recipeALL)) {
+            foreach ($recipeALL as $key => $recipe) {
+                $resp[] = $recipe;
+            }
+        } else {
+            $json_data['id'] = 2;
+            $json_data['status'] = 's292';
+            throw new Exception("Bad request to DB!");
+        }
+        $memcache->set('getDataRecipe', $resp, false, 300);
     }
 
     $json_data['message'] = $resp;
