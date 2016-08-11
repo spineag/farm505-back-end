@@ -289,10 +289,19 @@ class Application
     }
 
     final public function checkSessionKey($userId, $sessionKey) {
-        $result = $this->getMainDb()->query("SELECT session_key FROM users WHERE id=".$userId);
-        if (!$result) return false;
-        $arr = $result->fetch();
-        if ($sessionKey == $arr['session_key']) {
+        $sess = $this->getMemcache()->get($userId);
+        if (!$sess) {
+            $result = $this->getMainDb()->query("SELECT session_key FROM users WHERE id=" . $userId);
+            if (!$result) return false;
+            $arr = $result->fetch();
+            $sess = $arr['session_key'];
+            $this->getMemcache()->set($userId, $sess, false, 300);
+        }
+//        $result = $this->getMainDb()->query("SELECT session_key FROM users WHERE id=" . $userId);
+//        if (!$result) return false;
+//        $arr = $result->fetch();
+//        $sess = $arr['session_key'];
+        if ($sessionKey == $sess) {
             return true;
         } else {
             return false;

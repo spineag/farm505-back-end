@@ -7,6 +7,7 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
     $app = Application::getInstance();
     $mainDb = $app->getMainDb();
     $channelId = 1; // VK
+    $memcache = $app->getMemcache();
 
     try {
         $socialUId = $_POST['idSocial'];
@@ -40,6 +41,8 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
             $json_data['message'] = $e->getMessage();
             echo json_encode($json_data);
         }
+        $memcache->set($uid, $sess, false, 300);
+        
         $json_data['message'] = $uid;
         echo json_encode($json_data);
     }
