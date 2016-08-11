@@ -5,23 +5,26 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
+$memcache = $app->getMemcache();
 
-$result = $mainDb->query("SELECT pos_x, pos_y FROM data_outgame_tile");
-if ($result) {
-    $data = $result->fetchAll();
-} else {
-    $json_data['id'] = 2;
-    $json_data['status'] = 's290';
-    throw new Exception("Bad request to DB!");
-}
-
-try
-{
-    $resp = [];
-    if (!empty($data)) {
-        foreach ($data as $key => $tile) {
-            $resp[] = $tile;
+try {
+    $resp = $memcache->get('getDataOutGameTiles');
+    if (!$resp) {
+        $result = $mainDb->query("SELECT pos_x, pos_y FROM data_outgame_tile");
+        if ($result) {
+            $data = $result->fetchAll();
+        } else {
+            $json_data['id'] = 2;
+            $json_data['status'] = 's290';
+            throw new Exception("Bad request to DB!");
         }
+        $resp = [];
+        if (!empty($data)) {
+            foreach ($data as $key => $tile) {
+                $resp[] = $tile;
+            }
+        }
+        $memcache->set('getDataOutGameTiles', $resp, false, 300);
     }
 
     $json_data['message'] = $resp;

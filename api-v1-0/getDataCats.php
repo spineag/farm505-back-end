@@ -5,33 +5,35 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
+$memcache = $app->getMemcache();
 
-// $result = $mainDb->select('data_cat', '*');
-$result = $mainDb->query("SELECT * FROM data_cat");
 
-if ($result) {
-    $cats = $result->fetchAll();
-} else {
-    $json_data['id'] = 1;
-    $json_data['status'] = 's284';
-    throw new Exception("Bad request to DB!");
-}
-
-try
-{
-    $resp = [];
-    if (!empty($cats)) {
-        foreach ($cats as $key => $dict) {
-            $item = [];
-            $item['id'] = $dict['id'];
-            $item['cost'] = $dict['cost'];
-            $item['block_by_level'] = $dict['block_by_level'];
-            $resp[] = $item;
+try {
+    $resp = $memcache->get('getDataCats');
+    if (!$resp) {
+        $result = $mainDb->query("SELECT * FROM data_cat");
+        if ($result) {
+            $cats = $result->fetchAll();
+        } else {
+            $json_data['id'] = 1;
+            $json_data['status'] = 's284';
+            throw new Exception("Bad request to DB!");
         }
-    } else {
-        $json_data['id'] = 1;
-        $json_data['status'] = 's285';
-        throw new Exception("Bad request to DB!");
+        $resp = [];
+        if (!empty($cats)) {
+            foreach ($cats as $key => $dict) {
+                $item = [];
+                $item['id'] = $dict['id'];
+                $item['cost'] = $dict['cost'];
+                $item['block_by_level'] = $dict['block_by_level'];
+                $resp[] = $item;
+            }
+        } else {
+            $json_data['id'] = 1;
+            $json_data['status'] = 's285';
+            throw new Exception("Bad request to DB!");
+        }
+        $memcache->set('getDataCats', $resp, false, 300);
     }
 
     $json_data['message'] = $resp;

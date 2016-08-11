@@ -11,28 +11,31 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 $app = Application::getInstance();
 $mainDb = $app->getMainDb();
+$memcache = $app->getMemcache();
 
-$result = $mainDb->query("SELECT * FROM data_level");
-$dataLevel = [];
-if ($result) {
-    $dataLevel = $result->fetchAll();
-} else {
-    $json_data['id'] = 6;
-    $json_data['status'] = 's286';
-    throw new Exception("Bad request to DB!");
-}
-
-try
-{
-    $resp = [];
-    if (!empty($dataLevel)) {
-        foreach ($dataLevel as $key => $level) {
-            $resp[] = $level;
+try {
+    $resp = $memcache->get('getDataLevel');
+    if (!$resp) {
+        $result = $mainDb->query("SELECT * FROM data_level");
+        $dataLevel = [];
+        if ($result) {
+            $dataLevel = $result->fetchAll();
+        } else {
+            $json_data['id'] = 6;
+            $json_data['status'] = 's286';
+            throw new Exception("Bad request to DB!");
         }
-    } else {
-        $json_data['id'] = 1;
-        $json_data['status'] = 's287';
-        throw new Exception("Bad request to DB!");
+        $resp = [];
+        if (!empty($dataLevel)) {
+            foreach ($dataLevel as $key => $level) {
+                $resp[] = $level;
+            }
+        } else {
+            $json_data['id'] = 1;
+            $json_data['status'] = 's287';
+            throw new Exception("Bad request to DB!");
+        }
+        $memcache->set('getDataLevel', $resp, false, 300);
     }
 
     $json_data['message'] = $resp;
