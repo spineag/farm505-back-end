@@ -374,30 +374,6 @@ class Application
         return [];
     }
 
-    final public function setSessionKey($userSocialId = 0, $appName = '', $chName = '')
-    {
-        // create sessionKey and push it to memcache
-        $sessionKey = rand(0, 10000);
-        $sessionKey = md5($sessionKey);
-
-        $k = 'sess' . $userSocialId . $appName . $chName;
-        $this->getMemcache()->set($k, $sessionKey);
-
-        return $sessionKey;
-    }
-
-    /** get session key from memcache
-     *
-     * @param int $userSocialId
-     * @param string $appName
-     * @param string $chName
-     * @return mixed
-     */
-    final public function getSessionKey($userSocialId = 0, $appName = '', $chName = '')
-    {
-        return $this->getMemcache()->get("sess" . $userSocialId . $appName . $chName);
-    }
-
     final public function verifySecurityKey($securityKey = '', $appGuid, $chGuid, $userSocialId, $scriptName)
     {
         return (!empty($securityKey) && ($securityKey == (md5($appGuid . $chGuid . $userSocialId . substr($scriptName, strrpos($scriptName, '/') + 1) . GAME_SECRET)) ||
