@@ -8,8 +8,8 @@ $mainDb = $app->getMainDb();
 $memcache = $app->getMemcache();
 
 try {
-    $resp = $memcache->get('getDataBuilding');
-    if (!$resp) {
+//    $resp = $memcache->get('getDataBuilding');
+//    if (!$resp) {
         $result = $mainDb->query("SELECT * FROM building");
         if ($result) {
             $buildingsALL = $result->fetchAll();
@@ -309,8 +309,8 @@ try {
             $json_data['status'] = 's281';
             throw new Exception("Bad request to DB!");
         }
-        $memcache->set('getDataBuilding', $resp, false, 300);
-    }
+//        $memcache->set('getDataBuilding', $resp, false, 300);
+//    }
 
     $json_data['message'] = $resp;
     echo json_encode($json_data);

@@ -14,8 +14,8 @@ $mainDb = $app->getMainDb();
 $memcache = $app->getMemcache();
 
 try {
-    $resp = $memcache->get('getDataAnimal');
-    if (!$resp) {
+//    $resp = $memcache->get('getDataAnimal');
+//    if (!$resp) {
         $result = $mainDb->query("SELECT * FROM data_animal");
         if ($result) {
             $animalALL = $result->fetchAll();
@@ -34,8 +34,8 @@ try {
             $json_data['status'] = 's260';
             throw new Exception("Bad request to DB!");
         }
-        $memcache->set('getDataAnimal', $resp, false, 300);
-    }
+//        $memcache->set('getDataAnimal', $resp, false, 300);
+//    }
     $json_data['message'] = $resp;
     echo json_encode($json_data);
     

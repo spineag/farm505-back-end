@@ -14,8 +14,8 @@ $mainDb = $app->getMainDb();
 $memcache = $app->getMemcache();
 
 try {
-    $resp = $memcache->get('getDataBuyMoney');
-    if (!$resp) {
+//    $resp = $memcache->get('getDataBuyMoney');
+//    if (!$resp) {
         $result = $mainDb->query("SELECT * FROM data_buy_money");
         if ($result) {
             $dataMoney = $result->fetchAll();
@@ -34,8 +34,8 @@ try {
             $json_data['status'] = 's283';
             throw new Exception("Bad request to DB!");
         }
-        $memcache->set('getDataBuyMoney', $resp, false, 300);
-    }
+//        $memcache->set('getDataBuyMoney', $resp, false, 300);
+//    }
 
     $json_data['message'] = $resp;
     echo json_encode($json_data);

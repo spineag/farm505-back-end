@@ -14,8 +14,8 @@ $mainDb = $app->getMainDb();
 $memcache = $app->getMemcache();
 
 try {
-    $resp = $memcache->get('getDataLockedLand');
-    if (!$resp) {
+//    $resp = $memcache->get('getDataLockedLand');
+//    if (!$resp) {
         $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id = " . $_POST['userId']);
         $u = $result->fetchAll();
         $u = $u[0]['unlocked_land'];
@@ -40,8 +40,8 @@ try {
             $json_data['status'] = 's289';
             throw new Exception("Bad request to DB!");
         }
-        $memcache->set('getDataLockedLand', $resp, false, 300);
-    }
+//        $memcache->set('getDataLockedLand', $resp, false, 300);
+//    }
 
     $json_data['message'] = $resp;
     echo json_encode($json_data);
