@@ -17,11 +17,18 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =" . $_POST['userId'] . " AND user_db_building_id =" . $_POST['buildDbId']);
+                $m = '';
+                $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =".$_POST['userId'] . " AND user_db_building_id =" . $_POST['buildDbId']);
                 if ($result) {
                     $arr = $result->fetchAll();
+                    $d = 0;
                     foreach ($arr as $value => $dict) {
-                        $result = $mainDb->query('UPDATE user_recipe_fabrica SET delay_time=' . ($dict['delay_time'] - $_POST['leftTime']) . ' WHERE id=' . $dict['id']);
+                        $d = (int)$dict['delay_time'] - (int)$_POST['leftTime'];
+                        if ($d<0) {
+                            $m .= (string)$d.'_'.$dict['id'].'; ';
+                            $d = 0;
+                        }
+                        $result = $mainDb->query('UPDATE user_recipe_fabrica SET delay_time=' . $d . ' WHERE id=' . $dict['id']);
                     }
                 } else {
                     $json_data['id'] = 2;
@@ -30,6 +37,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 }
 
                 $json_data['message'] = '';
+                $json_data['warning'] = $m;
                 echo json_encode($json_data);
             } catch (Exception $e) {
                 $json_data['status'] = 's153';

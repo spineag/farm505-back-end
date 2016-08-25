@@ -14,8 +14,8 @@ $mainDb = $app->getMainDb();
 $memcache = $app->getMemcache();
 
 try {
-    $resp = $memcache->get('getDataLevel');
-    if (!$resp) {
+//    $resp = $memcache->get('getDataLevel');
+//    if (!$resp) {
         $result = $mainDb->query("SELECT * FROM data_level");
         $dataLevel = [];
         if ($result) {
@@ -35,8 +35,8 @@ try {
             $json_data['status'] = 's287';
             throw new Exception("Bad request to DB!");
         }
-        $memcache->set('getDataLevel', $resp, false, 300);
-    }
+//        $memcache->set('getDataLevel', $resp, false, 300);
+//    }
 
     $json_data['message'] = $resp;
     echo json_encode($json_data);

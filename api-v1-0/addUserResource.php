@@ -16,12 +16,14 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $mainDb->query("SELECT * FROM user_resource WHERE user_id =" . $_POST['userId'] . " AND resource_id=" . $_POST['resourceId']);
-                if ($result) {
-                    $result = $mainDb->query('UPDATE user_resource SET count = ' . $_POST['countAll'] . ' WHERE user_id=' . $_POST['userId'] . ' AND resource_id = ' . $_POST['resourceId']);
+                $result = $mainDb->query("SELECT id FROM user_resource WHERE user_id =".$_POST['userId']." AND resource_id=".$_POST['resourceId']);
+                $arr = $result->fetch();
+                if (count($arr) > 0) {
+//                if ($result) {
+                    $result = $mainDb->query('UPDATE user_resource SET count = '.$_POST['countAll'].' WHERE user_id='.$_POST['userId'].' AND resource_id = '.$_POST['resourceId']);
                     $text = 'update';
                 } else {
-                    $result = $mainDb->query('INSERT INTO user_resource SET user_id=' . $_POST['userId'] . ', resource_id=' . $_POST['resourceId'] . ', count=' . $_POST['countAll']);
+                    $result = $mainDb->query('INSERT INTO user_resource SET user_id='.$_POST['userId'].', resource_id='.$_POST['resourceId'].', count='.$_POST['countAll']);
                     $text = 'insert';
                 }
 

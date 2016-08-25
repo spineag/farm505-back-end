@@ -181,11 +181,24 @@ class Application
             $const[$c[$i]['name']] = $c[$i]['value'];
         }
 
+        $countCats = 3;
+        $result = $mainDb->query("SELECT * FROM data_cat");
+        if ($result) {
+            $c=0;
+            $cats = $result->fetchAll();
+            foreach ($cats as $value => $dict) {
+                if ($dict['block_by_level'] == '1') {
+                    $c++;
+                }
+            }
+            if ($c > 0) $countCats = $c;
+        }
+
         $result = $mainDb->insert( 'users',
             ['social_id' => $socialUId, 'created_date' => time(), 'last_visit_date' => time(),
                 'name' => $name, 'last_name' => $lname, 'channel_id' => $channelId, 'tutorial_step' => 1,
                 'ambar_max' => $const['AMBAR_MAX'], 'sklad_max' => $const['SKLAD_MAX'],
-                'ambar_level' => 1, 'sklad_level' => 1, 'count_cats' => 3,
+                'ambar_level' => 1, 'sklad_level' => 1, 'count_cats' => $countCats,
                 'hard_count' => $const['HARD_COUNT'], 'soft_count' => $const['SOFT_COUNT'],
                 'yellow_count' => $const['YELLOW_COUNT'], 'red_count' => $const['RED_COUNT'],
                 'green_count' => $const['GREEN_COUNT'], 'blue_count' => $const['BLUE_COUNT'],

@@ -8,8 +8,8 @@ $mainDb = $app->getMainDb();
 $memcache = $app->getMemcache();
 
 try {
-    $resp = $memcache->get('getDataOutGameTiles');
-    if (!$resp) {
+//    $resp = $memcache->get('getDataOutGameTiles');
+//    if (!$resp) {
         $result = $mainDb->query("SELECT pos_x, pos_y FROM data_outgame_tile");
         if ($result) {
             $data = $result->fetchAll();
@@ -24,8 +24,8 @@ try {
                 $resp[] = $tile;
             }
         }
-        $memcache->set('getDataOutGameTiles', $resp, false, 300);
-    }
+//        $memcache->set('getDataOutGameTiles', $resp, false, 300);
+//    }
 
     $json_data['message'] = $resp;
     echo json_encode($json_data);

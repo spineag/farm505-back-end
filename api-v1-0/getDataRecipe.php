@@ -14,8 +14,8 @@ $mainDb = $app->getMainDb();
 $memcache = $app->getMemcache();
 
 try {
-    $resp = $memcache->get('getDataRecipe');
-    if (!$resp) {
+//    $resp = $memcache->get('getDataRecipe');
+//    if (!$resp) {
         $result = $mainDb->query("SELECT * FROM data_recipe");
         if ($result) {
             $recipeALL = $result->fetchAll();
@@ -34,8 +34,8 @@ try {
             $json_data['status'] = 's292';
             throw new Exception("Bad request to DB!");
         }
-        $memcache->set('getDataRecipe', $resp, false, 300);
-    }
+//        $memcache->set('getDataRecipe', $resp, false, 300);
+//    }
 
     $json_data['message'] = $resp;
     echo json_encode($json_data);
