@@ -18,7 +18,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         } else {
             try {
                 $result = $mainDb->queryWithAnswerId('INSERT INTO user_order SET user_id=' . $_POST['userId'] . ', ids="' . $_POST['ids'] . '", counts="' . $_POST['counts'] . '", xp=' . $_POST['xp'] . ', coins=' . $_POST['coins'] .
-                    ', add_coupone=' . $_POST['addCoupone'] . ', start_time=' . (time() + (int)$_POST['delay']) . ', place=' . $_POST['place']);
+                    ', add_coupone=' . $_POST['addCoupone'] . ', start_time=' . (time() + (int)$_POST['delay']) . ', place=' . $_POST['place'].', faster_buyer =' . $_POST['fasterBuyer']);
 
                 if ($result) {
                     $json_data['message'] = $result[1];

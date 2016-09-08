@@ -67,9 +67,9 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 }
                 for ($i = 0; $i < 3; $i++) {
                     if ($userLevel >= 20) {
-                            $countResource = rand(1,$arr[$i]['big_count']);
+                            $countResource = rand($arr[$i]['big_count']/3*2,$arr[$i]['big_count']);
                         } else {
-                            $countResource = rand(1, $arr[$i]['small_count']);
+                            $countResource = rand($arr[$i]['small_count']/3*2, $arr[$i]['small_count']);
                         }
                     for ($k = 0; $k < $countCells; $k++) {
                         $result = $mainDb->insert('user_train_pack_item',

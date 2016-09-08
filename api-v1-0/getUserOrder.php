@@ -24,6 +24,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $res['add_coupone'] = $dict['add_coupone'];
                     $res['start_time'] = $dict['start_time'];
                     $res['place'] = $dict['place'];
+                    $res['faster_buyer'] = $dict['faster_buyer'];
                     $resp[] = $res;
                 }
             } else {
