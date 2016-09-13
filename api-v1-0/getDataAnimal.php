@@ -41,6 +41,7 @@ try {
                 $animalALL['cost_force'] = $recipe['cost_force'];
                 $animalALL['cost_new'] = $recipe['cost_new'];
                 $resp[] = $animalALL;
+                //new new new
             }
         } else {
             $json_data['id'] = 2;
