@@ -40,7 +40,7 @@ try {
             $json_data['status'] = 's289';
             throw new Exception("Bad request to DB!");
         }
-//        $memcache->set('getDataLockedLand', $resp, false, 300);
+//        $memcache->set('getDataLockedLand', $resp, MEMCACHED_DICT_TIME);
 //    }
 
     $json_data['message'] = $resp;

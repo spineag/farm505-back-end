@@ -14,7 +14,7 @@ define("DBPORT", "3306");
 
 define("MEMCACHED_HOST","localhost");
 define("MEMCACHED_PORT",11211);
-define("MEMCACHED_DICT_TIME", 300);
+define("MEMCACHED_DICT_TIME", 3600);
 
 
 /**

@@ -8,8 +8,8 @@ $mainDb = $app->getMainDb();
 $memcache = $app->getMemcache();
 
 try {
-//    $resp = $memcache->get('getDataResource');
-//    if (!$resp) {
+    $resp = $memcache->get('getDataResource3');
+    if (!$resp) {
         $result = $mainDb->query("SELECT * FROM resource");
         if ($result) {
             $resourcesALL = $result->fetchAll();
@@ -78,8 +78,8 @@ try {
             $json_data['status'] = 's296';
             throw new Exception("Bad request to DB!");
         }
-//        $memcache->set('getDataResource', $resp, false, 300);
-//    }
+        $memcache->set('getDataResource3', $resp, MEMCACHED_DICT_TIME);
+    }
 
     $json_data['message'] = $resp;
     echo json_encode($json_data);

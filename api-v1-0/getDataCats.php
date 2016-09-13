@@ -9,8 +9,8 @@ $memcache = $app->getMemcache();
 
 
 try {
-//    $resp = $memcache->get('getDataCats');
-//    if (!$resp) {
+    $resp = $memcache->get('getDataCats3');
+    if (!$resp) {
         $result = $mainDb->query("SELECT * FROM data_cat");
         if ($result) {
             $cats = $result->fetchAll();
@@ -33,8 +33,8 @@ try {
             $json_data['status'] = 's285';
             throw new Exception("Bad request to DB!");
         }
-//        $memcache->set('getDataCats', $resp, false, 300);
-//    }
+        $memcache->set('getDataCats3', $resp, MEMCACHED_DICT_TIME);
+    }
 
     $json_data['message'] = $resp;
     echo json_encode($json_data);
