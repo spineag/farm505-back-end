@@ -30,6 +30,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $user['green_count'] = $u['green_count'];
                 $user['red_count'] = $u['red_count'];
                 $user['blue_count'] = $u['blue_count'];
+                $user['level'] = $u['level'];
                 $user['xp'] = $u['xp'];
                 $user['daily_bonus_day'] = gmdate("d", $u['daily_bonus_day']);
                 $user['count_daily_bonus'] = $u['count_daily_bonus'];

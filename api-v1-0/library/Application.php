@@ -91,8 +91,6 @@ class Application
     final public function getMainDb()
     {
         return new OwnMySQLI(SERVER, USER, PASSWORD, DB);
-//        return new mysqli(SERVER, USER, PASSWORD, DB, DBPORT);
-//        return new mysqli(SERVER, USER, PASSWORD, DB);
     }
     
     final public function md5Secret() {
