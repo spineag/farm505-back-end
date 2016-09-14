@@ -5,22 +5,23 @@ global $cfgs;
 ////// ORIGINAL
 
 
-$cfgs = array($_SERVER["SERVER_NAME"] =>
-    array("db" => array("host" => '148.251.121.199', //getenv('IP'),
-        "database" => 'farm',
-        "user" => "root",
-        "pass" => ""),
+$cfgs = array(
+    '1' =>  array(
+//                 "db" => array("host" => '148.251.121.199', //getenv('IP'),
+//                                                    "database" => 'farm',
+//                                                    "user" => "root",
+//                                                    "pass" => ""),
 
-        "address" => "505.ninja",
+                 "address" => "505.ninja",
 //        "support_email" => "vksupport@joyrocks.com",
 
-        "sn" => array("channel" => 1,
-            "socialNetworkClass" => "VKSocialNetwork",
-            "local_path" => "local",
+                 "sn" => array("channel" => 1,
+                               "socialNetworkClass" => "VKSocialNetwork",
+                               "local_path" => "local",
             // Social network specific values
-            "api_id" => 5448769, //4677235,
+                               "api_id" => 5448769, 
 //            "api_editor_id" => 4493900,
-            "secret_key" => "pbJkDGDmNCcheNo6dZDe"),
+                               "secret_key" => "pbJkDGDmNCcheNo6dZDe")
 
 //        "memcached" => array("servers" => array("host" => "localhost",
 //            "port" => 11211 ),

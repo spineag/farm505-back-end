@@ -40,37 +40,37 @@ class Application
     {
         // get configuration from config file
         $cfgs = $GLOBALS["cfgs"];
-        $serverName = $_SERVER["SERVER_NAME"];
-        $this->_cfg = isset($cfgs[$serverName]) ? $cfgs[$serverName] : die("Wrong configuration  \n");
+        $this->_cfg = isset($cfgs['1']) ? $cfgs['1'] : die("Wrong configuration  \n");
 
 //        self::$_settingsConst = self::loadDefoultSettings();
 
 
     }
 
-    final public function getSnCfg()
-    {
-        return $this->_cfg["sn"];
-    }
+//    final public function getSnCfg()
+//    {
+//        return $this->_cfg["sn"];
+//    }
 
 
-    final public function getSettingsConst($key)
-    {
-        return self::$_settingsConst[$key];
-    }
-    final public function loadDefoultSettings()
-    {
-        $result = array();
-        $mainDb = $this->getMainDb();
-        $querySettings = $mainDb->query("SELECT * FROM dict_settings");
-        $settingsAll = $querySettings->fetchAll();
-        foreach($settingsAll as $settingsItem)
-        {
-            $result[$settingsItem["key"]] = $settingsItem["value"];
-            define($settingsItem["key"],$settingsItem["value"]);
-        }
-        return $result;
-    }
+//    final public function getSettingsConst($key)
+//    {
+//        return self::$_settingsConst[$key];
+//    }
+
+//    final public function loadDefoultSettings()
+//    {
+//        $result = array();
+//        $mainDb = $this->getMainDb();
+//        $querySettings = $mainDb->query("SELECT * FROM dict_settings");
+//        $settingsAll = $querySettings->fetchAll();
+//        foreach($settingsAll as $settingsItem)
+//        {
+//            $result[$settingsItem["key"]] = $settingsItem["value"];
+//            define($settingsItem["key"],$settingsItem["value"]);
+//        }
+//        return $result;
+//    }
 
     /**
      * @return Memcached
@@ -90,40 +90,40 @@ class Application
 
     final public function getMainDb()
     {
-        return new OwnMySQLI(SERVER, USER, PASSWORD, DB);
+        return new OwnMySQLI(SERVER_DB, USER, PASSWORD, DB);
     }
     
     final public function md5Secret() {
         return '505';
     }
 
-    final public function getShardDb($userId)
-    {
-        $memcached = $this->getMemcache();
-        $shardKey = "shard_" . $userId;
-        $dbCfgShard = $memcached->get($shardKey);
-
-        if (empty($dbCfgShard))
-        {
-            $mainDb = $this->getMainDb();
-
-            $result = $mainDb->query("SELECT id, shard_host, shard_user, shard_password as pass, db_name as `database` FROM shard
-            WHERE first_user_id <= '" . $userId . "' AND last_user_id >= '" . $userId . "';");
-
-            $dbCfgShard = $result->fetch();
-            $time_out = 5 * 60;
-            $memcached->set($shardKey, $dbCfgShard, $time_out);
-        }
-
-        if (!empty($dbCfgShard))
-        {
-            return new OwnMySQLI($dbCfgShard["shard_host"], $dbCfgShard["shard_user"], $dbCfgShard["pass"], $dbCfgShard["database"]);
-        }
-        else
-        {
-            return null;
-        }
-    }
+//    final public function getShardDb($userId)
+//    {
+//        $memcached = $this->getMemcache();
+//        $shardKey = "shard_" . $userId;
+//        $dbCfgShard = $memcached->get($shardKey);
+//
+//        if (empty($dbCfgShard))
+//        {
+//            $mainDb = $this->getMainDb();
+//
+//            $result = $mainDb->query("SELECT id, shard_host, shard_user, shard_password as pass, db_name as `database` FROM shard
+//            WHERE first_user_id <= '" . $userId . "' AND last_user_id >= '" . $userId . "';");
+//
+//            $dbCfgShard = $result->fetch();
+//            $time_out = 5 * 60;
+//            $memcached->set($shardKey, $dbCfgShard, $time_out);
+//        }
+//
+//        if (!empty($dbCfgShard))
+//        {
+//            return new OwnMySQLI($dbCfgShard["shard_host"], $dbCfgShard["shard_user"], $dbCfgShard["pass"], $dbCfgShard["database"]);
+//        }
+//        else
+//        {
+//            return null;
+//        }
+//    }
 
     final public function getUserId($channelId, $socialUId, $chackViewer = false)
     {
@@ -306,7 +306,7 @@ class Application
             if (!$result) return false;
             $arr = $result->fetch();
             $sess = $arr['session_key'];
-            $this->getMemcache()->set($userId, $sess, false, 300);
+            $this->getMemcache()->set($userId, $sess, MEMCACHED_DICT_TIME);
         }
 //        $result = $this->getMainDb()->query("SELECT session_key FROM users WHERE id=" . $userId);
 //        if (!$result) return false;
@@ -319,71 +319,71 @@ class Application
         }
     }
 
-    final public function getAppId($appGuid)
-    {
-        if ($appGuid != '')
-        {
-            $appData = $this->getMemcache()->get('appData_' . $appGuid);
-            if (empty($appData))
-            {
-                $mainDb = $this->getMainDb();
-                $result = $mainDb->select(
-                    'application',
-                    'id, application_name',
-                    ['guid' => $appGuid],
-                    ['str'],
-                    'id',
-                    1
-                );
+//    final public function getAppId($appGuid)
+//    {
+//        if ($appGuid != '')
+//        {
+//            $appData = $this->getMemcache()->get('appData_' . $appGuid);
+//            if (empty($appData))
+//            {
+//                $mainDb = $this->getMainDb();
+//                $result = $mainDb->select(
+//                    'application',
+//                    'id, application_name',
+//                    ['guid' => $appGuid],
+//                    ['str'],
+//                    'id',
+//                    1
+//                );
+//
+//                if ($row = $result->fetchObj())
+//                {
+//                    $appData = [
+//                        'appId'     => $row->id,
+//                        'appName'   => $row->application_name
+//                    ];
+//                    $this->getMemcache()->set('appData_' . $appGuid, $appData, 300);
+//                }
+//            }
+//
+//            return $appData;
+//        }
+//
+//        return [];
+//    }
 
-                if ($row = $result->fetchObj())
-                {
-                    $appData = [
-                        'appId'     => $row->id,
-                        'appName'   => $row->application_name
-                    ];
-                    $this->getMemcache()->set('appData_' . $appGuid, $appData, 300);
-                }
-            }
-
-            return $appData;
-        }
-
-        return [];
-    }
-
-    final public function getChannelId($chGuid)
-    {
-        if ($chGuid != '')
-        {
-            $chData = $this->getMemcache()->get('chData_' . $chGuid);
-            if (empty($chData))
-            {
-                $mainDb = $this->getMainDb();
-                $result = $mainDb->select(
-                    'channel',
-                    'id, channel_name',
-                    ['guid' => $chGuid],
-                    ['str'],
-                    'id',
-                    1
-                );
-
-                if ($row = $result->fetchObj())
-                {
-                    $chData = [
-                        'chId'=> $row->id,
-                        'chName' => $row->channel_name
-                    ];
-                    $this->getMemcache()->set('chData_' . $chGuid, $chData, 300);
-                }
-            }
-
-            return $chData;
-        }
-
-        return [];
-    }
+//    final public function getChannelId($chGuid)
+//    {
+//        if ($chGuid != '')
+//        {
+//            $chData = $this->getMemcache()->get('chData_' . $chGuid);
+//            if (empty($chData))
+//            {
+//                $mainDb = $this->getMainDb();
+//                $result = $mainDb->select(
+//                    'channel',
+//                    'id, channel_name',
+//                    ['guid' => $chGuid],
+//                    ['str'],
+//                    'id',
+//                    1
+//                );
+//
+//                if ($row = $result->fetchObj())
+//                {
+//                    $chData = [
+//                        'chId'=> $row->id,
+//                        'chName' => $row->channel_name
+//                    ];
+//                    $this->getMemcache()->set('chData_' . $chGuid, $chData, 300);
+//                }
+//            }
+//
+//            return $chData;
+//        }
+//
+//        return [];
+//    }
 
     final public function verifySecurityKey($securityKey = '', $appGuid, $chGuid, $userSocialId, $scriptName)
     {
@@ -396,44 +396,44 @@ class Application
      * @param $userId
      */
     
-    final public function getViewerId($userId)
-    {
-        $mainDb = $this->getMainDb();
-        $id = $userId;
-
-        $testerData = $mainDb->select(
-            'testers',
-            'viewer_id',
-            ['user_id' => $userId],
-            ['int'],
-            '',
-            1
-        );
-
-        $viewerSocialId = $testerData->f('viewer_id');
-
-        if ($viewerSocialId > 0)
-        {
-            $channelData = $mainDb->select(
-                'users',
-                'channel_id',
-                ['user_id' => $userId],
-                ['int'],
-                '',
-                1
-            );
-            $channelId = $channelData->f('channel_id');
-
-            $viewerId = $this->getUserId($channelId, $viewerSocialId);
-
-            if ($viewerId > 0)
-            {
-                $id = $viewerId;
-            }
-        }
-
-        return $id;
-    }
+//    final public function getViewerId($userId)
+//    {
+//        $mainDb = $this->getMainDb();
+//        $id = $userId;
+//
+//        $testerData = $mainDb->select(
+//            'testers',
+//            'viewer_id',
+//            ['user_id' => $userId],
+//            ['int'],
+//            '',
+//            1
+//        );
+//
+//        $viewerSocialId = $testerData->f('viewer_id');
+//
+//        if ($viewerSocialId > 0)
+//        {
+//            $channelData = $mainDb->select(
+//                'users',
+//                'channel_id',
+//                ['user_id' => $userId],
+//                ['int'],
+//                '',
+//                1
+//            );
+//            $channelId = $channelData->f('channel_id');
+//
+//            $viewerId = $this->getUserId($channelId, $viewerSocialId);
+//
+//            if ($viewerId > 0)
+//            {
+//                $id = $viewerId;
+//            }
+//        }
+//
+//        return $id;
+//    }
 
     final public function getSocialNetwork()
     {
