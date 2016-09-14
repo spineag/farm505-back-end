@@ -41,7 +41,7 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
             $json_data['message'] = $e->getMessage();
             echo json_encode($json_data);
         }
-        $memcache->set($uid, $sess, MEMCACHED_DICT_TIME);
+        $memcache->set((string)$uid, (string)$sess, MEMCACHED_DICT_TIME);
         
         $json_data['message'] = $uid;
         echo json_encode($json_data);
