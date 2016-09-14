@@ -27,7 +27,6 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 if ($result) {
                     $arr = $result->fetchAll();
                     foreach ($arr as $value => $dict) {
-                        if ($build['in_inventory']) continue;
                         $build = [];
                         $build['id'] = $dict['id'];
                         $build['building_id'] = $dict['building_id'];
