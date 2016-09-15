@@ -50,6 +50,20 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $user['wall_order_item_time'] = gmdate("d", $u['wall_order_item_time']);
                 $user['wall_train_item'] = gmdate("d", $u['wall_train_item']);
 
+                $quests = [];
+                $result = $mainDb->query("SELECT * FROM user_quests_temp WHERE user_id = ".$_POST['userId']);
+                if ($result) {
+                    $arr = $result->fetchAll();
+                    foreach ($arr as $value => $dict) {
+                        $res = [];
+                        $res['quest_id'] = $dict['quest_id'];
+                        $res['is_done'] = $dict['is_done'];
+                        $res['get_award'] = $dict['get_award'];
+                        $quests[] = $res;
+                    }
+                    $user['quests'] = $quests;
+                }
+
                 $json_data['message'] = $user;
                 echo json_encode($json_data);
             } catch (Exception $e) {
