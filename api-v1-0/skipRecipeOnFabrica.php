@@ -24,9 +24,9 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $d = 0;
                     foreach ($arr as $value => $dict) {
                         $d = (int)$dict['delay_time'] - (int)$_POST['leftTime'];
-                        if ($d<0) {
-                            $m .= (string)$d.'_'.$dict['id'].'; ';
-                            $d = 0;
+                        if ($d<0) { // it's normal!)) for first in list
+//                            $m .= (string)$d.'_'.$dict['id'].'; ';
+//                            $d = 0;
                         }
                         $result = $mainDb->query('UPDATE user_recipe_fabrica SET delay_time=' . $d . ' WHERE id=' . $dict['id']);
                     }
