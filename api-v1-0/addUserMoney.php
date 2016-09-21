@@ -58,8 +58,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
 
 
-        } else { // this need delete
-            $m = md5($_POST['userId'] . $_POST['type'] . $_POST['count'] . $app->md5Secret());
+        } else {
+            $m = md5($_POST['userId'] . $_POST['type'] . $_POST['countAll'] . $app->md5Secret());
             if ($m != $_POST['hash']) {
                 $json_data['id'] = 6;
                 $json_data['status'] = 's357';
@@ -88,18 +88,18 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                             break;
                     }
 
-                    $result = $mainDb->query("SELECT " . $col . " FROM users WHERE id =" . $_POST['userId']);
-                    if ($result) {
-                        $arr = $result->fetch();
-                        $count = $arr[$col];
-                        $count = (int)$count + (int)$_POST['count'];
-                        $result = $mainDb->query('UPDATE users SET ' . $col . '=' . $count . ',last_visit_date=' . time() . ' WHERE id=' . $_POST['userId']);
-                    } else {
-                        $json_data['id'] = 2;
-                        $json_data['status'] = 's234';
-                        throw new Exception("Bad request to DB!");
-                    }
-
+//                    $result = $mainDb->query("SELECT " . $col . " FROM users WHERE id =" . $_POST['userId']);
+//                    if ($result) {
+//                        $arr = $result->fetch();
+//                        $count = $arr[$col];
+//                        $count = (int)$count + (int)$_POST['count'];
+//                        $result = $mainDb->query('UPDATE users SET ' . $col . '=' . $count . ',last_visit_date=' . time() . ' WHERE id=' . $_POST['userId']);
+//                    } else {
+//                        $json_data['id'] = 2;
+//                        $json_data['status'] = 's234';
+//                        throw new Exception("Bad request to DB!");
+//                    }
+                    $result = $mainDb->query('UPDATE users SET '.$col.'='.$_POST['countAll'].',last_visit_date='.time().' WHERE id='.$_POST['userId']);
                     $json_data['message'] = '';
                     echo json_encode($json_data);
                 } catch (Exception $e) {
