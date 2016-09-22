@@ -18,7 +18,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         } else {
             try {
                 $resp = [];
-                $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =" . $_POST['userId']);
+                $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =" . $_POST['userId']." ORDER BY id");
                 if ($result) {
                     $arr = $result->fetchAll();
                     foreach ($arr as $value => $dict) {
