@@ -22,7 +22,7 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
         // create user if not exist
         $uid = $app->getUserId($channelId, $socialUId);
         if ($uid < 1) {
-            $uid = $app->newUser($channelId, $socialUId, $_POST['name'], $_POST['lastName']);
+            $uid = $app->newUser($channelId, $socialUId, $_POST['name'], $_POST['lastName'], $_POST['sex'], $_POST['bornDate']);
             if ($uid < 0) {
                 $json_data['id'] = 2;
                 $json_data['status'] = 's328';
