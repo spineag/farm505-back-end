@@ -49,6 +49,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $user['notification_new'] = $u['notification_new'];
                 $user['wall_order_item_time'] = gmdate("d", $u['wall_order_item_time']);
                 $user['wall_train_item'] = gmdate("d", $u['wall_train_item']);
+                $check = (int)$user['ambar_max'] + (int)$user['sklad_max'] + (int)$user['ambar_level'] + (int)$user['sklad_level'] + (int)$user['hard_count'] + (int)$user['soft_count'] +
+                    (int)$user['yellow_count'] + (int)$user['green_count'] + (int)$user['red_count'] + (int)$user['blue_count'] + (int)$user['level'] + (int)$user['xp'] + (int)$user['count_cats'] +
+                    (int)$user['tutorial_step'] + (int)$user['count_chest'] + (int)$user['count_daily_bonus'];
+                $user['test_date'] = $check;
 
                 $quests = [];
                 $result = $mainDb->query("SELECT * FROM user_quests_temp WHERE user_id = ".$_POST['userId']);
