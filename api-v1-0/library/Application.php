@@ -168,7 +168,7 @@ class Application
         return $userSocialId;
     }
 
-    final public function newUser($channelId, $socialUId, $name = 'Vasia', $lname = 'Pupkin')
+    final public function newUser($channelId, $socialUId, $name = 'Vasia', $lname = 'Pupkin', $sex = 'w', $bornDate = '28.09.16')
     {
         $mainDb = $this->getMainDb();
 
@@ -200,9 +200,9 @@ class Application
                 'hard_count' => $const['HARD_COUNT'], 'soft_count' => $const['SOFT_COUNT'],
                 'yellow_count' => $const['YELLOW_COUNT'], 'red_count' => $const['RED_COUNT'],
                 'green_count' => $const['GREEN_COUNT'], 'blue_count' => $const['BLUE_COUNT'],
-                'xp' => 0, 'level' => 1],
+                'xp' => 0, 'level' => 1, 'sex' => $sex, 'born_date' => $bornDate],
             ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int', 'int',
-                'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int']);
+                'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'str', 'str']);
                 
         if ($result)
         {
