@@ -130,22 +130,10 @@ class Application
         $mainDb = $this->getMainDb();
         $tableName = 'users';
 
-//        $result = $mainDb->select($tableName, 'user_id', ['user_social_id' => $socialUId, 'channel_id' => $channelId], ['int', 'int']);
         $result = $mainDb->query("SELECT id FROM users WHERE social_id =".$socialUId);
         $arr = $result->fetch();
         $userId= $arr['id'];
         if ($userId == false) $userId = 0;
-
-//        if($chackViewer)
-//        {
-//            $viewerId = $this->haveViewerId($userId);
-//            if($viewerId > 0)
-//            {
-//                $result = $mainDb->select($tableName, 'user_id', ['user_social_id' => $viewerId, 'channel_id' => $channelId], ['int', 'int']);
-//                $userData = $result->fetchObj();
-//                $userId = ($userData == false) ? 0 : (int)$userData->user_id;
-//            }
-//        }
 
         if ($userId > 0)
         {
@@ -154,6 +142,13 @@ class Application
         }
 
         return $userId;
+    }
+
+    public function checkNeedHelp($userId) {
+        $mainDb = $this->getMainDb();
+        $result = $mainDb->query("SELECT id FROM user_tree WHERE user_id =".$userId." AND state=11");
+        $count = $result->num();
+        return $count;
     }
 
     public function getSocialId($userId)

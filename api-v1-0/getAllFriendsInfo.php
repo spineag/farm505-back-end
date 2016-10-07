@@ -16,13 +16,28 @@ if (isset($_POST['userSocialIds']) && !empty($_POST['userSocialIds'])) {
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {
-            $ids = explode("&", $_POST['userSocialIds']);
-            $ids = join(',', $ids);
-            $result = $mainDb->query("SELECT social_id, level FROM users WHERE social_id IN (" . $ids . ")");
-            $arr = $result->fetchAll();
+            try {
+                $ids = explode("&", $_POST['userSocialIds']);
+                $ids = join(',', $ids);
+                $result = $mainDb->query("SELECT id, social_id, level FROM users WHERE social_id IN (".$ids.")");
+                $a = $result->fetchAll();
+                $arr = [];
+                foreach ($a as $value => $dict) {
+                    $b = [];
+                    $b['social_id'] = $dict['social_id'];
+                    $b['id'] = $dict['id'];
+                    $b['level'] = $dict['level'];
+                    $b['need_help'] = $app->checkNeedHelp($b['id']);
+                    $arr[] = $b;
+                }
 
-            $json_data['message'] = $arr;
-            echo json_encode($json_data);
+                $json_data['message'] = $arr;
+                echo json_encode($json_data);
+            } catch (Exception $e) {
+                $json_data['status'] = 's415';
+                $json_data['message'] = $e->getMessage();
+                echo json_encode($json_data);
+            }
 
 
             // try {
@@ -43,6 +58,7 @@ if (isset($_POST['userSocialIds']) && !empty($_POST['userSocialIds'])) {
             //     echo json_encode($json_data);
             // }
         }
+
     } else {
         $json_data['id'] = 13;
         $json_data['status'] = 's221';

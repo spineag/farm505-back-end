@@ -53,7 +53,7 @@ class DBStatementI
         return false;
     }
 
-    public function f($field)
+    public function f($field) // Извлекает результирующий ряд в виде ассоциативного массива
     {
         if ($this->_result)
         {
@@ -64,7 +64,7 @@ class DBStatementI
         return false;
     }
 
-    public function num()
+    public function num() // Получает число рядов в результирующей выборке
     {
         if ($this->_result)
         {
@@ -73,7 +73,7 @@ class DBStatementI
         return 0;
     }
 
-    public function numAffectedRows()
+    public function numAffectedRows() // Получает число строк, затронутых предыдущей операцией MySQL
     {
         if ($this->_result)
         {
