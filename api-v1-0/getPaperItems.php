@@ -11,7 +11,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
         try {
             $resp = [];
-            $result = $mainDb->query("SELECT * FROM user_market_item WHERE in_papper = 1 AND buyer_id = 0 AND user_id <> ".$_POST['userId']." ORDER BY RAND() LIMIT 60");
+            $endTime = time() - 5*60*60;
+            $result = $mainDb->query("SELECT * FROM user_market_item WHERE in_papper = 1 AND buyer_id = 0 AND time_in_papper > ".$endTime." AND user_id <> ".$_POST['userId']." ORDER BY RAND() LIMIT 60");
             if ($result) {
                 $arr = $result->fetchAll();
                 foreach ($arr as $value => $dict) {

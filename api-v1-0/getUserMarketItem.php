@@ -28,12 +28,19 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                     $res['cost'] = $dict['cost'];
                     $res['resource_id'] = $dict['resource_id'];
                     $res['resource_count'] = $dict['resource_count'];
-                    $res['in_papper'] = $dict['in_papper'];
                     $res['number_cell'] = $dict['number_cell'];
                     $res['time_in_papper'] = $dict['time_in_papper'];
-                    // $res['time_in_papper'] =   date("d", $dict['time_in_papper']);
-
-
+                    if ((int)$dict['in_papper'] == 1) {
+                        if (time() > (int)$dict['time_in_papper'] + 5*60*60) {
+                            $res['in_papper'] = 0;
+                            $res['time_in_papper'] = 0;
+                            $resultUpdate = $mainDb->query('UPDATE user_market_item SET in_papper=0 AND time_in_papper = 0 WHERE id='.$res['id']);
+                        } else {
+                            $res['in_papper'] = 1;
+                        }
+                    } else {
+                        $res['in_papper'] = 0;
+                    }
 
                     if ($dict['buyer_id'] > 0) {
                         $result2 = $mainDb->query("SELECT * FROM users WHERE id =".$dict['buyer_id']);
