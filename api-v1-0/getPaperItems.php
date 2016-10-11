@@ -21,12 +21,12 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $res['cost'] = $dict['cost'];
                     $res['resource_id'] = $dict['resource_id'];
                     $res['resource_count'] = $dict['resource_count'];
-                    $res['need_help'] = $app->checkNeedHelp($res['user_id']);
-                
+
                 $result2 = $mainDb->query("SELECT * FROM users WHERE id =".$dict['user_id']);
                 $arr = $result2->fetch();
                 $res['user_social_id'] = $arr['social_id'];
                 $res['level'] = $arr['level'];
+                $res['need_help'] = $app->checkNeedHelp($dict['user_id']);
 
                     $resp[] = $res;
                 }
