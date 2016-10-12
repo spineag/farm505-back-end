@@ -30,6 +30,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                     $res['resource_count'] = $dict['resource_count'];
                     $res['number_cell'] = $dict['number_cell'];
                     $res['time_in_papper'] = $dict['time_in_papper'];
+                    $res['level'] = $dict['level'];
                     if ((int)$dict['in_papper'] == 1) {
                         if (time() > (int)$dict['time_in_papper'] + 5*60*60) {
                             $res['in_papper'] = 0;
