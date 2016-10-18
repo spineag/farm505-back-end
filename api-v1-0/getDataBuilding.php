@@ -107,6 +107,7 @@ try {
                         $buildingItem['delta_cost'] = $decor['delta_cost'];
                         $buildingItem['filter'] = $decor['filter_type'];
                         $buildingItem['currency'] = $decor['currency_type'];
+
                         break;
                     case 10: // DECOR_POST_FENCE
                         $result = $mainDb->query("SELECT * FROM data_decor WHERE building_id =" . $dict['id']);
@@ -121,6 +122,7 @@ try {
                         $buildingItem['delta_cost'] = $decor['delta_cost'];
                         $buildingItem['filter'] = $decor['filter_type'];
                         $buildingItem['currency'] = $decor['currency_type'];
+
                         break;
                     case 11: // FABRICA
 //                    $result = $mainDb->select("data_fabrica", "*", "building_id='".$dict['id']."'");
@@ -196,6 +198,7 @@ try {
                         $buildingItem['delta_cost'] = $decor['delta_cost'];
                         $buildingItem['filter'] = $decor['filter_type'];
                         $buildingItem['currency'] = $decor['currency_type'];
+
                         break;
                     case 16: // FARM
 //                    $result = $mainDb->select("data_farm", "*", "building_id='".$dict['id']."'");
@@ -298,6 +301,21 @@ try {
                         $buildingItem['block_by_level'] = $build['block_by_level'];
                         $buildingItem['build_time'] = $build['build_time'];
                         $buildingItem['cost_skip'] = $build['cost_skip'];
+                        break;
+                    case 30: // DECOR_ANIMATION
+                        $result = $mainDb->query("SELECT * FROM data_decor WHERE building_id =" . $dict['id']);
+                        $decor = $result->fetch();
+                        if (empty($decor)) {
+                            $json_data['id'] = 4;
+                            $json_data['status'] = 's265';
+                            throw new Exception("Bad request to DB!");
+                        }
+                        $buildingItem['block_by_level'] = $decor['block_by_level'];
+                        $buildingItem['cost'] = $decor['cost'];
+                        $buildingItem['delta_cost'] = $decor['delta_cost'];
+                        $buildingItem['currency'] = $decor['currency_type'];
+                        $buildingItem['filter'] = $decor['filter_type'];
+                        $buildingItem['cat_need'] = $decor['cat_need'];
                         break;
                     default:
                         break;
