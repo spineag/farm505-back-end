@@ -93,6 +93,8 @@ try {
                         $buildingItem['delta_cost'] = $decor['delta_cost'];
                         $buildingItem['currency'] = $decor['currency_type'];
                         $buildingItem['filter'] = $decor['filter_type'];
+                        $buildingItem['group'] = $decor['filter_group'];
+                        $buildingItem['color'] = $decor['color'];
                         break;
                     case 9: // DECOR_FULL_FENCE
                         $result = $mainDb->query("SELECT * FROM data_decor WHERE building_id =" . $dict['id']);
@@ -107,7 +109,8 @@ try {
                         $buildingItem['delta_cost'] = $decor['delta_cost'];
                         $buildingItem['filter'] = $decor['filter_type'];
                         $buildingItem['currency'] = $decor['currency_type'];
-
+                        $buildingItem['group'] = $decor['filter_group'];
+                        $buildingItem['color'] = $decor['color'];
                         break;
                     case 10: // DECOR_POST_FENCE
                         $result = $mainDb->query("SELECT * FROM data_decor WHERE building_id =" . $dict['id']);
@@ -122,7 +125,8 @@ try {
                         $buildingItem['delta_cost'] = $decor['delta_cost'];
                         $buildingItem['filter'] = $decor['filter_type'];
                         $buildingItem['currency'] = $decor['currency_type'];
-
+                        $buildingItem['group'] = $decor['filter_group'];
+                        $buildingItem['color'] = $decor['color'];
                         break;
                     case 11: // FABRICA
 //                    $result = $mainDb->select("data_fabrica", "*", "building_id='".$dict['id']."'");
@@ -316,6 +320,40 @@ try {
                         $buildingItem['currency'] = $decor['currency_type'];
                         $buildingItem['filter'] = $decor['filter_type'];
                         $buildingItem['cat_need'] = $decor['cat_need'];
+                        $buildingItem['group'] = $decor['filter_group'];
+                        $buildingItem['color'] = $decor['color'];
+                        break;
+                    case 31: // DECOR_FENCE_GATE
+                        $result = $mainDb->query("SELECT * FROM data_decor WHERE building_id =" . $dict['id']);
+                        $decor = $result->fetch();
+                        if (empty($decor)) {
+                            $json_data['id'] = 4;
+                            $json_data['status'] = 's265';
+                            throw new Exception("Bad request to DB!");
+                        }
+                        $buildingItem['block_by_level'] = $decor['block_by_level'];
+                        $buildingItem['cost'] = $decor['cost'];
+                        $buildingItem['delta_cost'] = $decor['delta_cost'];
+                        $buildingItem['currency'] = $decor['currency_type'];
+                        $buildingItem['filter'] = $decor['filter_type'];
+                        $buildingItem['group'] = $decor['filter_group'];
+                        $buildingItem['color'] = $decor['color'];
+                        break;
+                    case 32: // DECOR_FENCE_ARKA
+                        $result = $mainDb->query("SELECT * FROM data_decor WHERE building_id =" . $dict['id']);
+                        $decor = $result->fetch();
+                        if (empty($decor)) {
+                            $json_data['id'] = 4;
+                            $json_data['status'] = 's265';
+                            throw new Exception("Bad request to DB!");
+                        }
+                        $buildingItem['block_by_level'] = $decor['block_by_level'];
+                        $buildingItem['cost'] = $decor['cost'];
+                        $buildingItem['delta_cost'] = $decor['delta_cost'];
+                        $buildingItem['currency'] = $decor['currency_type'];
+                        $buildingItem['filter'] = $decor['filter_type'];
+                        $buildingItem['group'] = $decor['filter_group'];
+                        $buildingItem['color'] = $decor['color'];
                         break;
                     default:
                         break;
