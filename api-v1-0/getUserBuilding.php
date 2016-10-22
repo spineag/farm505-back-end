@@ -18,25 +18,22 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         } else {
             try {
                 $resp = [];
-                $result = $mainDb->query("SELECT * FROM user_building WHERE user_id =" . $_POST['userId']);
+                $result = $mainDb->query("SELECT ub.id, ub.building_id, pos_x, pos_y, is_flip, in_inventory,count_cell,
+                                                 ub.user_id, date_start_build, is_open 
+                                          FROM user_building ub
+                                          LEFT JOIN user_building_open ubo
+                                          ON ubo.user_id = ub.user_id AND ub.id = ubo.user_db_building_id
+                                          WHERE ub.user_id = " . $_POST['userId']);
                 if ($result) {
-                    $arr = $result->fetchAll();
-                    foreach ($arr as $value => $dict) {
-                        $build = [];
-                        $build['id'] = $dict['id'];
-                        $build['building_id'] = $dict['building_id'];
-                        $build['pos_x'] = $dict['pos_x'];
-                        $build['pos_y'] = $dict['pos_y'];
-                        $build['is_flip'] = $dict['is_flip'];
-                        $build['in_inventory'] = $dict['in_inventory'];
-                        $build['count_cell'] = $dict['count_cell'];
-                        $startBuild = $mainDb->query("SELECT * FROM user_building_open WHERE user_id =" . $_POST['userId'] . " AND building_id =" . $dict['building_id'] . " AND user_db_building_id =" . $dict['id']);
-                        $date = $startBuild->fetch();
-                        if ($date) {
-                            $build['time_build_building'] = (int)time() - (int)$date['date_start_build'];
-                            $build['is_open'] = $date['is_open'];
+                    while ($arr = $result->fetch()) {
+                        if (!is_null($arr['date_start_build'])) {
+                            $arr['time_build_building'] = (int)time() - (int)$arr['date_start_build'];
                         }
-                        $resp[] = $build;
+                        unset($arr['date_start_build']);
+                        if (is_null($arr['is_open'])) {
+                            unset($arr['is_open']);
+                        }
+                        $resp[] = $arr;
                     }
                 } else {
                     $json_data['id'] = 2;
