@@ -5,10 +5,12 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+        $mainDb = $app->getMainDb();
+        $userId = filter_var($_POST['userId']);
+        $shardDb = $app->getShardDb($userId);
         $m = md5($_POST['userId'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
@@ -18,12 +20,12 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         } else {
             try {
                 $resp = [];
-                $result = $mainDb->query("SELECT ub.id, ub.building_id, pos_x, pos_y, is_flip, in_inventory,count_cell,
+                $result = $shardDb->query("SELECT ub.id, ub.building_id, pos_x, pos_y, is_flip, in_inventory,count_cell,
                                                  ub.user_id, date_start_build, is_open 
                                           FROM user_building ub
                                           LEFT JOIN user_building_open ubo
                                           ON ubo.user_id = ub.user_id AND ub.id = ubo.user_db_building_id
-                                          WHERE ub.user_id = " . $_POST['userId']);
+                                          WHERE ub.user_id = " . $userId);
                 if ($result) {
                     while ($arr = $result->fetch()) {
                         if (!is_null($arr['date_start_build'])) {
@@ -56,7 +58,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                         $build['building_id'] = $dict['building_id'];
                         $build['pos_x'] = $dict['pos_x'];
                         $build['pos_y'] = $dict['pos_y'];
-                        $startBuild = $mainDb->query("SELECT * FROM user_building_open WHERE user_id =" . $_POST['userId'] . " AND building_id =" . $dict['building_id']);
+                        $startBuild = $shardDb->query("SELECT * FROM user_building_open WHERE user_id =" . $_POST['userId'] . " AND building_id =" . $dict['building_id']);
                         $date = $startBuild->fetch();
                         if ($date) {
                             $build['time_build_building'] = (int)time() - (int)$date['date_start_build'];

@@ -137,8 +137,8 @@ class Application
     }
 
     public function checkNeedHelp($userId) {
-        $mainDb = $this->getMainDb();
-        $result = $mainDb->query("SELECT id FROM user_tree WHERE user_id =".$userId." AND state=11");
+        $shardDb = $this->getShardDb($userId);
+        $result = $shardDb->query("SELECT id FROM user_tree WHERE user_id =".$userId." AND state=11");
         $count = $result->num();
         return $count;
     }
@@ -195,57 +195,58 @@ class Application
         {
             $userId = $this->getUserId($channelId, $socialUId);
             $arr = [31, 32, 21, 118];
+            $shardDb = $this->getShardDb($userId);
             foreach ($arr as $value) {
-                $result = $mainDb->insert('user_resource',
+                $result = $shardDb->insert('user_resource',
                     ['user_id' => $userId, 'resource_id' => $value, 'count' => 3],
                     ['int', 'int', 'int']);
             }
 
             // add ridges and plant on them
-            $resultRidge = $mainDb->insert('user_building',
+            $resultRidge = $shardDb->insert('user_building',
                 ['user_id' => $userId, 'building_id' => 11, 'in_inventory' => 0, 'pos_x' => 21, 'pos_y' => 33, 'is_flip' => 0, 'count_cell' => 0],
                 ['int', 'int', 'int', 'int', 'int', 'int', 'int']);
-            $resultRidge = $mainDb->insert('user_building',
+            $resultRidge = $shardDb->insert('user_building',
                 ['user_id' => $userId, 'building_id' => 11, 'in_inventory' => 0, 'pos_x' => 23, 'pos_y' => 33, 'is_flip' => 0, 'count_cell' => 0],
                 ['int', 'int', 'int', 'int', 'int', 'int', 'int']);
-            $resultRidge = $mainDb->insert('user_building',
+            $resultRidge = $shardDb->insert('user_building',
                 ['user_id' => $userId, 'building_id' => 11, 'in_inventory' => 0, 'pos_x' => 25, 'pos_y' => 33, 'is_flip' => 0, 'count_cell' => 0],
                 ['int', 'int', 'int', 'int', 'int', 'int', 'int']);
-            $resultRidge = $mainDb->query("SELECT * FROM user_building WHERE building_id = 11 AND user_id =".$userId);
+            $resultRidge = $shardDb->query("SELECT * FROM user_building WHERE building_id = 11 AND user_id =".$userId);
             if ($resultRidge) {
                 $arr = $resultRidge->fetchAll();
                 foreach ($arr as $value => $dict) { 
                     // $result = $mainDb->insert('user_building_open',
                     //     ['user_id' => $userId, 'building_id' => 11, 'user_db_building_id' => $dict['id'], 'data_start_build' => time(), 'is_open' => 1],
                     //     ['int', 'int', 'int', 'int', 'int']);
-                    $result = $mainDb->insert('user_plant_ridge',
+                    $result = $shardDb->insert('user_plant_ridge',
                         ['user_id' => $userId, 'plant_id' => 31, 'user_db_building_id' => $dict['id'], 'time_start' => time()-12000],
                         ['int', 'int', 'int', 'int']);
                 }
             }
             
             // add farm and chickens    
-            $resultFarm = $mainDb->insert('user_building',
+            $resultFarm = $shardDb->insert('user_building',
                 ['user_id' => $userId, 'building_id' => 14, 'in_inventory' => 0, 'pos_x' => 22, 'pos_y' => 11, 'is_flip' => 0, 'count_cell' => 0],
                 ['int', 'int', 'int', 'int', 'int', 'int', 'int']);
-            $resultFarm = $mainDb->query("SELECT * FROM user_building WHERE building_id = 14 AND user_id =".$userId);    
+            $resultFarm = $shardDb->query("SELECT * FROM user_building WHERE building_id = 14 AND user_id =".$userId);
             if ($resultFarm) {
                 $arr = $resultFarm->fetch();
-                $resultAnimal = $mainDb->insert('user_animal',
+                $resultAnimal = $shardDb->insert('user_animal',
                         ['user_id' => $userId, 'animal_id' => 1, 'user_db_building_id' => $arr['id'], 'raw_time_start' => 0],
                         ['int', 'int', 'int', 'int']);
-                $resultAnimal = $mainDb->insert('user_animal',
+                $resultAnimal = $shardDb->insert('user_animal',
                         ['user_id' => $userId, 'animal_id' => 1, 'user_db_building_id' => $arr['id'], 'raw_time_start' => 0],
                         ['int', 'int', 'int', 'int']);
-                $resultAnimal = $mainDb->insert('user_animal',
+                $resultAnimal = $shardDb->insert('user_animal',
                         ['user_id' => $userId, 'animal_id' => 1, 'user_db_building_id' => $arr['id'], 'raw_time_start' => 0],
                         ['int', 'int', 'int', 'int']);
             }    
                 
-            $resultAmbar = $mainDb->insert('user_building',
+            $resultAmbar = $shardDb->insert('user_building',
                 ['user_id' => $userId, 'building_id' => 12, 'in_inventory' => 0, 'pos_x' => $const['AMBAR_POS_X'], 'pos_y' => $const['AMBAR_POS_Y']],
                 ['int', 'int', 'int', 'int', 'int']);
-            $resultSklad = $mainDb->insert('user_building',
+            $resultSklad = $shardDb->insert('user_building',
                 ['user_id' => $userId, 'building_id' => 13, 'in_inventory' => 0, 'pos_x' => $const['SKLAD_POS_X'], 'pos_y' => $const['SKLAD_POS_Y']],
                 ['int', 'int', 'int', 'int', 'int']);
             
@@ -277,7 +278,7 @@ class Application
                 $arr[]= -1;
             }
 
-            $resultNeighbor = $mainDb->insert('user_neighbor',
+            $resultNeighbor = $shardDb->insert('user_neighbor',
                 ['user_id' => $userId, 'last_update' => date('j'), 'resource_id1' => $arr[0], 'resource_id2' => $arr[1], 'resource_id3' => $arr[2], 'resource_id4' => $arr[3], 'resource_id5' => $arr[4], 'resource_id6' => $arr[5]],
                 ['int', 'int', 'int', 'int', 'int', 'int', 'int', 'int']);
 

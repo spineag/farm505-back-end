@@ -5,7 +5,8 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
+    $userId = filter_var($_POST['userId']);
+    $shardDb = $app->getShardDb($userId);
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
@@ -18,9 +19,9 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         } else {
             try {
                 if ((int)$_POST['buildingId'] == 47 || (int)$_POST['buildingId'] == 49) {
-                    $result = $mainDb->query('UPDATE user_building_open SET is_open=1 WHERE building_id=' . $_POST['buildingId'] . ' AND user_id = ' . $_POST['userId']);
+                    $result = $shardDb->query('UPDATE user_building_open SET is_open=1 WHERE building_id=' . $_POST['buildingId'] . ' AND user_id = ' . $userId);
                 } else {
-                    $result = $mainDb->query('UPDATE user_building_open SET is_open=1 WHERE building_id=' . $_POST['buildingId'] . ' AND user_id = ' . $_POST['userId'] . ' AND user_db_building_id=' . $_POST['dbId']);
+                    $result = $shardDb->query('UPDATE user_building_open SET is_open=1 WHERE building_id=' . $_POST['buildingId'] . ' AND user_id = ' . $userId . ' AND user_db_building_id=' . $_POST['dbId']);
                 }
 
                 if ($result) {

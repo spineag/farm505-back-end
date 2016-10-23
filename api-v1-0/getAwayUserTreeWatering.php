@@ -5,7 +5,8 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
+    $userId = filter_var($_POST['userId']);
+    $shardDb = $app->getShardDb($userId);
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
@@ -19,7 +20,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             try {
                 // trees
                 $respTrees = [];
-                $result = $mainDb->query("SELECT * FROM user_tree WHERE id = " . $_POST['id']); //user_id =".$userId);
+                $result = $shardDb->query("SELECT * FROM user_tree WHERE id = " . $_POST['id']); //user_id =".$userId);
                 if ($result) {
                     $arr = $result->fetch();
                     $res = [];

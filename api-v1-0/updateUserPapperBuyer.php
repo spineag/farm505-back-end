@@ -5,7 +5,6 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
@@ -16,9 +15,14 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {
+            $userId = filter_var($_POST['userId']);
+            $shardDb = $app->getShardDb($userId);
             try {
                 $time = time();
-                $result = $mainDb->query('UPDATE user_papper_buy SET resource_id=' . $_POST['resourceId'] . ', resource_count=' . $_POST['resourceCount'] . ', xp=' . $_POST['xp'] . ', cost=' . $_POST['cost'] . ', time_to_new=' . $time . ', visible=' . $_POST['visible'] . ', type_resource =' . $_POST['typeResource'] . ' WHERE user_id=' . $_POST['userId'] . ' AND buyer_id=' . $_POST['buyerId']);
+                $result = $mainDb->query('UPDATE user_papper_buy SET resource_id=' . $_POST['resourceId'] . ', resource_count=' .
+                    $_POST['resourceCount'] . ', xp=' . $_POST['xp'] . ', cost=' . $_POST['cost'] . ', time_to_new=' .
+                    $time . ', visible=' . $_POST['visible'] . ', type_resource =' . $_POST['typeResource'] .
+                    ' WHERE user_id=' . $userId . ' AND buyer_id=' . $_POST['buyerId']);
                 if (!$result) {
                     $json_data['id'] = 2;
                     $json_data['status'] = 's339';

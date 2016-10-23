@@ -5,7 +5,8 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
+    $userId = filter_var($_POST['userId']);
+    $shardDb = $app->getShardDb($userId);
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
@@ -14,7 +15,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             // $result = $mainDb->insert('user_removed_wild',
             //     ['user_id' => $_POST['userId'], 'wild_db_id' => $_POST['dbId']],
             //     ['int', 'int']);
-            $result = $mainDb->query('INSERT INTO user_removed_wild SET user_id='.$_POST['userId'].', wild_db_id='.$_POST['dbId']);
+            $result = $shardDb->query('INSERT INTO user_removed_wild SET user_id='.$userId.', wild_db_id='.$_POST['dbId']);
 
            if ($result) {
                 $json_data['message'] = '';

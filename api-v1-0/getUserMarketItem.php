@@ -5,10 +5,12 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+        $mainDb = $app->getMainDb();
+        $userId = filter_var($_POST['userId']);
+        $shardDb = $app->getShardDb($userId);
         try {
             $resp = [];
             $result = $mainDb->query("SELECT * FROM users WHERE social_id =".$_POST['userSocialId']);
@@ -16,7 +18,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             $responce['market_cell'] = $arr['market_cell'];
             $id = $arr['id'];
 
-            $result = $mainDb->query("SELECT * FROM user_market_item WHERE user_id =".$id);
+            $result = $shardDb->query("SELECT * FROM user_market_item WHERE user_id =".$id);
             if ($result) {
                 $arr = $result->fetchAll();
                 foreach ($arr as $value => $dict) {
@@ -35,7 +37,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                         if (time() > (int)$dict['time_in_papper'] + 5*60*60) {
                             $res['in_papper'] = 0;
                             $res['time_in_papper'] = 0;
-                            $resultUpdate = $mainDb->query('UPDATE user_market_item SET in_papper=0 AND time_in_papper = 0 WHERE id='.$res['id']);
+                            $resultUpdate = $shardDb->query('UPDATE user_market_item SET in_papper=0 AND time_in_papper = 0 WHERE id='.$res['id']);
                         } else {
                             $res['in_papper'] = 1;
                         }

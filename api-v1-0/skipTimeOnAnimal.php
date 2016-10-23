@@ -5,7 +5,6 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
@@ -16,8 +15,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {
+            $userId = filter_var($_POST['userId']);
+            $shardDb = $app->getShardDb($userId);
             try {
-                $result = $mainDb->query('UPDATE user_animal SET raw_time_start=' . $_POST['timeToEnd'] . ' WHERE id=' . $_POST['animalDbId']);
+                $result = $shardDb->query('UPDATE user_animal SET raw_time_start=' . $_POST['timeToEnd'] . ' WHERE id=' . $_POST['animalDbId']);
                 if (!$result) {
                     $json_data['id'] = 2;
                     $json_data['status'] = 's322';

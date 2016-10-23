@@ -5,7 +5,8 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
+    $userId = filter_var($_POST['userId']);
+    $shardDb = $app->getShardDb($userId);
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
@@ -17,7 +18,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $mainDb->queryWithAnswerId('INSERT INTO user_order SET user_id=' . $_POST['userId'] . ', ids="' . $_POST['ids'] . '", counts="' . $_POST['counts'] . '", xp=' . $_POST['xp'] . ', coins=' . $_POST['coins'] .
+                $result = $shardDb->queryWithAnswerId('INSERT INTO user_order SET user_id=' . $userId . ', ids="' . $_POST['ids'] . '", counts="' . $_POST['counts'] . '", xp=' . $_POST['xp'] . ', coins=' . $_POST['coins'] .
                     ', add_coupone=' . $_POST['addCoupone'] . ', start_time=' . (time() + (int)$_POST['delay']) . ', place=' . $_POST['place'].', faster_buyer =' . $_POST['fasterBuyer']);
 
                 if ($result) {

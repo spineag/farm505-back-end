@@ -20,10 +20,11 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 $result = $mainDb->query("SELECT * FROM users WHERE social_id =" . $_POST['userSocialId']);
                 $arr = $result->fetch();
                 $userId = $arr['id'];
+                $shardDb = $app->getShardDb($userId);
 
                 // buildings
                 $respBuildings = [];
-                $result = $mainDb->query("SELECT * FROM user_building WHERE in_inventory = 0 AND user_id =" . $userId);
+                $result = $shardDb->query("SELECT * FROM user_building WHERE in_inventory = 0 AND user_id =" . $userId);
                 if ($result) {
                     $arr = $result->fetchAll();
                     foreach ($arr as $value => $dict) {
@@ -33,7 +34,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                         $build['pos_x'] = $dict['pos_x'];
                         $build['pos_y'] = $dict['pos_y'];
                         $build['is_flip'] = $dict['is_flip'];
-                        $startBuild = $mainDb->query("SELECT * FROM user_building_open WHERE user_id =" . $userId . " AND building_id =" . $dict['building_id'] . " AND user_db_building_id =" . $dict['id']);
+                        $startBuild = $shardDb->query("SELECT * FROM user_building_open WHERE user_id =" . $userId . " AND building_id =" . $dict['building_id'] . " AND user_db_building_id =" . $dict['id']);
                         $date = $startBuild->fetch();
                         if ($date) {
                             $build['time_build_building'] = (int)time() - (int)$date['date_start_build'];
@@ -62,14 +63,14 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                         $build['building_id'] = $dict['building_id'];
                         $build['pos_x'] = $dict['pos_x'];
                         $build['pos_y'] = $dict['pos_y'];
-                        $startBuild = $mainDb->query("SELECT * FROM user_building_open WHERE user_id =" . $userId . " AND building_id =" . $dict['building_id']);
+                        $startBuild = $shardDb->query("SELECT * FROM user_building_open WHERE user_id =" . $userId . " AND building_id =" . $dict['building_id']);
                         $date = $startBuild->fetch();
                         if ($date) {
                             $build['time_build_building'] = (int)time() - (int)$date['date_start_build'];
                             $build['is_open'] = $date['is_open'];
                         }
                         if ($build['building_id'] == 49) {
-                            $tr = $mainDb->query("SELECT * FROM user_train WHERE user_id =" . $userId);
+                            $tr = $shardDb->query("SELECT * FROM user_train WHERE user_id =" . $userId);
                             $train = $tr->fetch();
                             $build['train_state'] = $train['state'];
                         }
@@ -83,7 +84,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
 
                 // plants
                 $respPlants = [];
-                $result = $mainDb->query("SELECT * FROM user_plant_ridge WHERE user_id =" . $userId);
+                $result = $shardDb->query("SELECT * FROM user_plant_ridge WHERE user_id =" . $userId);
                 if ($result) {
                     $arr = $result->fetchAll();
                     foreach ($arr as $value => $dict) {
@@ -102,7 +103,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
 
                 // trees
                 $respTrees = [];
-                $result = $mainDb->query("SELECT * FROM user_tree WHERE user_id =" . $userId);
+                $result = $shardDb->query("SELECT * FROM user_tree WHERE user_id =" . $userId);
                 if ($result) {
                     $arr = $result->fetchAll();
                     foreach ($arr as $value => $dict) {
@@ -121,7 +122,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
 
                 // animals
                 $respAnimals = [];
-                $result = $mainDb->query("SELECT * FROM user_animal WHERE user_id =" . $userId);
+                $result = $shardDb->query("SELECT * FROM user_animal WHERE user_id =" . $userId);
                 if ($result) {
                     $arr = $result->fetchAll();
                     foreach ($arr as $value => $dict) {
@@ -144,7 +145,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
 
                 //recipes
                 $respRecipes = [];
-                $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =" . $userId);
+                $result = $shardDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =" . $userId);
                 if ($result) {
                     $arr = $result->fetchAll();
                     foreach ($arr as $value => $dict) {
@@ -164,7 +165,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
 
                 //wild
                 $arrRemoved = [];
-                $result = $mainDb->query("SELECT wild_db_id FROM user_removed_wild WHERE user_id = " . $userId);
+                $result = $shardDb->query("SELECT wild_db_id FROM user_removed_wild WHERE user_id = " . $userId);
                 $u = $result->fetchAll();
                 foreach ($u as $value => $dict) {
                     $arrRemoved[] = $dict['wild_db_id'];
