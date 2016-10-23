@@ -92,6 +92,25 @@ class Application
     {
         return new OwnMySQLI(SERVER_DB, USER, PASSWORD, DB);
     }
+
+    final public function getShardDb($uid)
+    {
+        $memcached = $this->getMemcache();
+        $shardKey = "shard_" . $uid;
+        $dbCfgShard = $memcached->get($shardKey);
+        if (empty($dbCfgShard)) {
+            $mainDb = $this->getMainDb();
+            $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database` FROM game_shard WHERE first_user_id <='".$uid."' AND last_user_id >='".$uid."'");
+            $dbCfgShard = $res->fetch();
+            $time_out = 5 * 60;
+            $memcached->set($shardKey, $dbCfgShard, $time_out);
+        }
+
+        if (!empty($dbCfgShard)) {
+            return new OwnMySQLI($dbCfgShard["host"], $dbCfgShard["user"], $dbCfgShard["pass"], $dbCfgShard["database"]);
+        }
+        return NULL;
+    }
     
     final public function md5Secret() {
         return '505';
