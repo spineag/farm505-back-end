@@ -116,33 +116,6 @@ class Application
         return '505';
     }
 
-//    final public function getShardDb($userId)
-//    {
-//        $memcached = $this->getMemcache();
-//        $shardKey = "shard_" . $userId;
-//        $dbCfgShard = $memcached->get($shardKey);
-//
-//        if (empty($dbCfgShard))
-//        {
-//            $mainDb = $this->getMainDb();
-//
-//            $result = $mainDb->query("SELECT id, shard_host, shard_user, shard_password as pass, db_name as `database` FROM shard
-//            WHERE first_user_id <= '" . $userId . "' AND last_user_id >= '" . $userId . "';");
-//
-//            $dbCfgShard = $result->fetch();
-//            $time_out = 5 * 60;
-//            $memcached->set($shardKey, $dbCfgShard, $time_out);
-//        }
-//
-//        if (!empty($dbCfgShard))
-//        {
-//            return new OwnMySQLI($dbCfgShard["shard_host"], $dbCfgShard["shard_user"], $dbCfgShard["pass"], $dbCfgShard["database"]);
-//        }
-//        else
-//        {
-//            return null;
-//        }
-//    }
 
     final public function getUserId($channelId, $socialUId, $chackViewer = false)
     {
