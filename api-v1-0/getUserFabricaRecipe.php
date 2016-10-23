@@ -8,7 +8,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
-        $m = md5($_POST['userId'].$_POST['dbId'].$_POST['count'].$app->md5Secret());
+        $m = md5($_POST['userId'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
             $json_data['status'] = 's418';
