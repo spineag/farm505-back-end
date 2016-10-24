@@ -12,7 +12,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $shardDb = $app->getShardDb($userId);
         try {
             $resp = [];
-            $result = $mainDb->query("SELECT * FROM user_animal WHERE user_id =" . $userId);
+            $result = $shardDb->query("SELECT * FROM user_animal WHERE user_id =" . $userId);
             if ($result) {
                 $arr = $result->fetchAll();
                 foreach ($arr as $value => $dict) {
