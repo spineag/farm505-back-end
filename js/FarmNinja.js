@@ -24,30 +24,38 @@ var FarmNinja = {
     },
 
     init: function () {
-        var url = document.location.toString().split('?');
-        var flashvars =
-        {
-            data: (url[1] ? '&' + url[1] : ''),
-            protocol: (document.location.protocol == 'https:') ? 'https' : 'http',
-            channel: this.channel,
-            gacid: this.getUserGAcid()
-        };
+        if (this.version == '0') {
+            $('#gameContainer').html('<div id="flash_container">' +
+                '<div id="404">' +
+                '<img src="https://505.ninja/images/404/window404.png" alt="На ремонте" />' +
+                '</div>' +
+                '</div>');
+        } else {
+            var url = document.location.toString().split('?');
+            var flashvars =
+            {
+                data: (url[1] ? '&' + url[1] : ''),
+                protocol: (document.location.protocol == 'https:') ? 'https' : 'http',
+                channel: this.channel,
+                gacid: this.getUserGAcid()
+            };
 
-        var params =
-        {
-            allowFullscreen: "true",
-            allowFullScreenInteractive: "true",
-            allowScriptAccess: "always",
-            wmode: "direct",
-            flashvars: flashvars
-        };
-        var attributes =
-        {
-            id: "farm_game",
-            name: "farm_game"
-        };
-            swfobject.embedSWF('/client/farm'+this.version+'.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
+            var params =
+            {
+                allowFullscreen: "true",
+                allowFullScreenInteractive: "true",
+                allowScriptAccess: "always",
+                wmode: "direct",
+                flashvars: flashvars
+            };
+            var attributes =
+            {
+                id: "farm_game",
+                name: "farm_game"
+            };
+            swfobject.embedSWF('/client/farm' + this.version + '.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
             // swfobject.embedSWF('/client/farm505.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
+        }
     },
 
     callbackFn: function (e) {
