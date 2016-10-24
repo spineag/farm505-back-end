@@ -17,7 +17,6 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $res = [];
                 $res['id'] = $arr['id'];
                 $res['state'] = $arr['state'];
-                $res['count_items'] = $arr['count_items'];
                 $res['time_work'] = time() - $arr['time_start'];
 
             } else {
