@@ -18,7 +18,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $userId = filter_var($_POST['userId']);
             $shardDb = $app->getShardDb($userId);
             try {
-                $result = $shardDb->query('UPDATE user_building SET pos_x=' . $_POST['posX'] . ', pos_y=' . $_POST['posY'] . ' WHERE user_id=' . $result . ' AND id=' . $_POST['dbId']);
+                $result = $shardDb->query('UPDATE user_building SET pos_x=' . $_POST['posX'] . ', pos_y=' . $_POST['posY'] . ' WHERE user_id=' . $userId . ' AND id=' . $_POST['dbId']);
                 if (!$result) {
                     $json_data['id'] = 2;
                     $json_data['status'] = 's331';
