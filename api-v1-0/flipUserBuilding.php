@@ -5,7 +5,8 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
+    $userId = filter_var($_POST['userId']);
+    $shardDb = $app->getShardDb($userId);
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
@@ -17,7 +18,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $mainDb->query('UPDATE user_building SET is_flip=' . $_POST['isFlip'] . ' WHERE id=' . $_POST['dbId']);
+                $result = $shardDb->query('UPDATE user_building SET is_flip=' . $_POST['isFlip'] . ' WHERE id=' . $_POST['dbId']);
                 if ($result) {
                     $json_data['message'] = '';
                 } else {

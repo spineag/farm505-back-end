@@ -5,7 +5,6 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
@@ -16,8 +15,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {
+            $userId = filter_var($_POST['userId']);
+            $shardDb = $app->getShardDb($userId);
             try {
-                $result = $mainDb->query('INSERT INTO user_building_open SET user_id=' . $_POST['userId'] . ', user_db_building_id=' . $_POST['dbId'] . ', building_id=' . $_POST['buildingId'] . ', is_open=0, date_start_build=' . time());
+                $result = $shardDb->query('INSERT INTO user_building_open SET user_id=' . $userId . ', user_db_building_id=' . $_POST['dbId'] . ', building_id=' . $_POST['buildingId'] . ', is_open=0, date_start_build=' . time());
 
                 if ($result) {
                     $json_data['message'] = '';

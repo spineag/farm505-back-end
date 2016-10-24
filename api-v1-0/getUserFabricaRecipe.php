@@ -5,11 +5,10 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
-        $m = md5($_POST['userId'].$_POST['dbId'].$_POST['count'].$app->md5Secret());
+        $m = md5($_POST['userId'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
             $json_data['status'] = 's418';
@@ -17,8 +16,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
+                $userId = filter_var($_POST['userId']);
+                $shardDb = $app->getShardDb($userId);
                 $resp = [];
-                $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =" . $_POST['userId']." ORDER BY id");
+                $result = $shardDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =" . $_POST['userId']." ORDER BY id");
                 if ($result) {
                     $arr = $result->fetchAll();
                     foreach ($arr as $value => $dict) {

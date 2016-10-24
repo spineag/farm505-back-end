@@ -5,7 +5,6 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
@@ -16,9 +15,11 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {
+            $userId = filter_var($_POST['userId']);
+            $shardDb = $app->getShardDb($userId);
             try {
                 $m = '';
-                $result = $mainDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =".$_POST['userId'] . " AND user_db_building_id =" . $_POST['buildDbId']);
+                $result = $shardDb->query("SELECT * FROM user_recipe_fabrica WHERE user_id =".$userId . " AND user_db_building_id =" . $_POST['buildDbId']);
                 if ($result) {
                     $arr = $result->fetchAll();
                     $d = 0;
@@ -28,7 +29,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 //                            $m .= (string)$d.'_'.$dict['id'].'; ';
 //                            $d = 0;
                         }
-                        $result = $mainDb->query('UPDATE user_recipe_fabrica SET delay_time=' . $d . ' WHERE id=' . $dict['id']);
+                        $result = $shardDb->query('UPDATE user_recipe_fabrica SET delay_time=' . $d . ' WHERE id=' . $dict['id']);
                     }
                 } else {
                     $json_data['id'] = 2;

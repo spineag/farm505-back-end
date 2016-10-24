@@ -5,7 +5,8 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
+    $userId = filter_var($_POST['userId']);
+    $shardDb = $app->getShardDb($userId);
     $channelId = 1; // VK
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
         $m = md5($_POST['userId'] . $_POST['resourceId'] . $_POST['countAll'] . $app->md5Secret());
@@ -15,18 +16,13 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {
-            try {
-                $result = $mainDb->query("SELECT id FROM user_resource WHERE user_id =".$_POST['userId']." AND resource_id=".$_POST['resourceId']);
-                $arr = $result->fetch();
-                if (count($arr) > 0) {
-//                if ($result) {
-                    $result = $mainDb->query('UPDATE user_resource SET count = '.$_POST['countAll'].' WHERE user_id='.$_POST['userId'].' AND resource_id = '.$_POST['resourceId']);
-                    $text = 'update';
-                } else {
-                    $result = $mainDb->query('INSERT INTO user_resource SET user_id='.$_POST['userId'].', resource_id='.$_POST['resourceId'].', count='.$_POST['countAll']);
-                    $text = 'insert';
-                }
 
+            try {
+               $resourceId = filter_var($_POST['resourceId']);
+               $resourceCount = filter_var($_POST['countAll']);
+                $result = $shardDb->query("INSERT INTO user_resource (user_id, resource_id, count) 
+                                          VALUES ('" . $userId . "','" . $resourceId . "','" . $resourceCount . "') 
+                                          ON DUPLICATE KEY UPDATE count = " . $resourceCount);
                 if ($result) {
                     $json_data['message'] = '';
                     echo json_encode($json_data);

@@ -5,7 +5,6 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
@@ -16,9 +15,11 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {
+            $userId = filter_var($_POST['userId']);
+            $shardDb = $app->getShardDb($userId);
         try {
             $resp = [];
-            $result = $mainDb->query("SELECT * FROM user_plant_ridge WHERE user_id =" . $_POST['userId']);
+            $result = $shardDb->query("SELECT * FROM user_plant_ridge WHERE user_id =" . $userId);
             if ($result) {
                 $arr = $result->fetchAll();
                 foreach ($arr as $value => $dict) {

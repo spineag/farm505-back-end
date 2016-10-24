@@ -14,8 +14,9 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     $userLevel = $arr['level'];
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+        $shardDb = $app->getShardDb($userId);
         try {
-            $result = $mainDb->query("SELECT * FROM user_train_pack WHERE user_id =".$userId);
+            $result = $shardDb->query("SELECT * FROM user_train_pack WHERE user_id =".$userId);
             $arr = $result->fetch();
             if (empty($arr)) {
                 $result = $mainDb->query("SELECT resource_id, big_count, small_count FROM data_train_resource");
@@ -53,7 +54,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 $result = $mainDb->insert('user_train_pack',
                     ['user_id' => $userId, 'count_xp' => $XPCount, 'count_money' => $COINSCount],
                     ['int', 'int', 'int']);
-                $result = $mainDb->query("SELECT id FROM user_train_pack WHERE user_id =".$userId);
+                $result = $shardDb->query("SELECT id FROM user_train_pack WHERE user_id =".$userId);
                 if (!$result) {
                     $json_data['status'] = 's108';
                     $json_data['message'] = 3;
@@ -78,7 +79,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                     }
                 }
 
-                $result = $mainDb->query("SELECT * FROM user_train_pack WHERE user_id =".$userId);
+                $result = $shardDb->query("SELECT * FROM user_train_pack WHERE user_id =".$userId);
                 $arr = $result->fetch();
             }
 
@@ -87,7 +88,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             $pack['count_xp'] = $arr['count_xp'];
             $pack['count_money'] = $arr['count_money'];
             $pack['items'] = [];
-            $result = $mainDb->query("SELECT * FROM user_train_pack_item WHERE user_id =".$userId." AND user_train_pack_id=".$arr['id']);
+            $result = $shardDb->query("SELECT * FROM user_train_pack_item WHERE user_id =".$userId." AND user_train_pack_id=".$arr['id']);
             $arr = $result->fetchAll();
             if (!empty($arr)) {
                 foreach ($arr as $key => $d) {

@@ -5,7 +5,8 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
+    $userId = filter_var($_POST['userId']);
+    $shardDb = $app->getShardDb($userId);
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
@@ -17,7 +18,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $mainDb->queryWithAnswerId('INSERT INTO user_animal SET user_id=' . $_POST['userId'] . ', user_db_building_id=' . $_POST['farmDbId'] . ', animal_id=' . $_POST['animalId'] . ', raw_time_start=0');
+                $result = $shardDb->queryWithAnswerId('INSERT INTO user_animal SET user_id=' . $userId . ', user_db_building_id=' . $_POST['farmDbId'] . ', animal_id=' . $_POST['animalId'] . ', raw_time_start=0');
                 if ($result) {
                     $json_data['message'] = $result[1];
                     echo json_encode($json_data);

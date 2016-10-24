@@ -5,12 +5,15 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
+
     $channelId = 1; // VK
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+        $mainDb = $app->getMainDb();
+        $userId = filter_var($_POST['userId']);
+        $shardDb = $app->getShardDb($userId);
         try {
-            $result = $mainDb->query("SELECT level FROM users WHERE id =".$_POST['userId']);
+            $result = $mainDb->query("SELECT level FROM users WHERE id =".$userId);
             if ($result) {
                 $arr = $result->fetch();
                 $level = $arr['level'];
@@ -19,7 +22,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $json_data['status'] = 's304';
                 throw new Exception("Bad request to DB!");
             }
-            $result = $mainDb->query("SELECT * FROM user_neighbor WHERE user_id =".$_POST['userId']);
+            $result = $shardDb->query("SELECT * FROM user_neighbor WHERE user_id =".$userId);
             if ($result) {
                 $arr = $result->fetch();
                 if ($arr['last_update'] <> date('j')) {
@@ -57,7 +60,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     ['int', 'int', 'int', 'int', 'int', 'int', 'int'],
                     ['int']);
 
-                    $result = $mainDb->query("SELECT * FROM user_neighbor WHERE user_id =".$_POST['userId']);
+                    $result = $shardDb->query("SELECT * FROM user_neighbor WHERE user_id =".$_POST['userId']);
                     if ($result) {
                         $arr = $result->fetch();
                     } else {
