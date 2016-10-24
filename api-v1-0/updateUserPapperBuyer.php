@@ -19,7 +19,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $shardDb = $app->getShardDb($userId);
             try {
                 $time = time();
-                $result = $mainDb->query('UPDATE user_papper_buy SET resource_id=' . $_POST['resourceId'] . ', resource_count=' .
+                $result = $shardDb->query('UPDATE user_papper_buy SET resource_id=' . $_POST['resourceId'] . ', resource_count=' .
                     $_POST['resourceCount'] . ', xp=' . $_POST['xp'] . ', cost=' . $_POST['cost'] . ', time_to_new=' .
                     $time . ', visible=' . $_POST['visible'] . ', type_resource =' . $_POST['typeResource'] .
                     ' WHERE user_id=' . $userId . ' AND buyer_id=' . $_POST['buyerId']);
