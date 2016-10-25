@@ -51,7 +51,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 $XPCount = (int)$arr[1]['order_xp'] + (int)$arr[2]['order_xp'];
                 $COINSCount = (int)$arr[1]['order_price'] + (int)$arr[2]['order_price'];
 
-                $result = $mainDb->insert('user_train_pack',
+                $result = $shard->insert('user_train_pack',
                     ['user_id' => $userId, 'count_xp' => $XPCount, 'count_money' => $COINSCount],
                     ['int', 'int', 'int']);
                 $result = $shardDb->query("SELECT id FROM user_train_pack WHERE user_id =".$userId);
@@ -73,7 +73,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                             $countResource = rand($arr[$i]['small_count']/3*2, $arr[$i]['small_count']);
                         }
                     for ($k = 0; $k < $countCells; $k++) {
-                        $result = $mainDb->insert('user_train_pack_item',
+                        $result = $shardDb->insert('user_train_pack_item',
                             ['user_id' => $userId, 'user_train_pack_id' => $pack['id'], 'resource_id' => $arr[$i]['id'], 'count_resource' => $countResource, 'count_xp' => $arr[$i]['order_xp']*$countResource, 'count_money' => $arr[$i]['order_price']*$countResource, 'is_full' => 0],
                             ['int', 'int', 'int', 'int', 'int', 'int', 'int']);
                     }
