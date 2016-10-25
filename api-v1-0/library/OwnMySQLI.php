@@ -99,25 +99,20 @@ class OwnMySQLI
 
     private function _connect()
     {
-        if (!empty($this->_connections[$this->_params['key']]))
-        {
-            $this->_linkIdentifier = $this->_connections[$this->_params['key']];
-        }
-        else
-        {
-            @$this->_connections[$this->_params['key']] = $this->_linkIdentifier = mysqli_connect("p:".$this->_params['host'], $this->_params['user'], $this->_params['pass']);
+        if (!empty(self::$_connections[$this->_params['key']])) {
+            $this->_linkIdentifier = self::$_connections[$this->_params['key']];
+        } else {
+            self::$_connections[$this->_params['key']] = $this->_linkIdentifier = mysqli_connect("p:".$this->_params['host'], $this->_params['user'], $this->_params['pass']);
         }
 
-        if (!$this->_linkIdentifier)
-        {
+        if (!$this->_linkIdentifier) {
             die ("Could not connect to host <b>\"".$this->_params['host']."\"</b> user <b>\"".$this->_params['user']."\"</b> ".mysqli_connect_error()."<br />\n");
         }
 
         $result = mysqli_query($this->_linkIdentifier, 'set names utf8');
-        if($result === false)
-        {
+        if ($result === false) {
             mysqli_close($this->_linkIdentifier);
-            @$this->_connections[$this->_params['key']] = $this->_linkIdentifier = mysqli_connect("p:".$this->_params['host'], $this->_params['user'], $this->_params['pass']);
+            self::$_connections[$this->_params['key']] = $this->_linkIdentifier = mysqli_connect("p:".$this->_params['host'], $this->_params['user'], $this->_params['pass']);
             mysqli_query($this->_linkIdentifier, 'set names utf8');
         }
         $this->_database = $this->_params['database'];
@@ -130,7 +125,7 @@ class OwnMySQLI
             'user' => $user,
             'pass' => $pass,
             'database' => $database,
-            'key' => $host.$user,
+            'key' => $host . $user,
         );
 
         $this->_connect();
@@ -226,24 +221,55 @@ class OwnMySQLI
     public function query($query)
     {
         mysqli_select_db($this->_linkIdentifier, $this->_database);
-        if (static::$_debug)
-        {
+        if (static::$_debug) {
             echo $query . "<br />\n";
         }
         $result = mysqli_query($this->_linkIdentifier, $query);
-        if($result === false)
-        {
+        if ($result === false) {
             mysqli_close($this->_linkIdentifier);
-            @$this->_connections[$this->_params['key']] = $this->_linkIdentifier = mysqli_connect("p:".$this->_params['host'], $this->_params['user'], $this->_params['pass']);
+            self::$_connections[$this->_params['key']] = $this->_linkIdentifier = mysqli_connect("p:".$this->_params['host'], $this->_params['user'], $this->_params['pass']);
             mysqli_select_db($this->_linkIdentifier, $this->_params['database']);
 
             $result = mysqli_query($this->_linkIdentifier, $query);
 
-            if($result === false)
-            {
+            if ($result === false) {
                 die("Query:<i> ".$query."</i> ".mysqli_error($this->_linkIdentifier));
             }
         }
+        return new DBStatementI($result);
+    }
+
+    public function insertId()
+    {
+        return mysqli_insert_id($this->_linkIdentifier);
+    }
+
+    /**
+     * Executes query and Return new DBStatementI or int if this is INSERT statement
+     *
+     * @param $query
+     * @return DBStatementI|int
+     */
+    public function queryLastId($query)
+    {
+        mysqli_select_db($this->_linkIdentifier, $this->_database);
+        if (static::$_debug) {
+            echo $query . "<br />\n";
+        }
+        $queryResult = mysqli_real_query($this->_linkIdentifier, $query);
+
+        $mysqli_field_count = mysqli_field_count($this->_linkIdentifier);
+        if ($mysqli_field_count) {
+            $result = mysqli_store_result($this->_linkIdentifier);
+        } else {
+            $result = $queryResult;
+        }
+
+        if ( ($result === true) && (preg_match('/^\s*"?(INSERT|REPLACE)\s+/i', $query)) ) {
+            $insertId = (int)$this->insertId();
+            return $insertId;
+        }
+
         return new DBStatementI($result);
     }
     
