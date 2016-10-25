@@ -51,7 +51,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 $XPCount = (int)$arr[1]['order_xp'] + (int)$arr[2]['order_xp'];
                 $COINSCount = (int)$arr[1]['order_price'] + (int)$arr[2]['order_price'];
 
-                $result = $shard->insert('user_train_pack',
+                $result = $shardDb->insert('user_train_pack',
                     ['user_id' => $userId, 'count_xp' => $XPCount, 'count_money' => $COINSCount],
                     ['int', 'int', 'int']);
                 $result = $shardDb->query("SELECT id FROM user_train_pack WHERE user_id =".$userId);
