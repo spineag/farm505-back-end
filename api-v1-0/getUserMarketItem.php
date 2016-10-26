@@ -54,7 +54,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                             $result2 = $mainDb->query("SELECT * FROM users WHERE social_id = 1");
                             $arr = $result2->fetch();
                             if (time() - $dict['time_start'] > 24*60*60) {
-                                $result = $mainDb->update(
+                                $result = $shardDb->update(
                                     'user_market_item',
                                     ['buyer_id' => $arr['id'], 'time_sold' => time(), 'in_papper' => 0],
                                     ['id' => $dict['id']],
