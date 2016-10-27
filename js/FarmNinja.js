@@ -2,6 +2,7 @@ var FarmNinja = {
     user_sid: false,
     swf: {},
     version: -1,
+    channel: 2, // vk main
 
     getVersion: function() {
         $.ajax({
