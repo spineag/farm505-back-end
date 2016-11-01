@@ -36,6 +36,12 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $user['xp'] = $u['xp'];
                 $user['daily_bonus_day'] = gmdate("d", $u['daily_bonus_day']);
                 $user['count_daily_bonus'] = $u['count_daily_bonus'];
+                if ($u['mouse_day'] == '0') {
+                    $user['mouse_day'] = 0;
+                } else {
+                    $user['mouse_day'] = gmdate("d", $u['mouse_day']);
+                }
+                $user['mouse_count'] = $u['mouse_count'];
                 $user['is_tester'] = $u['is_tester'];
                 $user['count_cats'] = $u['count_cats'];
                 $user['scale'] = $u['scale'];
