@@ -19,6 +19,10 @@ var FarmNinja = {
         })
     },
 
+    setChannel: function(v) {
+        this.channel = v;
+    },
+
     setVersion: function(v) {
         this.version = v;
         this.init();
