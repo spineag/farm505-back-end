@@ -5,9 +5,11 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     $app = Application::getInstance();
-    $channelId = 1; // VK
+    if (isset($_POST['channelId'])) {
+        $channelId = (int)$_POST['channelId'];
+    } else $channelId = 2; // VK
 
-    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$_POST['userSocialId'].$_POST['awayUserSocialId'].$_POST['id'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
@@ -16,7 +18,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             echo json_encode($json_data);
         } else {
             $userId = filter_var($_POST['userId']);
-            $shardDb = $app->getShardDb($userId);
+            $shardDb = $app->getShardDb($userId, $channelId);
             try {
                 $result = $shardDb->query('UPDATE user_tree SET state=' . $_POST['state'] . ', fixed_user_id=' . $_POST['userSocialId'] . ', time_start =' . time() . ' WHERE id=' . $_POST['id']);
                 if (!$result) {

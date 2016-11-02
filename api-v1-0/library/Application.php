@@ -1,14 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: oleksiy.stadnyk
- * Date: 10/7/14
- * Time: 4:54 PM
- * aFor TEst
- */
-
-////// ORIGINAL
-
 require_once($_SERVER['DOCUMENT_ROOT'] . "/php/api-v1-0/library/OwnMySQLI.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/php/api-v1-0/config/config.php");
 require_once($_SERVER['DOCUMENT_ROOT'] . "/php/api-v1-0/config/configNew.php");
@@ -19,87 +9,50 @@ class Application
     private static $_instance;
     private $_cfg;
     private $_socialNetwork;
-    private $_mainDbLink;
     private $_memcached;
     protected static $_settingsConst = array();
 
     /**
      * @return Application
      */
-    final static public function getInstance()
-    {
-        if (static::$_instance == NULL)
-        {
+    final static public function getInstance(){
+        if (static::$_instance == NULL) {
             static::$_instance = new Application();
         }
-
         return static::$_instance;
     }
 
-    function __construct()
-    {
-        // get configuration from config file
+    function __construct() {
         $cfgs = $GLOBALS["cfgs"];
-        $this->_cfg = isset($cfgs['1']) ? $cfgs['1'] : die("Wrong configuration  \n");
-
-//        self::$_settingsConst = self::loadDefoultSettings();
-
-
+        $this->_cfg = isset($cfgs['1']) ? $cfgs['1'] : die("Wrong configuration __construct \n");
     }
-
-//    final public function getSnCfg()
-//    {
-//        return $this->_cfg["sn"];
-//    }
-
-
-//    final public function getSettingsConst($key)
-//    {
-//        return self::$_settingsConst[$key];
-//    }
-
-//    final public function loadDefoultSettings()
-//    {
-//        $result = array();
-//        $mainDb = $this->getMainDb();
-//        $querySettings = $mainDb->query("SELECT * FROM dict_settings");
-//        $settingsAll = $querySettings->fetchAll();
-//        foreach($settingsAll as $settingsItem)
-//        {
-//            $result[$settingsItem["key"]] = $settingsItem["value"];
-//            define($settingsItem["key"],$settingsItem["value"]);
-//        }
-//        return $result;
-//    }
-
     /**
      * @return Memcached
      */
-    final public function getMemcache()
-    {
-        if ($this->_memcached == NULL)
-        {
+    final public function getMemcache() {
+        if ($this->_memcached == NULL) {
             $this->_memcached = new Memcached();
-
-            //Configure memcached
             $this->_memcached->addServer(MEMCACHED_HOST, MEMCACHED_PORT) or die ("Could not connect to memcached!");
         }
-
         return $this->_memcached;
     }
 
-    final public function getMainDb()
-    {
-        return new OwnMySQLI(SERVER_DB, USER, PASSWORD, DB);
+    final public function getMainDb($channelId = 2) {
+        if ($channelId == 2) {
+            return new OwnMySQLI(SERVER_DB, USER, PASSWORD, DB);
+        } else if ($channelId == 3) {
+            return new OwnMySQLI(SERVER_DB_OK, USER_OK, PASSWORD_OK, DB_OK);
+        } else {
+            return new OwnMySQLI(SERVER_DB, USER, PASSWORD, DB); // if unknown value
+        }
     }
 
-    final public function getShardDb($uid)
-    {
+    final public function getShardDb($uid, $channelId = 2) {
         $memcached = $this->getMemcache();
-        $shardKey = "shard_" . $uid;
+        $shardKey = $channelId."shard_".$uid;
         $dbCfgShard = $memcached->get($shardKey);
         if (empty($dbCfgShard)) {
-            $mainDb = $this->getMainDb();
+            $mainDb = $this->getMainDb($channelId);
             $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database` FROM game_shard WHERE first_user_id <='".$uid."' AND last_user_id >='".$uid."'");
             $dbCfgShard = $res->fetch();
             $time_out = 5 * 60;
@@ -117,48 +70,37 @@ class Application
     }
 
 
-    final public function getUserId($channelId, $socialUId, $chackViewer = false)
-    {
-        $mainDb = $this->getMainDb();
-        $tableName = 'users';
-
+    final public function getUserId($channelId, $socialUId, $checkViewer = false) {
+        $mainDb = $this->getMainDb($channelId);
         $result = $mainDb->query("SELECT id FROM users WHERE social_id =".$socialUId);
         $arr = $result->fetch();
         $userId= $arr['id'];
         if ($userId == false) $userId = 0;
 
-        if ($userId > 0)
-        {
+        if ($userId > 0) {
             // update user last activity date
-            $result = $mainDb->update($tableName, ['last_visit_date' => time()], ['id' => $userId], ['int'], ['int']);
+            $result = $mainDb->update('users', ['last_visit_date' => time()], ['id' => $userId], ['int'], ['int']);
         }
 
         return $userId;
     }
 
-    public function checkNeedHelp($userId) {
-        $shardDb = $this->getShardDb($userId);
+    public function checkNeedHelp($userId, $channelId = 2) {
+        $shardDb = $this->getShardDb($userId, $channelId);
         $result = $shardDb->query("SELECT id FROM user_tree WHERE user_id =".$userId." AND state=11");
         $count = $result->num();
         return $count;
     }
 
-    public function getSocialId($userId)
-    {
-        $mainDb = $this->getMainDb();
-        $tableName = 'users';
-
-        $result = $mainDb->select($tableName, 'social_id', ['id' => $userId], ['int']);
-
+    public function getSocialId($userId, $channelId = 2) {
+        $mainDb = $this->getMainDb($channelId);
+        $result = $mainDb->select('users', 'social_id', ['id' => $userId], ['int']);
         $userSocialId = (int)$result->f('social_id');
-
         return $userSocialId;
     }
 
-    final public function newUser($channelId, $socialUId, $name = 'Vasia', $lname = 'Pupkin', $sex = 'w', $bornDate = '28.09.16')
-    {
-        $mainDb = $this->getMainDb();
-
+    final public function newUser($channelId, $socialUId, $name = 'Vasia', $lname = 'Pupkin', $sex = 'w', $bornDate = '28.09.16') {
+        $mainDb = $this->getMainDb($channelId);
         $const = [];
         $result = $mainDb->query('SELECT * FROM const');
         $c = $result->fetchAll();
@@ -191,11 +133,10 @@ class Application
             ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int', 'int',
                 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'str', 'str']);
                 
-        if ($result)
-        {
+        if ($result) {
             $userId = $this->getUserId($channelId, $socialUId);
             $arr = [31, 32, 21, 118];
-            $shardDb = $this->getShardDb($userId);
+            $shardDb = $this->getShardDb($userId, $channelId);
             foreach ($arr as $value) {
                 $result = $shardDb->insert('user_resource',
                     ['user_id' => $userId, 'resource_id' => $value, 'count' => 3],
@@ -287,20 +228,16 @@ class Application
         return -1;
     }
 
-    final public function checkSessionKey($userId, $sessionKey) {
+    final public function checkSessionKey($userId, $sessionKey, $channelId = 2) {
 //        return true;
         $sess = $this->getMemcache()->get((string)$userId);
         if (!$sess) {
-            $result = $this->getMainDb()->query("SELECT session_key FROM users WHERE id=" . $userId);
+            $result = $this->getMainDb($channelId)->query("SELECT session_key FROM users WHERE id=" . $userId);
             if (!$result) return true; // false
             $arr = $result->fetch();
             $sess = $arr['session_key'];
             $this->getMemcache()->set((string)$userId, (string)$sess, MEMCACHED_DICT_TIME);
         }
-//        $result = $this->getMainDb()->query("SELECT session_key FROM users WHERE id=" . $userId);
-//        if (!$result) return false;
-//        $arr = $result->fetch();
-//        $sess = $arr['session_key'];
         if ((string)$sessionKey == (string)$sess) {
             return true;
         } else {
@@ -308,124 +245,13 @@ class Application
         }
     }
 
-//    final public function getAppId($appGuid)
-//    {
-//        if ($appGuid != '')
-//        {
-//            $appData = $this->getMemcache()->get('appData_' . $appGuid);
-//            if (empty($appData))
-//            {
-//                $mainDb = $this->getMainDb();
-//                $result = $mainDb->select(
-//                    'application',
-//                    'id, application_name',
-//                    ['guid' => $appGuid],
-//                    ['str'],
-//                    'id',
-//                    1
-//                );
-//
-//                if ($row = $result->fetchObj())
-//                {
-//                    $appData = [
-//                        'appId'     => $row->id,
-//                        'appName'   => $row->application_name
-//                    ];
-//                    $this->getMemcache()->set('appData_' . $appGuid, $appData, 300);
-//                }
-//            }
-//
-//            return $appData;
-//        }
-//
-//        return [];
-//    }
 
-//    final public function getChannelId($chGuid)
-//    {
-//        if ($chGuid != '')
-//        {
-//            $chData = $this->getMemcache()->get('chData_' . $chGuid);
-//            if (empty($chData))
-//            {
-//                $mainDb = $this->getMainDb();
-//                $result = $mainDb->select(
-//                    'channel',
-//                    'id, channel_name',
-//                    ['guid' => $chGuid],
-//                    ['str'],
-//                    'id',
-//                    1
-//                );
-//
-//                if ($row = $result->fetchObj())
-//                {
-//                    $chData = [
-//                        'chId'=> $row->id,
-//                        'chName' => $row->channel_name
-//                    ];
-//                    $this->getMemcache()->set('chData_' . $chGuid, $chData, 300);
-//                }
-//            }
-//
-//            return $chData;
-//        }
-//
-//        return [];
-//    }
-
-    final public function verifySecurityKey($securityKey = '', $appGuid, $chGuid, $userSocialId, $scriptName)
-    {
+    final public function verifySecurityKey($securityKey = '', $appGuid, $chGuid, $userSocialId, $scriptName) {
         return (!empty($securityKey) && ($securityKey == (md5($appGuid . $chGuid . $userSocialId . substr($scriptName, strrpos($scriptName, '/') + 1) . GAME_SECRET)) ||
                 $securityKey == (md5($appGuid . $chGuid . $userSocialId . substr($scriptName, strrpos($scriptName, '/') + 1) . EDITOR_SECRET))));
     }
 
-    /** remove all user data
-     *
-     * @param $userId
-     */
-    
-//    final public function getViewerId($userId)
-//    {
-//        $mainDb = $this->getMainDb();
-//        $id = $userId;
-//
-//        $testerData = $mainDb->select(
-//            'testers',
-//            'viewer_id',
-//            ['user_id' => $userId],
-//            ['int'],
-//            '',
-//            1
-//        );
-//
-//        $viewerSocialId = $testerData->f('viewer_id');
-//
-//        if ($viewerSocialId > 0)
-//        {
-//            $channelData = $mainDb->select(
-//                'users',
-//                'channel_id',
-//                ['user_id' => $userId],
-//                ['int'],
-//                '',
-//                1
-//            );
-//            $channelId = $channelData->f('channel_id');
-//
-//            $viewerId = $this->getUserId($channelId, $viewerSocialId);
-//
-//            if ($viewerId > 0)
-//            {
-//                $id = $viewerId;
-//            }
-//        }
-//
-//        return $id;
-//    }
-
-    final public function getSocialNetwork()
-    {
+    final public function getSocialNetwork() {
         if ($this->_socialNetwork == NULL)
         {
             $socialNetwork = $this->_cfg["sn"]["socialNetworkClass"];
@@ -434,9 +260,8 @@ class Application
         return $this->_socialNetwork;
     }
 
-    final public function getRandomResource($userId)
-    {
-        $mainDb = $this->getMainDb();
+    final public function getRandomResource($userId, $channelId) {
+        $mainDb = $this->getMainDb($channelId);
         $result = $mainDb->query("SELECT * FROM users WHERE id =".$userId);
         if ($result) {
             $arr = $result->fetch();

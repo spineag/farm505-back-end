@@ -5,12 +5,14 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $channelId = 1; // VK
+    if (isset($_POST['channelId'])) {
+        $channelId = (int)$_POST['channelId'];
+    } else $channelId = 2; // VK
 
-    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
-        $mainDb = $app->getMainDb();
+    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
+        $mainDb = $app->getMainDb($channelId);
         $userId = filter_var($_POST['userId']);
-        $shardDb = $app->getShardDb($userId);
+        $shardDb = $app->getShardDb($userId, $channelId);
         try {
             $arrRemoved=[];
             $result = $shardDb->query("SELECT wild_db_id FROM user_removed_wild WHERE user_id = " . $userId);

@@ -6,12 +6,14 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 const TIME_GAP = 5 * 60 * 60;
 if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     $app = Application::getInstance();
-    $channelId = 1; // VK
+    if (isset($_POST['channelId'])) {
+        $channelId = (int)$_POST['channelId'];
+    } else $channelId = 2; // VK
 
-    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
-        $mainDb = $app->getMainDb();
+    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
+        $mainDb = $app->getMainDb($channelId);
         $userId = filter_var($_POST['userId']);
-        $shardDb = $app->getShardDb($userId);
+        $shardDb = $app->getShardDb($userId, $channelId);
         try {
             $resp = [];
             $result = $mainDb->query("SELECT market_cell, id FROM users WHERE social_id =".$_POST['userSocialId']);

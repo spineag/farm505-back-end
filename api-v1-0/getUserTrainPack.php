@@ -5,16 +5,18 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
-    $channelId = 1; // VK
+    if (isset($_POST['channelId'])) {
+        $channelId = (int)$_POST['channelId'];
+    } else $channelId = 2; // VK
+    $mainDb = $app->getMainDb($channelId);
 
     $result = $mainDb->query("SELECT * FROM users WHERE social_id =".$_POST['userSocialId']);
     $arr = $result->fetch();
     $userId = $arr['id'];
     $userLevel = $arr['level'];
 
-    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
-        $shardDb = $app->getShardDb($userId);
+    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
+        $shardDb = $app->getShardDb($userId, $channelId);
         try {
             $result = $shardDb->query("SELECT * FROM user_train_pack WHERE user_id =".$userId);
             $arr = $result->fetch();

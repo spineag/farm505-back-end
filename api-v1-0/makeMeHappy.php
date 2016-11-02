@@ -5,14 +5,16 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
+    if (isset($_POST['channelId'])) {
+        $channelId = (int)$_POST['channelId'];
+    } else $channelId = 2; // VK
+    $mainDb = $app->getMainDb($channelId);
     $userId = filter_var($_POST['userId']);
-    $shardDb = $app->getShardDb($userId);
-    $channelId = 1; // VK
+    $shardDb = $app->getShardDb($userId, $channelId);
 
     if (isset($_GET['a']) && $_GET['a'] == 'a') {
         try {
-            $id = $app->getUserId(1, $_GET['id']);
+            $id = $app->getUserId($channelId, $_GET['id']);
             if ($id >0) {
                 $shardDb->query('DELETE FROM user_animal WHERE user_id=' . $id);
 

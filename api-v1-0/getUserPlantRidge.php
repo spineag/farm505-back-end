@@ -5,9 +5,11 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $channelId = 1; // VK
+    if (isset($_POST['channelId'])) {
+        $channelId = (int)$_POST['channelId'];
+    } else $channelId = 2; // VK
 
-    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
@@ -16,7 +18,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             $userId = filter_var($_POST['userId']);
-            $shardDb = $app->getShardDb($userId);
+            $shardDb = $app->getShardDb($userId, $channelId);
         try {
             $resp = [];
             $result = $shardDb->query("SELECT * FROM user_plant_ridge WHERE user_id =" . $userId);

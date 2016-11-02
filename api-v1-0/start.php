@@ -6,20 +6,11 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
     $app = Application::getInstance();
     $mainDb = $app->getMainDb();
-    $channelId = 1; // VK
+    $channelId = 2; // VK
     $memcache = $app->getMemcache();
 
     try {
         $socialUId = $_POST['idSocial'];
-        //check is user available for game
-//        $result = $mainDb->query("SELECT * FROM available_users WHERE social_id =".$socialUId);
-//        $arr = $result->fetch();
-//        if (!$arr['id']) {
-//            $json_data['id'] = 3;
-//            throw new Exception("U are not an available user");
-//        }
-        
-        // create user if not exist
         $uid = $app->getUserId($channelId, $socialUId);
         if ($uid < 1) {
             $uid = $app->newUser($channelId, $socialUId, $_POST['name'], $_POST['lastName'], $_POST['sex'], $_POST['bornDate']);

@@ -6,10 +6,12 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
     $userId = filter_var($_POST['userId']);
-    $shardDb = $app->getShardDb($userId);
-    $channelId = 1; // VK
+    if (isset($_POST['channelId'])) {
+        $channelId = (int)$_POST['channelId'];
+    } else $channelId = 2; // VK
+    $shardDb = $app->getShardDb($userId, $channelId);
 
-    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$_POST['resourceId'].$_POST['count'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;

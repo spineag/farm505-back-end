@@ -5,10 +5,12 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
     $userId = filter_var($_POST['userId']);
-    $shardDb = $app->getShardDb($userId);
-    $channelId = 1; // VK
+    if (isset($_POST['channelId'])) {
+        $channelId = (int)$_POST['channelId'];
+    } else $channelId = 2; // VK
+    $mainDb = $app->getMainDb($channelId);
+    $shardDb = $app->getShardDb($userId, $channelId);
 
     try {
         

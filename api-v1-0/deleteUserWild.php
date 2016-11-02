@@ -6,17 +6,15 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
     $userId = filter_var($_POST['userId']);
-    $shardDb = $app->getShardDb($userId);
-    $channelId = 1; // VK
+    if (isset($_POST['channelId'])) {
+        $channelId = (int)$_POST['channelId'];
+    } else $channelId = 2; // VK
+    $shardDb = $app->getShardDb($userId, $channelId);
 
-    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         try {
             $time = time();
-            // $result = $mainDb->insert('user_removed_wild',
-            //     ['user_id' => $_POST['userId'], 'wild_db_id' => $_POST['dbId']],
-            //     ['int', 'int']);
             $result = $shardDb->query('INSERT INTO user_removed_wild SET user_id='.$userId.', wild_db_id='.$_POST['dbId']);
-
            if ($result) {
                 $json_data['message'] = '';
                 echo json_encode($json_data);

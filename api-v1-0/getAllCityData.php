@@ -5,10 +5,12 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
-    $channelId = 1; // VK
+    $mainDb = $app->getMainDb($channelId);
+    if (isset($_POST['channelId'])) {
+        $channelId = (int)$_POST['channelId'];
+    } else $channelId = 2; // VK
 
-    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$_POST['userSocialId'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
@@ -20,9 +22,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 $result = $mainDb->query("SELECT * FROM users WHERE social_id =" . $_POST['userSocialId']);
                 $arr = $result->fetch();
                 $userId = $arr['id'];
-                $shardDb = $app->getShardDb($userId);
-
-
+                $shardDb = $app->getShardDb($userId, $channelId);
                 $respBuildings = [];
                 $result = $shardDb->query("SELECT ub.id, ub.building_id, pos_x, pos_y, is_flip,
                                                  ub.user_id, date_start_build, is_open 

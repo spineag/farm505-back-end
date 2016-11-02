@@ -6,9 +6,9 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 if (isset($_POST['userSocialIds']) && !empty($_POST['userSocialIds'])) {
     $app = Application::getInstance();
     $mainDb = $app->getMainDb();
-    $channelId = 1; // VK
+    $channelId = 2; // VK
 
-    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'])) {
+    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
@@ -27,7 +27,7 @@ if (isset($_POST['userSocialIds']) && !empty($_POST['userSocialIds'])) {
                     $b['social_id'] = $dict['social_id'];
                     $b['id'] = $dict['id'];
                     $b['level'] = $dict['level'];
-                    $b['need_help'] = $app->checkNeedHelp($b['id']);
+                    $b['need_help'] = $app->checkNeedHelp($b['id'], $channelId);
                     $arr[] = $b;
                 }
 
