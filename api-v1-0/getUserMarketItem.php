@@ -51,7 +51,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                 $resp[] = $res;
             }
 
-            $responce['items'] = $resp;
+            $response['items'] = $resp;
             $json_data['message'] = $response;
             echo json_encode($json_data);
         }
