@@ -5,9 +5,11 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
-    $channelId = 2; // VK
+    if (isset($_POST['channelId'])) {
+        $channelId = (int)$_POST['channelId'];
+    } else $channelId = 2; // VK
     $memcache = $app->getMemcache();
+    $mainDb = $app->getMainDb($channelId);
 
     try {
         $socialUId = $_POST['idSocial'];

@@ -1,7 +1,7 @@
 <?php
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
 
-$mainDb = Application::getInstance()->getMainDb();
+$mainDb = Application::getInstance()->getMainDb(2);
 $socialNetwork = Application::getInstance()->getSocialNetwork();
 
 $r = rand(1, 6);

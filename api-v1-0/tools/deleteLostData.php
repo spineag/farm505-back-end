@@ -4,7 +4,7 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/Application.p
 include_once($_SERVER['DOCUMENT_ROOT'] . '/public/api-v1-0/library/defaultResponseJSON.php');
 
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb();
+    $mainDb = $app->getMainDb(2);
     $channelId = 1; // VK
 
 // $result = $mainDb->query("SELECT * FROM users ORDER BY id DESC LIMIT 1");

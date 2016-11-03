@@ -2,7 +2,7 @@
 define('SN', 'vk');
 require_once '../library/Application.php';
 
-$mainDb = Application::getInstance()->getMainDb();
+$mainDb = Application::getInstance()->getMainDb(2);
 //$snCfg = Application::getInstance()->getSnCfg();
 
 header("Content-Type: application/json; encoding=utf-8");

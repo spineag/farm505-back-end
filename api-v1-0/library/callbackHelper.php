@@ -37,7 +37,7 @@ class callbackHelper
     function __construct()
     {
         include_once($_SERVER['DOCUMENT_ROOT'] . '/api-v1-0/library/Application.php');
-        $this->_db = Application::getInstance()->getMainDb();
+        $this->_db = Application::getInstance()->getMainDb(2);
     }
 
     /**
@@ -57,7 +57,7 @@ class callbackHelper
 
         if($this->user_id === NULL)
         {
-            $result = $this->_db->query("SELECT user_id FROM users WHERE user_social_id = " . $this->social_id . "");
+            $result = $this->_db->query("SELECT user_id FROM users WHERE user_social_id = " . $this->social_id);
             $this->user = $result->fetch();
         }
         else
@@ -67,7 +67,7 @@ class callbackHelper
             );
         }
 
-        $this->_shard_db = Application::getInstance()->getShardDb($this->user['user_id']);
+        $this->_shard_db = Application::getInstance()->getShardDb($this->user['user_id'], 2);
 
         if(empty($this->user))
         {
@@ -241,7 +241,7 @@ class callbackHelper
      */
     public static function getPackInfo($pack_id)
     {
-        $_db = Application::getInstance()->getMainDb();
+        $_db = Application::getInstance()->getMainDb(2);
 
         $resources = array(
             '1' => 'ПТИЦЕБАКСОВ',
@@ -250,7 +250,7 @@ class callbackHelper
 
         $return = '';
         $result = $_db->query("SELECT * FROM dict_store_packs AS store_packs
-                               WHERE pack_id = " . $pack_id . "");
+                               WHERE pack_id = " . $pack_id);
 
         while ($data = $result->fetch())
         {

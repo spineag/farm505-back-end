@@ -8,7 +8,7 @@ function is_payer($social_id)
 {
     $return = FALSE;
     $social_id = (int)$social_id;
-    $_db = Application::getInstance()->getMainDb();
+    $_db = Application::getInstance()->getMainDb(2);
 
     $result = $_db->query(" SELECT COUNT( order_id ) AS count
                             FROM dict_payments
