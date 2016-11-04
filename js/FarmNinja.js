@@ -8,13 +8,15 @@ var FarmNinja = {
         $.ajax({
             type:'post',
             url:'../php/api-v1-0/getVersionClient.php',
+            data: "channelId=" + this.channel,
             response:'text',
             success:function (v) {
+                if (this.channel == 3) alert('version:' + v);
                 FarmNinja.setVersion(v);
             },
             errrep:true,
             error:function(num) {
-                // ....!!!
+                alert('error get client version');
             }
         })
     },
@@ -37,42 +39,45 @@ var FarmNinja = {
                 '</div>');
         } else {
             var url = document.location.toString().split('?');
-            var flashvars =
-            {
+            var flashvars = {
                 data: (url[1] ? '&' + url[1] : ''),
                 protocol: (document.location.protocol == 'https:') ? 'https' : 'http',
                 channel: this.channel,
                 gacid: this.getUserGAcid()
             };
 
-            var params =
-            {
+            var params = {
                 allowFullscreen: "true",
                 allowFullScreenInteractive: "true",
                 allowScriptAccess: "always",
                 wmode: "direct",
                 flashvars: flashvars
             };
-            var attributes =
-            {
+            var attributes = {
                 id: "farm_game",
                 name: "farm_game"
             };
-            swfobject.embedSWF('/client/farm' + this.version + '.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
-            // swfobject.embedSWF('/client/farm505.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
+            var st;
+            if (this.channel == 2) {
+                st = '/client/farm' + this.version + '.swf';
+            } else if (this.channel == 3) {
+                st = 'client_ok/farm' + this.version + '.swf';
+            }
+            if (this.channel == 3) console.log('try init');
+            swfobject.embedSWF(st, 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
         }
     },
 
     callbackFn: function (e) {
+        if (this.channel == 3) alert('on init');
         if (!e.success) {
             console.log('bad with load swf');
             $('#loader').css('display', 'none');
-            // $('#noFlash').find('center').css('display', 'block');
             $('#no_player').css('display', 'block');
         }
         else {
+            if (this.channel == 3) alert('init good');
             document.getElementById("farm_game").style.display = "block";
-            this.play();
         }
     },
 

@@ -1,23 +1,11 @@
 <?php
 require_once 'vkapi.class.php';
 
-interface SocialNetworkInterface
-{
-    /**
-     *
-     * @param array $socialNetworkUids
-     * @return array
-     */
+interface SocialNetworkInterface {
+
     public function getUsers($socialNetworkUids);
     public function isGroupMember($socialNetworkUid, $socialNetworkGroupId);
     public function setUserLevel($socialNetworkUid, $socialNetworkLevel);
-
-    /**
-     *
-     * @param array $socialNetworkUid
-     * @param string $message
-     * @return boolean
-     */
 
     public function sendNotification($socialNetworkUid, $message);
     public function getJavaScript();
@@ -34,40 +22,21 @@ interface SocialNetworkInterface
     public function check_in_another_game($socialNetworkUid);
     public function setCounters($usersAndCounters);
 
-    /**
-     *
-     * @param $socialNetworkUid
-     * @param string $country (RU,UA)
-     * @param string $age_range (18-25)
-     * @param string $gender (0 / 1 / 2) 1-f, 2-m
-     *
-     * @return boolean
-     */
-
     public function check_targeting($socialNetworkUid, $country, $age_range, $gender, $bdate);
-
-    /**
-     * for check connection with SN
-     * @return ok
-     */
-
     public function check_connection();
-
 }
 
-class VKSocialNetwork implements SocialNetworkInterface
-{
+// -----------------------------------------------------------------------------------------------
+
+class VKSocialNetwork implements SocialNetworkInterface {
     private $_vk;
     private $_socialNetworkParameters;
-    function __construct($socialNetworkParameters)
-    {
+    function __construct($socialNetworkParameters) {
         $this->_socialNetworkParameters = $socialNetworkParameters;
     }
 
-    public function getSocialObject()
-    {
-        if (empty($this->_vk))
-        {
+    public function getSocialObject() {
+        if (empty($this->_vk)) {
             $this->_vk = new vkapi(
                 $this->_socialNetworkParameters["api_id"],
                 $this->_socialNetworkParameters["secret_key"]);
@@ -75,193 +44,77 @@ class VKSocialNetwork implements SocialNetworkInterface
         return $this->_vk;
     }
 
-    public function setCounters($usersAndCounters)
-    {
-        if($usersAndCounters === null)
-        {
-            return true;
-        }
-
+    public function setCounters($usersAndCounters) {
+        if($usersAndCounters === null) { return true; }
         $limit = 200;
         $requestArray = array();
-
-        foreach($usersAndCounters as $user)
-        {
-            if($limit<=0)
-            {
-                break;
-            }
+        foreach($usersAndCounters as $user) {
+            if($limit<=0) { break; }
             $requestArray[] = $user['id'].':'.$user['counter'];
             $limit--;
         }
-
         $requestString = implode(',', $requestArray);
-
-//        $config = Application::getInstance()->getGearmanCfg();
-//        if(class_exists('GearmanClient') && $config !== NULL)
-//        {
-//            $gmc = new GearmanClient();
-//            $gmc->addServer($config['host'], $config['port']);
-//            $gmc->doBackground('VKSetCounter', $requestString);
-//            return true;
-//        }
-
         $resultResponse = $this->getSocialObject()->api('secure.setCounter', array('counters' => $requestString));
-
         return $resultResponse['response'];
     }
 
-    public function getUsers($socialNetworkUid)
-    {
+    public function getUsers($socialNetworkUid) {
         $resultResponse = $this->getSocialObject()->api('users.get', array('uids'=>$socialNetworkUid, 'fields'=>'sex, bdate, city, country, first_name, last_name'));
         return $resultResponse['response'];
     }
 
-    public function isGroupMember($socialNetworkUid, $socialNetworkGroupId)
-    {
+    public function isGroupMember($socialNetworkUid, $socialNetworkGroupId) {
         return $this->getSocialObject()->api('groups.isMember', array('gid'=>$socialNetworkGroupId, 'uid'=>$socialNetworkUid));
     }
 
-    public function setUserLevel($socialNetworkUid, $socialNetworkLevel)
-    {
+    public function setUserLevel($socialNetworkUid, $socialNetworkLevel) {
         return $this->getSocialObject()->api('secure.setUserLevel', array('user_id'=>$socialNetworkUid, 'level'=>$socialNetworkLevel));
     }
 
-    public function sendNotification($socialNetworkUid, $message)
-    {
-//        $config = Application::getInstance()->getGearmanCfg();
-//        if(class_exists('GearmanClient') && $config !== NULL)
-//        {
-//            $gmc = new GearmanClient();
-//            $gmc->addServer($config['host'], $config['port']);
-//            $gmc->doBackground('VKSendNotification', json_encode(array('timestamp'=>time(), 'random'=>rand(1, 10000), 'uids'=>$socialNetworkUid, 'message'=>$message)));
-//
-//            return true;
-//        }
+    public function sendNotification($socialNetworkUid, $message) {
         return $this->getSocialObject()->api('secure.sendNotification', array('timestamp'=>time(), 'user_ids'=>$socialNetworkUid, 'message'=>$message));
     }
 
-    public function getJavaScript()
-    {
-        return false;
-    }
-
-    public function transactionChek($transaction_id)
-    {
-        return false;
-    }
-
-    public function getFriendCount()
-    {
-        return 0;
-    }
-
-    public function getFriends()
-    {
-        return false;
-    }
-
-    public function getFriendsApp()
-    {
-        return false;
-    }
-
-    public function getFriendsOnline()
-    {
-        return false;
-    }
-
-    public function transactionCreate($price, $serviceId)
-    {
-        return false;
-    }
-
-    public function addActivity($text)
-    {
-        return false;
-    }
-
-    public function isBirthDay($date)
-    {
-        if (!empty($date))
-        {
+    public function isBirthDay($date) {
+        if (!empty($date))  {
             $data = explode(".", $date);
             $day = date('j');
             $month = date('n');
-            if ($data[0] == $day && $data[1] == $month){
-                return true;
-            }
+            if ($data[0] == $day && $data[1] == $month) { return true; }
         }
-
         return false;
     }
 
-    public function userSync($socialNetworkUid, $socialNetworkLevel, $socialNetworkXp)
-    {
-        return false;
-    }
-
-    public function check_in_another_game($socialNetworkUid)
-    {
-        return false;
-    }
-
-    public function check_targeting($socialNetworkUid, $country, $age_range, $gender, $bdate)
-    {
+    public function check_targeting($socialNetworkUid, $country, $age_range, $gender, $bdate) {
         $user = $this->getUsers($socialNetworkUid);
         $user = $user[0];
 
-        if (!empty($country))
-        {
-            /*
-            $res = $this->getSocialObject()->api('places.getCountries', array('need_full'=>0, 'code'=>$country));
-            return $res;
-            $code = array();
-            if (!empty($res['response']))
-            {
-                foreach ($res['response'] as $k)
-                {
-                    $code[] = $c['cid'];
-                }
-            }
-            */
+        if (!empty($country)) {
             $targ = explode(",", $country);
             $country_array = array(1=>"RU", 2=>"UA");
-
 
             if (!in_array($country_array[$user['country']], $targ)) return false;
         }
 
-        if (!empty($age_range))
-        {
-            //	if (empty($user['bdate'])) return false;
-            //	new *
+        if (!empty($age_range)) {
             if (empty($bdate)) return false;
             $bdate = explode(".", $bdate);
-
-            //	$bdate = explode(".", $user['bdate']);
-
             if (empty($bdate[2])) return false;
-
             $year = date('Y');
             $u_age = $year - $bdate[2];
             $age = explode("-", $age_range);
 
-
             if ($u_age < $age[0] || $u_age > $age[1]) return false;
-
         }
 
-        if (!empty($gender))
-        {
+        if (!empty($gender)) {
             if ($user["sex"] != $gender) return false;
         }
 
         return true;
     }
 
-    public function check_connection()
-    {
+    public function check_connection() {
         $res = $this->getUsers("26342690");
         if (!empty($res[0])){
             return "ok";
@@ -269,4 +122,156 @@ class VKSocialNetwork implements SocialNetworkInterface
             return "error";
         }
     }
+
+    public function getJavaScript() { return false; }
+    public function transactionChek($transaction_id) { return false; }
+    public function getFriendCount() {  return 0; }
+    public function getFriends() { return false; }
+    public function getFriendsApp() { return false; }
+    public function getFriendsOnline() { return false; }
+    public function transactionCreate($price, $serviceId) { return false; }
+    public function addActivity($text) { return false; }
+    public function userSync($socialNetworkUid, $socialNetworkLevel, $socialNetworkXp) { return false;}
+    public function check_in_another_game($socialNetworkUid) { return false; }
+}
+
+// -----------------------------------------------------------------------------------------------------
+
+class OkSocialNetwork implements SocialNetworkInterface {
+    private $app_id;
+    private $secret_key;
+
+    function __construct($socialNetworkParameters){
+        $this->app_id = $socialNetworkParameters["api_id"];
+        $this->secret_key = $socialNetworkParameters["secret_key"];
+    }
+    public function getUsers($socialNetworkUid) {
+        $path = "http://api.odnoklassniki.ru/fb.do?";
+        $params = array(
+            'application_key=' . $this->app_id,
+            'uids=' . $socialNetworkUid,
+            'format=JSON',
+            'fields=first_name,last_name,gender,birthday,age,location',
+            'method=users.getInfo'
+        );
+        sort($params);
+        $sig = md5(implode("", $params) . $this->secret_key);
+        $request = $path . implode("&", $params) . "&sig=".$sig;
+        $page = file_get_contents($request);
+        return json_decode($page, true);
+    }
+
+    public function isGroupMember($socialNetworkUid, $socialNetworkGroupId) {
+        $path = "http://api.odnoklassniki.ru/fb.do?";
+        $params = array('application_key=' . $this->app_id,
+            'uid=' . $socialNetworkUid,
+            'format=JSON',
+            'method=group.getUserGroupsV2'
+        );
+        sort($params);
+        $sig = md5(implode("", $params) . $this->secret_key);
+        $request = $path . implode("&", $params) . "&sig=".$sig;
+        $page = file_get_contents($request);
+        $result = json_decode($page);
+        $res['response'] = 0;
+        $groups = $result->groups;
+        if (!empty($groups)){
+            foreach ($groups as $k){
+                if ($k->groupId == $socialNetworkGroupId){
+                    $res['response'] = 1;
+                }
+            }
+        }
+        return $res;
+    }
+
+    public function sendNotification($socialNetworkUid, $notif) {
+        if (is_array($notif)) {
+            $expires = date("Y.m.d H:s", $notif['date_end']);
+            $params = array(
+                'application_key=' . $this->app_id,
+                'text='.$notif['message'],
+                'format=json',
+                'expires='.$expires
+            );
+            if (!empty($socialNetworkUid)) {
+                foreach($socialNetworkUid as $param) {
+                    $params[] = $param;
+                }
+            }
+
+            sort($params);
+            $sig = md5(implode("", $params) . $this->secret_key);
+            $url = "http://api.odnoklassniki.ru/api/notifications/sendMass";
+            $paramsAll = array(
+                'format' => 'json',
+                'application_key' => $this->app_id,
+                'text' => $notif['message'],
+                'expires' => $expires,
+                'sig' => $sig
+            );
+            if (!empty($socialNetworkUid)) {
+                foreach($socialNetworkUid as $param)
+                {
+                    $addToAllParams = explode('=', $param);
+                    $paramsAll[$addToAllParams[0]] = $addToAllParams[1];
+                }
+            }
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $paramsAll);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($curl);
+            curl_close($curl);
+            return $result;
+        } else return false;
+    }
+
+    public function isBirthDay($date) {
+        if (!empty($date)) {
+            $data = explode("-", $date);
+            $data = array_reverse($data);
+            $day = date('d');
+            $month = date('m');
+            if ($data[0] == $day && $data[1] == $month){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function check_targeting($socialNetworkUid, $country, $age_range, $gender, $bdate) {
+        $user = $this->getUsers($socialNetworkUid);
+        $user = $user[0];
+        if (!empty($country)) {
+            if (!isset($user['location']['countryCode']) || !in_array($user['location']['countryCode'], explode(",", $country))) { return FALSE; }
+        }
+
+        if (!empty($age_range)) {
+            if (empty($bdate)) { return FALSE; }
+            $bdate = explode("-", $bdate);
+            if (empty($bdate[0])) return false;
+            $year = date('Y');
+            $u_age = $year - $bdate[0];
+            $age = explode("-", $age_range);
+            if ($u_age < $age[0] || $u_age > $age[1]) return false;
+        }
+        return true;
+    }
+
+    public function userSync($socialNetworkUid, $socialNetworkLevel, $socialNetworkXp) { return false; }
+    public function check_in_another_game($socialNetworkUid) { return NULL; }
+    public function getJavaScript() { return false; }
+    public function transactionChek($transaction_id) { return false; }
+    public function getFriendCount() { return 0; }
+    public function getFriends() { return false; }
+    public function getFriendsApp() { return false; }
+    public function getFriendsOnline() { return false; }
+    public function transactionCreate($price, $serviceId) { return false;}
+    public function addActivity($text) { return false; }
+    public function getSocialObject() { return false; }
+    public function setUserLevel($socialNetworkUid, $socialNetworkLevel) { return false; }
+    public function setCounters($usersAndCounters) { return false; }
+    public function check_connection() { return "ok"; }
 }

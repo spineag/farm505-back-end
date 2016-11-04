@@ -9,10 +9,7 @@ var SN = function (social) {
             s.src = url;
             var script = document.getElementsByTagName('script')[1];
             script.parentNode.insertBefore(s, script);
-            if (typeof id !== 'undefined') {
-                script.setAttribute("id", id);
-            }
-
+            if (typeof id !== 'undefined') { script.setAttribute("id", id); }
             if (typeof callback === 'function') {
                 s.addEventListener('load', function () {
                     callback();
@@ -30,6 +27,7 @@ var SN = function (social) {
             // VK.Widgets.Like("vk_like", {type: "button"});
             // VK.Widgets.Subscribe("vk_subscribe", {}, -38679323);
         });
+
     } else if (social == 3) { //OK
         that.load($_GET('api_server') + 'js/fapi5.js', function() {
             FAPI.init($_GET('api_server'), $_GET('apiconnection'),

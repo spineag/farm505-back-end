@@ -251,11 +251,15 @@ class Application
                 $securityKey == (md5($appGuid . $chGuid . $userSocialId . substr($scriptName, strrpos($scriptName, '/') + 1) . EDITOR_SECRET))));
     }
 
-    final public function getSocialNetwork() {
-        if ($this->_socialNetwork == NULL)
-        {
-            $socialNetwork = $this->_cfg["sn"]["socialNetworkClass"];
-            $this->_socialNetwork = new $socialNetwork($this->_cfg["sn"]);
+    final public function getSocialNetwork($channelId) {
+        if ($this->_socialNetwork == NULL) {
+            if ($channelId == 2) {
+                $socialNetwork = $this->_cfg["sn"]["socialNetworkClass"];
+                $this->_socialNetwork = new $socialNetwork($this->_cfg["sn"]);
+            } else if ($channelId == 3) {
+                $socialNetwork = $this->_cfg["snOK"]["socialNetworkClass"];
+                $this->_socialNetwork = new $socialNetwork($this->_cfg["snOK"]);
+            }
         }
         return $this->_socialNetwork;
     }

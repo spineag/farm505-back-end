@@ -4,7 +4,7 @@ include_once('../library/Application.php');
 //include_once('http://505.ninja/php/api-v1-0/library/Application.php');
 
 $mainDb = Application::getInstance()->getMainDb(2);
-$socialNetwork = Application::getInstance()->getSocialNetwork();
+$socialNetwork = Application::getInstance()->getSocialNetwork(2);
 
 $vkTimeRestriction = time() - 2592000; // 1 Month
 $vkTimeOffline = time () - 86400; // 1 day

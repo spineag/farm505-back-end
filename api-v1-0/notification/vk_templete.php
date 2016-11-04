@@ -3,7 +3,7 @@
 require_once 'init_tools.php';
 
 $mainDb = Application::getInstance()->getMainDb(2);
-$socailNetwork = Application::getInstance()->getSocialNetwork();
+$socailNetwork = Application::getInstance()->getSocialNetwork(2);
 
 $notif_all_id = array();
 $notif = array();

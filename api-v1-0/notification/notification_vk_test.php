@@ -2,7 +2,7 @@
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
 
 $mainDb = Application::getInstance()->getMainDb(2);
-$socialNetwork = Application::getInstance()->getSocialNetwork();
+$socialNetwork = Application::getInstance()->getSocialNetwork(2);
 
 $r = rand(1, 6);
 if ($r == 1) {
