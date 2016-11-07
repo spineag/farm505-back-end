@@ -3,6 +3,7 @@
 var SN = function (social) {
     var that = this;
     if (social == 2) {// VK
+        console.log('init vk social');
         that.load = function (url, callback, id) {
             var s = document.createElement('script');
             s.type = 'text/javascript';
@@ -29,67 +30,80 @@ var SN = function (social) {
         });
 
     } else if (social == 3) { //OK
-        that.load($_GET('api_server') + 'js/fapi5.js', function() {
-            FAPI.init($_GET('api_server'), $_GET('apiconnection'),
-                function() {
-                    //	 alert("connect ok");
-                }, function(error){
-                    alert("Forticom API initialization failed");
-                });
-            FAPI.Client.initialize();
-
-            var $help = $('#help');
-            $help.find('input[name=uid]').val(FAPI.Client.uid);
-            $help.find('#social_id').val(FAPI.Client.uid);
-
-            FAPI.Client.call({
-                "method" : "users.getInfo",
-                "uids" : FAPI.Client.uid,
-                "fields" : "first_name,last_name,birthday"
-            }, function(status, data, error) {
-                if (status == "ok")
-                {
-                    if(typeof data[0].birthday !== "undefined")
-                    {
-                        //$.ajax({
-                        //    url: SN_CONFIG.serverUrl + 'tools/update_birthdate.php',
-                        //    type: 'POST',
-                        //    dataType: 'json',
-                        //    data: {social_id: SN_CONFIG.user_id, birth_date: data[0].birthday},
-                        //    success: function (rdata)
-                        //    {
-                        //        console.log(rdata);
-                        //    }
-                        //});
-                    }
-
-                    //$help.find('input[name=fullname]').val(data[0].first_name + " " + data[0].last_name);
-                }
+        console.log('init ok social');
+        var rParams = FAPI.Util.getRequestParameters();
+        FAPI.init(rParams["api_server"], rParams["apiconnection"],
+            function() {
+                console.log("Инициализация прошла успешно");
+            }, function(error) {
+                console.log("Ошибка инициализации");
             });
-            that.showInviteBox = function ()
-            {
-                //that.play();
-                FAPI.UI.showInvite('Приглашаю посетить игру Умелые Лапки.', 'customAttr=customValue');
-            };
 
-            var API_callback = function(method, status, data)
-            {
-                switch (method)
-                {
-                    case 'showNotification':
-                        document.farm_game.showNotification({result: status, method: method, data: data});
-                        break;
-                    default:
+        // that.load($_GET('api_server') + 'js/fapi5.js', function() {
+        //     FAPI.init($_GET('api_server'), $_GET('apiconnection'),
+        //         function() {
+        //             //	 alert("connect ok");
+        //         }, function(error){
+        //             alert("Forticom API initialization failed");
+        //         });
+        //     FAPI.Client.initialize();
+        //
+        //     var $help = $('#help');
+        //     $help.find('input[name=uid]').val(FAPI.Client.uid);
+        //     $help.find('#social_id').val(FAPI.Client.uid);
+        //
+        //     FAPI.Client.call({
+        //         "method" : "users.getInfo",
+        //         "uids" : FAPI.Client.uid,
+        //         "fields" : "first_name,last_name,birthday"
+        //     }, function(status, data, error) {
+        //         if (status == "ok")
+        //         {
+        //             if(typeof data[0].birthday !== "undefined")
+        //             {
+        //                 //$.ajax({
+        //                 //    url: SN_CONFIG.serverUrl + 'tools/update_birthdate.php',
+        //                 //    type: 'POST',
+        //                 //    dataType: 'json',
+        //                 //    data: {social_id: SN_CONFIG.user_id, birth_date: data[0].birthday},
+        //                 //    success: function (rdata)
+        //                 //    {
+        //                 //        console.log(rdata);
+        //                 //    }
+        //                 //});
+        //             }
+        //
+        //             //$help.find('input[name=fullname]').val(data[0].first_name + " " + data[0].last_name);
+        //         }
+        //     });
+        //     that.showInviteBox = function ()
+        //     {
+        //         //that.play();
+        //         FAPI.UI.showInvite('Приглашаю посетить игру Умелые Лапки.', 'customAttr=customValue');
+        //     };
+        //
+        //     var API_callback = function(method, status, data)
+        //     {
+        //         switch (method)
+        //         {
+        //             case 'showNotification':
+        //                 document.farm_game.showNotification({result: status, method: method, data: data});
+        //                 break;
+        //             default:
+        //
+        //                 break;
+        //         }
+        //     };
+        //
+        //     that.okInvite = function(text, attr, uid)
+        //     {
+        //         FAPI.UI.showNotification(text, attr, uid);
+        //     };
+        // });
+    }
 
-                        break;
-                }
-            };
-
-            that.okInvite = function(text, attr, uid)
-            {
-                FAPI.UI.showNotification(text, attr, uid);
-            };
-        });
+    function API_callback(method, result, data){ // for OK
+        alert("Method " + method + " finished with result " + result + ", " + data);
     }
 };
 
