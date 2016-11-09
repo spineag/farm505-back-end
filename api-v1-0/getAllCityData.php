@@ -5,10 +5,10 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     $app = Application::getInstance();
-    $mainDb = $app->getMainDb($channelId);
     if (isset($_POST['channelId'])) {
         $channelId = (int)$_POST['channelId'];
     } else $channelId = 2; // VK
+    $mainDb = $app->getMainDb($channelId);
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$_POST['userSocialId'].$app->md5Secret());
@@ -47,7 +47,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                     throw new Exception("Bad request to DB!");
                 }
 
-                $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id = " . $userId);
+                $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id = " . $userId);  // need optimise and use line 22
                 $u = $result->fetchAll();
                 $u = $u[0]['unlocked_land'];
                 $arrLocked = explode("&", $u);

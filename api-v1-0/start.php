@@ -15,7 +15,14 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
         $socialUId = $_POST['idSocial'];
         $uid = $app->getUserId($channelId, $socialUId);
         if ($uid < 1) {
-            $uid = $app->newUser($channelId, $socialUId, $_POST['name'], $_POST['lastName'], $_POST['sex'], $_POST['bornDate']);
+            try {
+                $uid = $app->newUser($channelId, $socialUId, $_POST['name'], $_POST['lastName'], $_POST['sex'], $_POST['bornDate']);
+            } catch (Exception $e) {
+                $json_data['id'] = 2;
+                $json_data['status'] = '00000';
+                $json_data['message'] = $e->getMessage();
+                echo json_encode($json_data);
+            }
             if ($uid < 0) {
                 $json_data['id'] = 2;
                 $json_data['status'] = 's328';
