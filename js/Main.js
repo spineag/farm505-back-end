@@ -161,6 +161,11 @@ var SN = function (social) {
         that.flash().getAppUsersHandler(data);
     };
 
+    that.showInviteWindowAll = function(userSocialId) {
+        console.log('OK: try get showInviteWindowAll');
+        FAPI.UI.showInvite("Приглашаю посетить игру Умелые Лапки.");
+    };
+
 
 
     // that.API_callback = function(method, result, data){ // for OK
