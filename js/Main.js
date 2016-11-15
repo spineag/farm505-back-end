@@ -107,11 +107,15 @@ var SN = function (social) {
         FAPI.UI.showPayment(txt, txt2, id, price, null, null, "ok", "true");
     };
 
+    that.makeWallPost = function(uid, message, url){
+        console.log('OK: try get makeWallPost');
+        var attachment = {caption: 'Умелые Лапки', media:[{ images:[{ url: url, title: message }] }]};
+        FAPI.Client.call({"method":"mediatopic.post", "uid":uid, "type":'USER', "attachment":attachment});
+    };
 
 
     that.API_callback = function(method, result, data){ // for OK
         console.log("Method " + method + " finished with result " + result + ", data:" + data);
     }
 };
-
 
