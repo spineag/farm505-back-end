@@ -192,7 +192,8 @@ class OkSocialNetwork implements SocialNetworkInterface {
                 'application_key=' . $this->app_id,
                 'text='.$notif['message'],
                 'format=json',
-                'expires='.$expires
+                'expires='.$expires,
+                'last_access_range='.$notif['last_access_range']
             );
             if (!empty($socialNetworkUid)) {
                 foreach($socialNetworkUid as $param) {
@@ -208,6 +209,7 @@ class OkSocialNetwork implements SocialNetworkInterface {
                 'application_key' => $this->app_id,
                 'text' => $notif['message'],
                 'expires' => $expires,
+                'last_access_range='.$notif['last_access_range'],
                 'sig' => $sig
             );
             if (!empty($socialNetworkUid)) {
