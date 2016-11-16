@@ -40,7 +40,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
 //                            ['id' => $d['id']],
 //                            ['int', 'int','int'],
 //                            ['int']);
-                        $result = $mainDb->query("UPDATE user_market_item SET buyer_id=".$arr['id'].", time_sold=".time().", in_papper=0 WHERE id=".$d['id']);
+                        $result = $shardDb->query("UPDATE user_market_item SET buyer_id=".$arr['id'].", time_sold=".time().", in_papper=0 WHERE id=".$d['id']);
                         $d['buyer_social_id'] = 1;
                         $d['buyer_id'] = $arr['id'];
                         $d['time_sold'] = time();
