@@ -16,7 +16,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
         $shardDb = $app->getShardDb($userId, $channelId);
         try {
             $resp = [];
-            $result = $mainDb->query("SELECT id, market_cell FROM users WHERE id =".$userId);
+            $result = $mainDb->query("SELECT id, market_cell FROM users WHERE social_id =".$_POST['userSocialId']);
             $arr = $result->fetch();
             $idU = $arr['id'];
             $response['market_cell'] = $arr['market_cell'];
