@@ -22,8 +22,8 @@ try {
     $u = $u[0]['unlocked_land'];
     $arrLocked = explode("&", $u);
 
-    $result = $memcache->get('getDataLockedLand'.$channelId);
-    if (!$result) {
+    $lands = $memcache->get('getDataLockedLand'.$channelId);
+    if (!$lands) {
         $result = $mainDb->query("SELECT * FROM data_locked_land");
         if ($result) {
             $lands = $result->fetchAll();
@@ -32,7 +32,7 @@ try {
             $json_data['status'] = 's288';
             throw new Exception("Bad request to DB!");
         }
-        $memcache->set('getDataLockedLand'.$channelId, $result, MEMCACHED_DICT_TIME);
+        $memcache->set('getDataLockedLand'.$channelId, $lands, MEMCACHED_DICT_TIME);
     }
     $resp = [];
     if (!empty($lands)) {
