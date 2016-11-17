@@ -123,7 +123,7 @@ class Application
 
         $result = $mainDb->insert( 'users',
             ['social_id' => $socialUId, 'created_date' => time(), 'last_visit_date' => time(),
-                'name' => $name, 'last_name' => $lname, 'channel_id' => $channelId, 'tutorial_step' => 1,
+                'name' => $name, 'last_name' => $lname, 'tutorial_step' => 1,
                 'ambar_max' => $const['AMBAR_MAX'], 'sklad_max' => $const['SKLAD_MAX'],
                 'ambar_level' => 1, 'sklad_level' => 1, 'count_cats' => $countCats,
                 'hard_count' => $const['HARD_COUNT'], 'soft_count' => $const['SOFT_COUNT'],
