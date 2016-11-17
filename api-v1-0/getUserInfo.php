@@ -55,7 +55,6 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $user['in_papper'] = $u['in_papper'];
                 $user['chest_day'] = gmdate("d", $u['chest_day']);
                 $user['count_chest'] = $u['count_chest'];
-                $user['cut_scene'] = $u['cut_scene'];
                 $user['notification_new'] = $u['notification_new'];
                 $user['wall_order_item_time'] = gmdate("d", $u['wall_order_item_time']);
                 $user['wall_train_item'] = gmdate("d", $u['wall_train_item']);
@@ -63,6 +62,14 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     (int)$user['yellow_count'] + (int)$user['green_count'] + (int)$user['red_count'] + (int)$user['blue_count'] + (int)$user['level'] + (int)$user['xp'] + (int)$user['count_cats'] +
                     (int)$user['tutorial_step'] + (int)$user['count_chest'] + (int)$user['count_daily_bonus'];
                 $user['test_date'] = $check;
+
+                if ($channelId == 2) {
+                    $user['cut_scene'] = $u['cut_scene'];
+                } else {
+                    $result = $shardDb->query("SELECT cutscene FROM user_info WHERE user_id =" . $_POST['userId']);
+                    $uS = $result->fetch();
+                    $user['cut_scene'] = $uS['cutscene'];
+                }
 
                 $quests = [];
                 $result = $shardDb->query("SELECT * FROM user_quests_temp WHERE user_id = ".$_POST['userId']);

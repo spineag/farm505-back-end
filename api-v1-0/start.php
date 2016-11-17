@@ -20,7 +20,7 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
             } catch (Exception $e) {
                 $json_data['id'] = 2;
                 $json_data['status'] = '00000';
-                $json_data['message'] = $e->getMessage();
+                $json_data['message'] = $e->getMessage(); 
                 echo json_encode($json_data);
             }
             if ($uid < 0) {
