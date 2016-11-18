@@ -17,10 +17,18 @@ $mainDb = $app->getMainDb($channelId);
 $memcache = $app->getMemcache();
 
 try {
-    $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id = " . $_POST['userId']);
-    $u = $result->fetchAll();
-    $u = $u[0]['unlocked_land'];
-    $arrLocked = explode("&", $u);
+    if ($channelId == 2) {
+        $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id = " . $_POST['userId']);
+        $u = $result->fetchAll();
+        $u = $u[0]['unlocked_land'];
+        $arrLocked = explode("&", $u);
+    } else {
+        $shardDb = $app->getShardDb($_POST['userId'], $channelId);
+        $result = $shardDb->query("SELECT unlocked_land FROM user_info WHERE user_id = " . $_POST['userId']);
+        $u = $result->fetchAll();
+        $u = $u[0]['unlocked_land'];
+        $arrLocked = explode("&", $u);
+    }
 
     $lands = $memcache->get('getDataLockedLand'.$channelId);
     if (!$lands) {
