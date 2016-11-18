@@ -40,25 +40,6 @@ if (isset($_POST['userSocialIds']) && !empty($_POST['userSocialIds'])) {
                 $json_data['message'] = $e->getMessage();
                 echo json_encode($json_data);
             }
-
-
-            // try {
-            //     $result = $mainDb->query("SELECT * FROM users WHERE social_id =".$_POST['userSocialId']);
-            //     $u = $result->fetch();
-            //     $user = [];
-
-            //     $user['level'] = $u['level'];
-            //     $user['social_id'] = $u['social_id'];
-
-            //     $json_data['message'] = $user;
-            //     echo json_encode($json_data);
-            // }
-            // catch (Exception $e)
-            // {
-            //     $json_data['status'] = 'error';
-            //     $json_data['message'] = $e->getMessage();
-            //     echo json_encode($json_data);
-            // }
         }
 
     } else {

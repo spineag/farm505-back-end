@@ -24,7 +24,11 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             try {
                 $time = time();
                 $result = $shardDb->query('UPDATE user_market_item SET in_papper=' . $_POST['inPapper'] . ', time_in_papper =' . $time . ' WHERE number_cell=' . $_POST['numberCell'] . ' AND user_id = ' . $userId);
-                $result = $mainDb->query('UPDATE users SET in_papper=' . time() . ' WHERE id=' . $_POST['userId']);
+                if ($channelId == 2) {
+                    $result = $mainDb->query('UPDATE users SET in_papper=' . time() . ' WHERE id=' . $_POST['userId']);
+                } else {
+                    $result = $shardDb->query('UPDATE user_info SET in_papper=' . time() . ' WHERE user_id=' . $_POST['userId']);
+                }
                 if (!$result) {
                     $json_data['id'] = 2;
                     $json_data['status'] = 's329';

@@ -130,7 +130,7 @@ class Application
                 'yellow_count' => $const['YELLOW_COUNT'], 'red_count' => $const['RED_COUNT'],
                 'green_count' => $const['GREEN_COUNT'], 'blue_count' => $const['BLUE_COUNT'],
                 'xp' => 0, 'level' => 1, 'sex' => $sex, 'born_date' => $bornDate],
-            ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int', 'int',
+            ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int',
                 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'str', 'str']);
                 
         if ($result) {

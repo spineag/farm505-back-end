@@ -16,6 +16,8 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
         try {
             $id = $app->getUserId($channelId, $_GET['id']);
             if ($id >0) {
+                if ($_POST['channelId'] == '3') $shardDb->query('DELETE FROM user_info WHERE user_id=' . $id);
+
                 $shardDb->query('DELETE FROM user_animal WHERE user_id=' . $id);
 
                 $shardDb->query('DELETE FROM user_cave WHERE user_id=' . $id);

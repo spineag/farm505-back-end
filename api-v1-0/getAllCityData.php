@@ -19,7 +19,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $mainDb->query("SELECT * FROM users WHERE social_id =" . $_POST['userSocialId']);
+                $result = $mainDb->query("SELECT id FROM users WHERE social_id =" . $_POST['userSocialId']);
                 $arr = $result->fetch();
                 $userId = $arr['id'];
                 $shardDb = $app->getShardDb($userId, $channelId);
@@ -47,10 +47,17 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                     throw new Exception("Bad request to DB!");
                 }
 
-                $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id = " . $userId);  // need optimise and use line 22
-                $u = $result->fetchAll();
-                $u = $u[0]['unlocked_land'];
-                $arrLocked = explode("&", $u);
+                if ($channelId == 2) {
+                    $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id = " . $userId);  // need optimise and use line 22
+                    $u = $result->fetchAll();
+                    $u = $u[0]['unlocked_land'];
+                    $arrLocked = explode("&", $u);
+                } else {
+                    $result = $shardDb->query("SELECT unlocked_land FROM user_info WHERE user_id = " . $userId);  // need optimise and use line 22
+                    $u = $result->fetchAll();
+                    $u = $u[0]['unlocked_land'];
+                    $arrLocked = explode("&", $u);
+                }
 
                 $result = $mainDb->query("SELECT * FROM map_building");
                 if ($result) {

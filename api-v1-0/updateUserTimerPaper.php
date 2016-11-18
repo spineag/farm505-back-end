@@ -9,7 +9,6 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     if (isset($_POST['channelId'])) {
         $channelId = (int)$_POST['channelId'];
     } else $channelId = 2; // VK
-    $mainDb = $app->getMainDb($channelId);
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$_POST['timePaper'].$app->md5Secret());
@@ -21,11 +20,22 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         } else {
             try {
                 $time = time();
-                $result = $mainDb->query('UPDATE users SET time_paper=' . $_POST['timePaper'] . ' WHERE id=' . $_POST['userId']);
-                if (!$result) {
-                    $json_data['id'] = 2;
-                    $json_data['status'] = 's341';
-                    throw new Exception("Bad request to DB!");
+                if ($channelId == 2) {
+                    $mainDb = $app->getMainDb($channelId);
+                    $result = $mainDb->query('UPDATE users SET time_paper=' . $_POST['timePaper'] . ' WHERE id=' . $_POST['userId']);
+                    if (!$result) {
+                        $json_data['id'] = 2;
+                        $json_data['status'] = 's341';
+                        throw new Exception("Bad request to DB!");
+                    }
+                } else {
+                    $shardDb = $app->getShardDb($_POST['userId'], $channelId);
+                    $result = $shardDb->query('UPDATE user_info SET time_paper=' . $_POST['timePaper'] . ' WHERE user_id=' . $_POST['userId']);
+                    if (!$result) {
+                        $json_data['id'] = 2;
+                        $json_data['status'] = 's341';
+                        throw new Exception("Bad request to DB!");
+                    }
                 }
 
                 $json_data['message'] = '';

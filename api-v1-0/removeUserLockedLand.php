@@ -8,7 +8,6 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     if (isset($_POST['channelId'])) {
         $channelId = (int)$_POST['channelId'];
     } else $channelId = 2; // VK
-    $mainDb = $app->getMainDb($channelId);
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$_POST['mapBuildingId'].$app->md5Secret());
@@ -19,15 +18,30 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id =" . $_POST['userId']);
-                $u = $result->fetchAll();
-                $u = $u[0]['unlocked_land'];
-                $u = $u . "&" . $_POST['mapBuildingId'];
-                $result = $mainDb->query('UPDATE users SET unlocked_land="' . $u . '" WHERE id=' . $_POST['userId']);
-                if (!$result) {
-                    $json_data['id'] = 2;
-                    $json_data['status'] = 's318';
-                    throw new Exception("Bad request to DB!");
+                if ($channelId == 2) {
+                    $mainDb = $app->getMainDb($channelId);
+                    $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id =" . $_POST['userId']);
+                    $u = $result->fetchAll();
+                    $u = $u[0]['unlocked_land'];
+                    $u = $u . "&" . $_POST['mapBuildingId'];
+                    $result = $mainDb->query('UPDATE users SET unlocked_land="' . $u . '" WHERE id=' . $_POST['userId']);
+                    if (!$result) {
+                        $json_data['id'] = 2;
+                        $json_data['status'] = 's318';
+                        throw new Exception("Bad request to DB!");
+                    }
+                } else {
+                    $shardDb = $app->getShardDb($userId, $channelId);
+                    $result = $shardDb->query("SELECT unlocked_land FROM user_info WHERE user_id =" . $_POST['userId']);
+                    $u = $result->fetchAll();
+                    $u = $u[0]['unlocked_land'];
+                    $u = $u . "&" . $_POST['mapBuildingId'];
+                    $result = $mainDb->query('UPDATE user_info SET unlocked_land="' . $u . '" WHERE user_id=' . $_POST['userId']);
+                    if (!$result) {
+                        $json_data['id'] = 2;
+                        $json_data['status'] = 's318';
+                        throw new Exception("Bad request to DB!");
+                    }
                 }
 
                 $json_data['message'] = $u;
