@@ -27,8 +27,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                         throw new Exception("Bad request to DB!");
                     }
                 } else {
-                    $shardDb = $app->getShardDb($userId, $channelId);
-                    $result = $shardDb->query('UPDATE user_info SET cutscene="' . $_POST['cutScene'] . '" WHERE user_id=' . $_POST['userId']);
+                    $shardDb = $app->getShardDb($_POST['userId'], $channelId);
+                    $result = $shardDb->query('UPDATE user_info SET cutscene="'.$_POST['cutScene'].'" WHERE user_id='.$_POST['userId']);
                     if (!$result) {
                         $json_data['id'] = 2;
                         $json_data['status'] = 's333';

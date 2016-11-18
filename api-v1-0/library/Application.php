@@ -137,6 +137,11 @@ class Application
             $userId = $this->getUserId($channelId, $socialUId);
             $arr = [31, 32, 21, 118];
             $shardDb = $this->getShardDb($userId, $channelId);
+
+            if ($channelId == 3) { //for OK
+                $result = $shardDb->query('INSERT INTO user_info SET user_id='.$userId.', cutscene=0');
+            }
+
             foreach ($arr as $value) {
                 $result = $shardDb->insert('user_resource',
                     ['user_id' => $userId, 'resource_id' => $value, 'count' => 3],

@@ -13,6 +13,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $shardDb = $app->getShardDb($userId, $channelId);
 
     try {
+
+        if ($channelId == 3) {
+            $shardDb->query('DELETE FROM user_info WHERE user_id='.$_POST['userId']);
+        }
         
         $shardDb->query('DELETE FROM user_animal WHERE user_id='.$_POST['userId']);
 
