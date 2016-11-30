@@ -19,6 +19,19 @@ class Payment {
 
     // массив пар код продукта => цена
     private static $catalog = array();
+//        "1" => 1,
+//        "2" => 50,
+//        "3" => 100,
+//        "4" => 190,
+//        "5" => 490,
+//        "6" => 990,
+//        "7" => 30,
+//        "8" => 60,
+//        "9" => 90,
+//        "10" => 240,
+//        "11" => 690,
+//        "12" => 1490
+//    );
     // массив пар код ошибки => описание
     private static $errors = array(
         1 => "UNKNOWN: please, try again later. If error repeats, contact application support team.",
@@ -29,25 +42,39 @@ class Payment {
     );
 
     public static function fillCatalog() {
-        $mainDb = Application::getInstance()->getMainDb(3);
-        $result = $mainDb->query("SELECT * FROM data_buy_money");
-        if ($result) {
-            $dataMoney = $result->fetchAll();
-        } else {
-            $json_data['id'] = 666;
-            $json_data['status'] = 's666';
-            throw new Exception("Bad request to DB!");
-        }
-        if (!empty($dataMoney)) {
-            foreach ($dataMoney as $key => $m) {
-                $catalog[$m['id']] = $m['cost_for_real'];
-            }
-        } else {
-            $json_data['id'] = 555;
-            $json_data['status'] = 's555';
-            throw new Exception("Bad request to DB!");
-        }
-        return $catalog;
+//        $mainDb = Application::getInstance()->getMainDb(3);
+//        $result = $mainDb->query("SELECT * FROM data_buy_money");
+//        if ($result) {
+//            $dataMoney = $result->fetchAll();
+//        } else {
+//            $json_data['id'] = 666;
+//            $json_data['status'] = 's666';
+//            throw new Exception("Bad request to DB!");
+//        }
+//        if (!empty($dataMoney)) {
+//            foreach ($dataMoney as $key => $m) {
+//                self::$catalog[$m['id']] = $m['cost_for_real'];
+//            }
+//        } else {
+//            $json_data['id'] = 555;
+//            $json_data['status'] = 's555';
+//            throw new Exception("Bad request to DB!");
+//        }
+        self::$catalog = array(
+            "1" => 1,
+            "2" => 50,
+            "3" => 100,
+            "4" => 190,
+            "5" => 490,
+            "6" => 990,
+            "7" => 30,
+            "8" => 60,
+            "9" => 90,
+            "10" => 240,
+            "11" => 690,
+            "12" => 1490
+        );
+        return self::$catalog;
     }
 
     // функция рассчитывает подпись для пришедшего запроса
@@ -119,16 +146,35 @@ class Payment {
         // вывод xml
         print $rezString;
     }
+
     // Рекомендуется хранить информацию обо всех транзакциях
-    public function saveTransaction($uid, $transaction_id, $transaction_time, $product_code){
+    public static function saveTransaction($uid, $product_code){
         // тут может быть код для сохранения информации о транзакции
         $mainDb = Application::getInstance()->getMainDb(3);
         try {
-            $mainDb->query('INSERT INTO transactions SET uid='. $uid .', transaction_id='.$transaction_id.', transaction_time='.$transaction_time.', product_code='.$product_code);
+            $time = date("Y-m-d H:i:s");
+            $mainDb->query('INSERT INTO transactions SET uid='. $uid .', product_code='.$product_code.', time_try="'.$time.'"');
         } catch(Exception $e) {}
     }
 
-    // функция создает объект DomDocument и добавляет в него в качестве корневого тега $root
+    public static function saveErrorTransaction($uid, $errorNumber, $product){
+        $mainDb = Application::getInstance()->getMainDb(3);
+        try {
+            $time = date("Y-m-d H:i:s");
+            if ($uid == '') $uid = -1;
+            $mainDb->query('INSERT INTO trans_error SET user_id='.$uid.', error_n='.$errorNumber.', product='.$product.', time_try="'.$time.'"');
+        } catch(Exception $e) {
+            $mainDb->query('INSERT INTO trans_error SET user_id=-5, error_n=-5, product=-5, time_try="123 321"');
+        }
+    }
+
+    public static function test($n){
+        $mainDb = Application::getInstance()->getMainDb(3);
+        $time = date("Y-m-d H:i:s");
+        $mainDb->query('INSERT INTO trans_error SET user_id=0, error_n='.$n.', product=0, time_try="'.$time.'"');
+    }
+
+    // функция создает объект DomDocument и доб авляет в него в качестве корневого тега $root
     private static function createXMLWithRoot($root){
         // создание xml документа
         $dom = new DomDocument('1.0');
@@ -140,25 +186,36 @@ class Payment {
         return $dom;
     }
 }
+
 /*
 * Обработка платежа начинается отсюда
 */
 if (array_key_exists("product_code", $_GET) && array_key_exists("amount", $_GET) && array_key_exists("sig", $_GET)){
     $c = Payment::fillCatalog();
-    if (Payment::checkPayment($_GET["product_code"], $_GET["amount"])){
-        if ($_GET["sig"] == Payment::calcSignature($_GET)){
-            Payment::saveTransaction($_GET["uid"], $_GET["transaction_id"], $_GET["transaction_time"], $_GET["product_code"]);
+    if (Payment::checkPayment($_GET["product_code"], $_GET["amount"])) {
+        if ($_GET["sig"] == Payment::calcSignature($_GET)) {
+            Payment::saveTransaction($_GET["uid"], $_GET["product_code"]);
             Payment::returnPaymentOK();
         } else {
             // здесь можно что-нибудь сделать, если подпись неверная
+            Payment::saveErrorTransaction($_GET["uid"], Payment::ERROR_TYPE_PARAM_SIGNATURE, $_GET["product_code"]);
             Payment::returnPaymentError(Payment::ERROR_TYPE_PARAM_SIGNATURE);
         }
     } else {
         // здесь можно что-нибудь сделать, если информация о покупке некорректна
+        Payment::saveErrorTransaction($_GET["uid"], 4, $_GET["product_code"]);
         Payment::returnPaymentError(Payment::ERROR_TYPE_CALLBACK_INVALID_PYMENT);
     }
 } else {
     // здесь можно что-нибудь сделать, если информация о покупке или подпись отсутствуют в запросе
+    $code = '';
+    if (array_key_exists("product_code", $_GET)) $code = $code.'9';
+        else  $code = $code.'6';
+    if (array_key_exists("amount", $_GET)) $code = $code.'9';
+        else  $code = $code.'6';
+    if (array_key_exists("sig", $_GET)) $code = $code.'9';
+        else  $code = $code.'6';
+    Payment::saveErrorTransaction($_GET["uid"], Payment::ERROR_TYPE_CALLBACK_INVALID_PYMENT, $code);
     Payment::returnPaymentError(Payment::ERROR_TYPE_CALLBACK_INVALID_PYMENT);
 }
 

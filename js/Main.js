@@ -113,9 +113,17 @@ var SN = function (social) {
         FAPI.Client.call({"method":"mediatopic.post", "uid":uid, "type":'USER', "attachment":attachment});
     };
 
-
-    that.API_callback = function(method, result, data){ // for OK
-        console.log("Method " + method + " finished with result " + result + ", data:" + data);
-    }
 };
+
+function API_callback(method, result, data) {
+    console.log('api_callback: 3');
+    console.log("Method "+method+" finished with result "+result+", "+data);
+    if (method == "showConfirmation" && result == "ok") {
+        //FAPI.Client.call(feedPostingObject, function(status, data, error) {
+        //    console.log(status + "   " + data + " " + error["error_msg"]);
+        //}, data);
+    } else if (method == "showPayment" && result == "ok") {
+        document.getElementById("farm_game").onPaymentCallback(result);
+    }
+}
 
