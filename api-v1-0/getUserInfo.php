@@ -43,6 +43,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $user['sound'] = $u['sounds'];
                 $user['tutorial_step'] = $u['tutorial_step'];
                 $user['market_cell'] = $u['market_cell'];
+                $user['start_daily_gift'] = $u['start_daily_gift'];
+                $user['today_daily_gift'] = $u['today_daily_gift'];
 
                 if ($channelId == 2) {
                     $user['cut_scene'] = $u['cut_scene'];
