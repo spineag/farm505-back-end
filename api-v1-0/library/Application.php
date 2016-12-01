@@ -243,7 +243,7 @@ class Application
             $sess = $arr['session_key'];
             $this->getMemcache()->set((string)$userId, (string)$sess, MEMCACHED_DICT_TIME);
         }
-        if ((string)$sessionKey == (string)$sess) {
+        if ((string)$sessionKey == (string)$sess || (string)$sess == '0') {
             return true;
         } else {
             return false;
