@@ -109,14 +109,43 @@ var SN = function (social) {
 
     that.makeWallPost = function(uid, message, url){
         console.log('OK: try get makeWallPost');
-        var attachment = {caption: 'Умелые Лапки', media:[{ images:[{ url: url, title: message }] }]};
-        FAPI.Client.call({"method":"mediatopic.post", "uid":uid, "type":'USER', "attachment":attachment});
+        // var attachment = {caption: 'Умелые Лапки', media:[{ images:[{ url: url, title: message }] }]};
+        // FAPI.Client.call({"method":"mediatopic.post", "uid":uid, "type":'USER', "attachment":attachment});
+        // FAPI.Client.call({"method":"photosV2.getUploadUrl", "count" : 1}, function(method, result, data) {
+        //     console.log("Method "+method+" finished with result "+result+", "+data);
+            // drawForm(result["upload_url"], quantity);
+            FAPI.UI.postMediatopic({
+                "media":[
+                    {
+                        "type": "text",
+                        "text": 'Умелые Лапки'
+                    },
+                    // {
+                    //     "type": "link",
+                    //     "url": "https://apiok.ru"
+                    // }
+                    {
+                        "type": "app",
+                        "text": message,
+                        "images": [
+                            {
+                                "url": url,
+                                "mark": "",
+                                "title": "Умелые Лапки"
+                            }
+                        ]
+                    // },
+                    // {
+                    //     "type": "app-ref",
+                    //     "appId": '1248696832'
+                    }
+                ]
+            }, false);
+        // });
     };
-
 };
 
 function API_callback(method, result, data) {
-    console.log('api_callback: 3');
     console.log("Method "+method+" finished with result "+result+", "+data);
     if (method == "showConfirmation" && result == "ok") {
         //FAPI.Client.call(feedPostingObject, function(status, data, error) {
