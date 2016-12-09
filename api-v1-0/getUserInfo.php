@@ -48,6 +48,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
                 if ($channelId == 2) {
                     $user['cut_scene'] = $u['cut_scene'];
+                    $user['mini_scene'] = $u['mini_scene'];
                     $user['daily_bonus_day'] = gmdate("d", $u['daily_bonus_day']);
                     $user['count_daily_bonus'] = $u['count_daily_bonus'];
                     if ($u['mouse_day'] == '0') {
@@ -67,6 +68,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $result = $shardDb->query("SELECT * FROM user_info WHERE user_id =" . $_POST['userId']);
                     $uS = $result->fetch();
                     $user['cut_scene'] = $uS['cutscene'];
+                    $user['mini_scene'] = $uS['miniscene'];
                     $user['daily_bonus_day'] = gmdate("d", $uS['daily_bonus_day']);
                     $user['count_daily_bonus'] = $uS['count_daily_bonus'];
                     if ($uS['mouse_day'] == '0') {
