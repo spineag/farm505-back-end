@@ -19,7 +19,7 @@ class Payment {
 
     // массив пар код продукта => цена
     private static $catalog = array();
-//        "1" => 1,
+//        "1" => 15,
 //        "2" => 50,
 //        "3" => 100,
 //        "4" => 190,
@@ -61,7 +61,7 @@ class Payment {
 //            throw new Exception("Bad request to DB!");
 //        }
         self::$catalog = array(
-            "1" => 1,
+            "1" => 15,
             "2" => 50,
             "3" => 100,
             "4" => 190,

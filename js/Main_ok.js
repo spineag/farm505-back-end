@@ -1,45 +1,17 @@
 "use strict";
 
-var SN = function (social) {
+var SN = function (social) { // social == 3
     var that = this;
-    if (social == 2) {// VK
-        console.log('init vk social');
-        that.load = function (url, callback, id) {
-            var s = document.createElement('script');
-            s.type = 'text/javascript';
-            s.src = url;
-            var script = document.getElementsByTagName('script')[1];
-            script.parentNode.insertBefore(s, script);
-            if (typeof id !== 'undefined') { script.setAttribute("id", id); }
-            if (typeof callback === 'function') {
-                s.addEventListener('load', function () {
-                    callback();
-                }, false);
-            }
-        };
 
-        that.load('//vk.com/js/api/xd_connection.js?2', function () {
-            that.showInviteBox = function () {
-                VK.callMethod('showInviteBox');
-            };
-
-            VK.init({apiId: 5448769, onlyWidgets: true});
-
-            // VK.Widgets.Like("vk_like", {type: "button"});
-            // VK.Widgets.Subscribe("vk_subscribe", {}, -38679323);
+    console.log('init ok social');
+    var rParams = FAPI.Util.getRequestParameters();
+    FAPI.init(rParams["api_server"], rParams["apiconnection"],
+        function() {
+            console.log("Инициализация прошла успешно");
+            //FAPI.UI.setWindowSize(717, 1400); !!!!!
+        }, function(error) {
+            console.log("Ошибка инициализации");
         });
-
-    } else if (social == 3) { //OK
-        console.log('init ok social');
-        var rParams = FAPI.Util.getRequestParameters();
-        FAPI.init(rParams["api_server"], rParams["apiconnection"],
-            function() {
-                console.log("Инициализация прошла успешно");
-                //FAPI.UI.setWindowSize(717, 1400); !!!!!
-            }, function(error) {
-                console.log("Ошибка инициализации");
-            });
-    }
 
     that.flash = function(){
         return document.getElementById("farm_game");
@@ -86,7 +58,7 @@ var SN = function (social) {
         console.log('getTempUsersInfoByIdCallback result: ' + result);
         that.flash().getTempUsersInfoByIdHandler(data);
     };
-    
+
     that.getFriendsByIds = function(uids, params) {
         var ids = uids.join();
         var fields = params.join();
@@ -140,10 +112,10 @@ var SN = function (social) {
                             "title": "Умелые Лапки"
                         }
                     ]
-                // },
-                // {
-                //     "type": "app-ref",
-                //     "appId": '1248696832'
+                    // },
+                    // {
+                    //     "type": "app-ref",
+                    //     "appId": '1248696832'
                 }
             ]
         }, false);
