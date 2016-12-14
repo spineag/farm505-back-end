@@ -90,6 +90,17 @@ var SN = function (social) { // social == 3
         FAPI.UI.showPayment(txt, txt2, id, price, null, null, "ok", "true");
     };
 
+    that.isInGroup = function(groupId, userId) {
+        console.log('OK: try isInGroup');
+        FAPI.Client.call({"method":"group.getUserGroupsByIds", "group_id":groupId, "uids":userId}, that.isInGroupCallback);
+    };
+
+    that.isInGroupCallback = function(result, data) {
+        console.log('isInGroupCallback result: ' + result);
+        console.log('isInGroupCallback data: ' + data);
+        that.flash().isInGroupCallback(data);
+    };
+
     that.makeWallPost = function(uid, message, url){
         console.log('OK: try get makeWallPost');
         FAPI.UI.postMediatopic({
