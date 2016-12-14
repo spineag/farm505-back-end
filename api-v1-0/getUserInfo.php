@@ -91,19 +91,19 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     (int)$user['tutorial_step'] + (int)$user['count_chest'] + (int)$user['count_daily_bonus'];
                 $user['test_date'] = $check;
 
-                $quests = [];
-                $result = $shardDb->query("SELECT * FROM user_quests_temp WHERE user_id = ".$_POST['userId']);
-                if ($result) {
-                    $arr = $result->fetchAll();
-                    foreach ($arr as $value => $dict) {
-                        $res = [];
-                        $res['quest_id'] = $dict['quest_id'];
-                        $res['is_done'] = $dict['is_done'];
-                        $res['get_award'] = $dict['get_award'];
-                        $quests[] = $res;
-                    }
-                    $user['quests'] = $quests;
-                }
+//                $quests = [];
+//                $result = $shardDb->query("SELECT * FROM user_quests_temp WHERE user_id = ".$_POST['userId']);
+//                if ($result) {
+//                    $arr = $result->fetchAll();
+//                    foreach ($arr as $value => $dict) {
+//                        $res = [];
+//                        $res['quest_id'] = $dict['quest_id'];
+//                        $res['is_done'] = $dict['is_done'];
+//                        $res['get_award'] = $dict['get_award'];
+//                        $quests[] = $res;
+//                    }
+//                    $user['quests'] = $quests;
+//                }
 
                 $json_data['message'] = $user;
                 echo json_encode($json_data);
