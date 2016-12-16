@@ -8,10 +8,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     if (isset($_POST['channelId'])) {
         $channelId = (int)$_POST['channelId'];
     } else $channelId = 2; // VK
-    $shardDb = $app->getShardDb($channelId);
+    $mainDb = $app->getShardDb($channelId);
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
-        $m = md5($_POST['userId'].$_POST['task_id'].$app->md5Secret());
+        $m = md5($_POST['userId'].$_POST['level'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
             $json_data['status'] = 's...';
@@ -19,7 +19,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $shardDb->query('UPDATE user_quest_task SET count_done ='.$_POST['count_done'].'AND is_done='.$_POST['is_done'].' WHERE id='.$_POST['task_id']);
+                $result = $shardDb->query('UPDATE user_quest SET get_award=1 WHERE id='.$_POST['userQuestDbId']);
                 if (!$result) {
                     $json_data['id'] = 2;
                     $json_data['status'] = 's...';
