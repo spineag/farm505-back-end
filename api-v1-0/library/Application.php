@@ -132,14 +132,15 @@ class Application
                 'xp' => 0, 'level' => 1, 'sex' => $sex, 'born_date' => $bornDate],
             ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int',
                 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'str', 'str']);
-                
-        if ($result) {
-            $userId = $this->getUserId($channelId, $socialUId);
-            $arr = [31, 32, 21, 118];
-            $shardDb = $this->getShardDb($userId, $channelId);
+
+        $userId = $this->getUserId($channelId, $socialUId);
+        $arr = [31, 32, 21, 118];
+        $shardDb = $this->getShardDb($userId, $channelId);
 
             if ($channelId == 3) { //for OK
-                $result = $shardDb->query('INSERT INTO user_info SET user_id='.$userId.', cutscene=0');
+                $result = $shardDb->query('INSERT INTO user_info SET user_id='.$userId.', cutscene=0, open_order=0');
+            } else if ($channelId == 2) {
+                $result = $mainDb->query('INSERT INTO users SET open_order=0 WHERE id='.$userId);
             }
 
             foreach ($arr as $value) {
@@ -229,8 +230,6 @@ class Application
                 ['int', 'int', 'int', 'int', 'int', 'int', 'int', 'int']);
 
             return $userId;
-        }
-        return -1;
     }
 
     final public function checkSessionKey($userId, $sessionKey, $channelId = 2) {
