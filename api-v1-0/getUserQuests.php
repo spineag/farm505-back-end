@@ -16,7 +16,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $m = md5($_POST['userId'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
-            $json_data['status'] = 's...';
+            $json_data['status'] = 's442';
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {
@@ -51,6 +51,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $result = $shardDb->query("SELECT * FROM user_quest_task WHERE id IN (" . implode(',', array_map('intval', $qIDs)) . ")");
                     $tasks = $result->fetchAll();
                 } else {
+                    $quests = [];
                     $tasks = [];
                 }
 
@@ -61,14 +62,14 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 echo json_encode($json_data);
 
             } catch (Exception $e) {
-                $json_data['status'] = 's...';
+                $json_data['status'] = 's443';
                 $json_data['message'] = $e->getMessage();
                 echo json_encode($json_data);
             }
         }
     } else {
         $json_data['id'] = 13;
-        $json_data['status'] = 's...';
+        $json_data['status'] = 's444';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }
@@ -76,7 +77,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 's...';
+    $json_data['status'] = 's445';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }
