@@ -11,6 +11,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     } else $channelId = 2; // VK
     $shardDb = $app->getShardDb($userId, $channelId);
     $mainDb = $app->getMainDb($channelId);
+    $memcache = $app->getMemcache();
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$app->md5Secret());
@@ -24,9 +25,22 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $result = $shardDb->query("SELECT * FROM user_quest WHERE user_id =".$userId. " AND get_award = 0 AND is_out_date = 0");
                 $quests = $result->fetchAll();
                 if (count($quests)) {
+                    // get data quests
+                    $dataAllQuests = $memcache->get('getDataQuests'.$channelId);
+                    if (!$dataAllQuests) {
+                        $dataAllQuests = [];
+                        $result = $mainDb->query("SELECT * FROM quests");
+                        $q = $result->fetchAll();
+                        foreach ($q as $value => $dict) {
+                            $dataAllQuests[$dict['id']] = $dict;
+                        }
+                        $memcache->set('getDataQuests'.$channelId, $dataAllQuests, MEMCACHED_DICT_TIME);
+                    }
+
                     $qIDs = [];
                     foreach ($quests as $value => $dict) {
                         $qIDs[] = $dict['id'];
+                        $quests[$value]['quest_data'] = $dataAllQuests[$dict['id']];
                     }
                     //check for is_out_date via date_finish
                     $q = $qIDs;
