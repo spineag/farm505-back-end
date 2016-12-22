@@ -23,7 +23,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             try {
                 $result = $shardDb->query("SELECT * FROM user_quest WHERE user_id =".$userId. " AND is_out_date = 0 AND get_award = 0");
                 $unfinishedQuests = $result->fetchAll();
-                foreach ($finishedQuests as $value => $dict) {
+                foreach ($unfinishedQuests as $value => $dict) {
                     $unfinishedQuestsIDs[] = $dict['id'];
                 }
                 $result = $shardDb->query("SELECT * FROM user_quest WHERE user_id =".$userId. " AND is_out_date = 0 AND get_award = 1");
@@ -32,11 +32,12 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 foreach ($finishedQuests as $value => $dict) {
                     $finishedQuestsIDs[] = $dict['id'];
                 }
+                $finishedQuestsIDs[] = '0';
 
                 $time = time();
                 $arF = implode(',', array_map('intval', $finishedQuestsIDs));
-                $arUF = implode(',', array_map('intval', $unfinishedQuestsIDs));
-                $result =  $mainDb->query("SELECT * FROM quests WHERE date_start <".$time." AND date_finish >".$time." AND ( prev_id IN (".$arF.") ||  prev_id=0) AND id NOT IN (" .$arUF.") AND id NOT IN (".$arF.")" );
+                $arUF = implode(',', array_map('intval', array_merge($unfinishedQuestsIDs, $finishedQuestsIDs)));
+                $result =  $mainDb->query("SELECT * FROM quests WHERE level <= ".$_POST['level']." date_start < ".$time." AND date_finish > ".$time." AND  prev_id IN (".$arF.") AND id NOT IN (".$arUF.") AND id NOT IN (".$arF.")" );
                 $quests = $result->fetchAll();
 
                 $questsNew = [];
