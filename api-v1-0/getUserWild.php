@@ -33,6 +33,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $build['pos_x'] = $dict['pos_x'];
                     $build['pos_y'] = $dict['pos_y'];
                     $build['is_flip'] = $dict['is_flip'];
+                    $build['chest_id'] = $dict['chest_id'];
                     $resp[] = $build;
                 }
             } else {

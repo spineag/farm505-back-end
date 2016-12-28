@@ -189,6 +189,7 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                         $build['pos_x'] = $dict['pos_x'];
                         $build['pos_y'] = $dict['pos_y'];
                         $build['is_flip'] = $dict['is_flip'];
+                        $build['chest_id'] = $dict['chest_id'];
                         $respWilds[] = $build;
                     }
                 } else {
