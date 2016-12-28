@@ -141,6 +141,12 @@ function API_callback(method, result, data) {
         //}, data);
     } else if (method == "showPayment" && result == "ok") {
         document.getElementById("farm_game").onPaymentCallback(result);
+    } else if (method == 'postMediatopic') {
+        if (result == 'ok') {
+            document.getElementById("farm_game").wallPostSave();
+        } else {
+            document.getElementById("farm_game").wallPostCancel();
+        }
     }
 }
 
