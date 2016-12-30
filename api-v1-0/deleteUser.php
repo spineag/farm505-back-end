@@ -49,6 +49,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         
         $shardDb->query('DELETE FROM user_papper_buy WHERE user_id='.$_POST['userId']);
 
+        $shardDb->query('DELETE FROM user_quest WHERE user_id='.$_POST['userId']);
+        $shardDb->query('DELETE FROM user_quest_task WHERE user_id='.$_POST['userId']);
 //        $shardDb->query('DELETE FROM user_quests_temp WHERE user_id='.$_POST['userId']);
 
         $mainDb->query('DELETE FROM users WHERE id='.$_POST['userId']);
