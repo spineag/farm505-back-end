@@ -45,6 +45,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $user['market_cell'] = $u['market_cell'];
                 $user['day_daily_gift'] = $u['day_daily_gift'];
                 $user['count_daily_gift'] = $u['count_daily_gift'];
+                $user['starter_pack'] = $u['starter_pack'];
 
                 if ($channelId == 2) {
                     $user['cut_scene'] = $u['cut_scene'];
