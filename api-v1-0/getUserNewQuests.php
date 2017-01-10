@@ -66,6 +66,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                         $t['is_done'] = 0;
                         $t['count_done'] = 0;
                         $t['task_data'] = $dict;
+                        $tasksNew[] = $t;
                     }
                 }
 
