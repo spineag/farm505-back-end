@@ -26,21 +26,23 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $quests = $result->fetchAll();
                 if (count($quests)) {
                     // get data quests
-                    $dataAllQuests = $memcache->get('getDataQuests'.$channelId);
-                    if (!$dataAllQuests) {
-                        $dataAllQuests = [];
-                        $result = $mainDb->query("SELECT * FROM quests");
-                        $q = $result->fetchAll();
-                        foreach ($q as $value => $dict) {
-                            $dataAllQuests[$dict['id']] = $dict;
-                        }
-                        $memcache->set('getDataQuests'.$channelId, $dataAllQuests, MEMCACHED_DICT_TIME);
-                    }
+//                    $dataAllQuests = $memcache->get('getDataQuests'.$channelId);
+//                    if (!$dataAllQuests) {
+//                        $dataAllQuests = [];
+//                        $result = $mainDb->query("SELECT * FROM quests");
+//                        $q = $result->fetchAll();
+//                        foreach ($q as $value => $dict) {
+//                            $dataAllQuests[$dict['id']] = $dict;
+//                        }
+//                        $memcache->set('getDataQuests'.$channelId, $dataAllQuests, MEMCACHED_DICT_TIME);
+//                    }
 
                     $qIDs = [];
                     foreach ($quests as $value => $dict) {
                         $qIDs[] = $dict['id'];
-                        $quests[$value]['quest_data'] = $dataAllQuests[$dict['id']];
+//                        $quests[$value]['quest_data'] = $dataAllQuests[$dict['id']];
+                        $result = $mainDb->query("SELECT * FROM quests WHERE id = ".$dict['quest_id']);
+                        $quests[$value]['quest_data'] = $result->fetch();
                     }
                     //check for is_out_date via date_finish
                     $q = $qIDs;
