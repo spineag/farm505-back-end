@@ -24,13 +24,13 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $result = $shardDb->query("SELECT * FROM user_quest WHERE user_id =".$userId. " AND is_out_date = 0 AND get_award = 0");
                 $unfinishedQuests = $result->fetchAll();
                 foreach ($unfinishedQuests as $value => $dict) {
-                    $unfinishedQuestsIDs[] = $dict['id'];
+                    $unfinishedQuestsIDs[] = $dict['quest_id'];
                 }
                 $result = $shardDb->query("SELECT * FROM user_quest WHERE user_id =".$userId. " AND is_out_date = 0 AND get_award = 1");
                 $finishedQuests = $result->fetchAll();
                 $finishedQuestsIDs = [];
                 foreach ($finishedQuests as $value => $dict) {
-                    $finishedQuestsIDs[] = $dict['id'];
+                    $finishedQuestsIDs[] = $dict['quest_id'];
                 }
                 $finishedQuestsIDs[] = '0';
 
