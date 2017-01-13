@@ -38,8 +38,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 //                    }
 
                     $qIDs = [];
+                    $qIDsAll = [];
                     foreach ($quests as $value => $dict) {
                         $qIDs[] = $dict['id'];
+                        $qIDsAll[] = $dict['quest_id'];
 //                        $quests[$value]['quest_data'] = $dataAllQuests[$dict['id']];
                         $result = $mainDb->query("SELECT * FROM quests WHERE id = ".$dict['quest_id']);
                         $quests[$value]['quest_data'] = $result->fetch();
@@ -70,14 +72,19 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                         $result = $mainDb->query("SELECT * FROM quest_task WHERE quest_id = ".$dict['quest_id']);
                         $tasks[$value]['task_data'] = $result->fetch();
                     }
+                    $result = $mainDb->query("SELECT * FROM quest_award WHERE quest_id IN (" . implode(',', array_map('intval', $qIDsAll)) . ")");
+                    $awards = $result->fetchAll();
+
                 } else {
                     $quests = [];
                     $tasks = [];
+                    $awards = [];
                 }
 
                 $ar = [];
                 $ar['quests'] = $quests;
                 $ar['tasks'] = $tasks;
+                $ar['awards'] = $awards;
                 $json_data['message'] = $ar;
                 echo json_encode($json_data);
 
