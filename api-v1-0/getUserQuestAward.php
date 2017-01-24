@@ -19,7 +19,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $shardDb->query('UPDATE user_quest SET is_done=1 WHERE id='.$_POST['dbID']);
+                $result = $shardDb->query('UPDATE user_quest SET get_award = 1 WHERE id='.$_POST['dbID']);
                 if (!$result) {
                     $json_data['id'] = 2;
                     $json_data['status'] = 's459';

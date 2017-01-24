@@ -60,9 +60,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $result =  $mainDb->query("SELECT * FROM quest_task WHERE quest_id IN (".$ar.") ");
                     $tasks = $result->fetchAll();
                     foreach ($tasks as $value => $dict) {
-                        $result = $shardDb->queryWithAnswerId('INSERT INTO user_quest_task SET user_id='.$userId.', quest_id='.$dict['quest_id'].', count_done=0, is_done=0');
+                        $result = $shardDb->queryWithAnswerId('INSERT INTO user_quest_task SET user_id='.$userId.', task_id = '.$dict["id"].', quest_id='.$dict["quest_id"].', count_done=0, is_done=0');
                         $t = [];
                         $t['id'] = $result[1];
+                        $t['task_id'] = $dict['id'];
                         $t['quest_id'] = $dict['quest_id'];
                         $t['is_done'] = 0;
                         $t['count_done'] = 0;
