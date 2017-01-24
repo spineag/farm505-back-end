@@ -19,13 +19,9 @@ if ($input['item_id'] == 13) {
         foreach ($arr as $value => $dict) {
             $res = [];
             $res['item_id'] = 13;
-            $res['soft_count'] = $dict['hard_count'];
-            $res['hard_count'] = $dict['user_db_building_id'];
-            if ($dict['raw_time_start'] == 0) {
-                $res['time_work'] = 0;
-            } else {
-                $res['time_work'] = time() - $dict['raw_time_start'];
-            }
+            $res['soft_count'] = $dict['soft_count'];
+            $res['hard_count'] = $dict['hard_count'];
+
             $resp[] = $res;
         }
     }
