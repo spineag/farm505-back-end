@@ -26,21 +26,25 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $quests = $result->fetchAll();
                 if (count($quests)) {
                     // get data quests
-                    $dataAllQuests = $memcache->get('getDataQuests'.$channelId);
-                    if (!$dataAllQuests) {
-                        $dataAllQuests = [];
-                        $result = $mainDb->query("SELECT * FROM quests");
-                        $q = $result->fetchAll();
-                        foreach ($q as $value => $dict) {
-                            $dataAllQuests[$dict['id']] = $dict;
-                        }
-                        $memcache->set('getDataQuests'.$channelId, $dataAllQuests, MEMCACHED_DICT_TIME);
-                    }
+//                    $dataAllQuests = $memcache->get('getDataQuests'.$channelId);
+//                    if (!$dataAllQuests) {
+//                        $dataAllQuests = [];
+//                        $result = $mainDb->query("SELECT * FROM quests");
+//                        $q = $result->fetchAll();
+//                        foreach ($q as $value => $dict) {
+//                            $dataAllQuests[$dict['id']] = $dict;
+//                        }
+//                        $memcache->set('getDataQuests'.$channelId, $dataAllQuests, MEMCACHED_DICT_TIME);
+//                    }
 
                     $qIDs = [];
+                    $qIDsAll = [];
                     foreach ($quests as $value => $dict) {
                         $qIDs[] = $dict['id'];
-                        $quests[$value]['quest_data'] = $dataAllQuests[$dict['id']];
+                        $qIDsAll[] = $dict['quest_id'];
+//                        $quests[$value]['quest_data'] = $dataAllQuests[$dict['id']];
+                        $result = $mainDb->query("SELECT * FROM quests WHERE id = ".$dict['quest_id']);
+                        $quests[$value]['quest_data'] = $result->fetch();
                     }
                     //check for is_out_date via date_finish
                     $q = $qIDs;
@@ -64,14 +68,23 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
                     $result = $shardDb->query("SELECT * FROM user_quest_task WHERE id IN (" . implode(',', array_map('intval', $qIDs)) . ")");
                     $tasks = $result->fetchAll();
+                    foreach ($tasks as $value => $dict) {
+                        $result = $mainDb->query("SELECT * FROM quest_task WHERE quest_id = ".$dict['quest_id']);
+                        $tasks[$value]['task_data'] = $result->fetch();
+                    }
+                    $result = $mainDb->query("SELECT * FROM quest_award WHERE quest_id IN (" . implode(',', array_map('intval', $qIDsAll)) . ")");
+                    $awards = $result->fetchAll();
+
                 } else {
                     $quests = [];
                     $tasks = [];
+                    $awards = [];
                 }
 
                 $ar = [];
                 $ar['quests'] = $quests;
                 $ar['tasks'] = $tasks;
+                $ar['awards'] = $awards;
                 $json_data['message'] = $ar;
                 echo json_encode($json_data);
 

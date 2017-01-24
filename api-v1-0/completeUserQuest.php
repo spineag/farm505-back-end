@@ -8,35 +8,35 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     if (isset($_POST['channelId'])) {
         $channelId = (int)$_POST['channelId'];
     } else $channelId = 2; // VK
-    $mainDb = $app->getShardDb($channelId);
+    $shardDb = $app->getShardDb($channelId);
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
-        $m = md5($_POST['userId'].$_POST['level'].$app->md5Secret());
+        $m = md5($_POST['userId'].$_POST['questId'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
-            $json_data['status'] = 's...';
+            $json_data['status'] = 's448';
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {
             try {
-                $result = $shardDb->query('UPDATE user_quest SET is_done=1 AND date_finish='.time().' WHERE id='.$_POST['userQuestDbId']);
+                $result = $shardDb->query('UPDATE user_quest SET date_finish = '.time().' AND is_done = 1 WHERE id='.$_POST['dbID']);
                 if (!$result) {
                     $json_data['id'] = 2;
-                    $json_data['status'] = 's...';
+                    $json_data['status'] = 's449';
                     throw new Exception("Bad request to DB!");
                 }
 
                 $json_data['message'] = '';
                 echo json_encode($json_data);
             } catch (Exception $e) {
-                $json_data['status'] = 's...';
+                $json_data['status'] = 's450';
                 $json_data['message'] = $e->getMessage();
                 echo json_encode($json_data);
             }
         }
     } else {
         $json_data['id'] = 13;
-        $json_data['status'] = 's...';
+        $json_data['status'] = 's451';
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }
@@ -44,7 +44,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 's...';
+    $json_data['status'] = 's452';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }

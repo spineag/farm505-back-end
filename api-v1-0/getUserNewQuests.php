@@ -24,13 +24,13 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $result = $shardDb->query("SELECT * FROM user_quest WHERE user_id =".$userId. " AND is_out_date = 0 AND get_award = 0");
                 $unfinishedQuests = $result->fetchAll();
                 foreach ($unfinishedQuests as $value => $dict) {
-                    $unfinishedQuestsIDs[] = $dict['id'];
+                    $unfinishedQuestsIDs[] = $dict['quest_id'];
                 }
                 $result = $shardDb->query("SELECT * FROM user_quest WHERE user_id =".$userId. " AND is_out_date = 0 AND get_award = 1");
                 $finishedQuests = $result->fetchAll();
                 $finishedQuestsIDs = [];
                 foreach ($finishedQuests as $value => $dict) {
-                    $finishedQuestsIDs[] = $dict['id'];
+                    $finishedQuestsIDs[] = $dict['quest_id'];
                 }
                 $finishedQuestsIDs[] = '0';
 
@@ -42,6 +42,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
                 $questsNew = [];
                 $tasksNew = [];
+                $awards = [];
                 if (count($quests)) {
                     $ids = [];
                     foreach ($quests as $value => $dict) {
@@ -59,7 +60,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $result =  $mainDb->query("SELECT * FROM quest_task WHERE quest_id IN (".$ar.") ");
                     $tasks = $result->fetchAll();
                     foreach ($tasks as $value => $dict) {
-                        $result = $shardDb->queryWithAnswerId('INSERT INTO user_quest_task SET user_id='.$userId.', quest_id='.$dict['quest_id'].', count=0, is_done=0');
+                        $result = $shardDb->queryWithAnswerId('INSERT INTO user_quest_task SET user_id='.$userId.', quest_id='.$dict['quest_id'].', count_done=0, is_done=0');
                         $t = [];
                         $t['id'] = $result[1];
                         $t['quest_id'] = $dict['quest_id'];
@@ -68,11 +69,14 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                         $t['task_data'] = $dict;
                         $tasksNew[] = $t;
                     }
+                    $result = $mainDb->query("SELECT * FROM quest_award WHERE quest_id IN (".$ar.") ");
+                    $awards = $result->fetchAll();
                 }
 
                 $ar = [];
                 $ar['quests'] = $questsNew;
                 $ar['tasks'] = $tasksNew;
+                $ar['awards'] = $awards;
                 $json_data['message'] = $ar;
                 echo json_encode($json_data);
 
