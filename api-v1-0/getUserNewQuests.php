@@ -21,12 +21,13 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $shardDb->query("SELECT * FROM user_quest WHERE user_id =".$userId. " AND is_out_date = 0 AND get_award = 0");
+                $result = $shardDb->query("SELECT quest_id FROM user_quest WHERE user_id =".$userId. " AND is_out_date = 0 AND get_award = 0");
                 $unfinishedQuests = $result->fetchAll();
+                $unfinishedQuestsIDs = [];
                 foreach ($unfinishedQuests as $value => $dict) {
                     $unfinishedQuestsIDs[] = $dict['quest_id'];
                 }
-                $result = $shardDb->query("SELECT * FROM user_quest WHERE user_id =".$userId. " AND is_out_date = 0 AND get_award = 1");
+                $result = $shardDb->query("SELECT quest_id FROM user_quest WHERE user_id =".$userId. " AND is_out_date = 0 AND get_award = 1");
                 $finishedQuests = $result->fetchAll();
                 $finishedQuestsIDs = [];
                 foreach ($finishedQuests as $value => $dict) {
@@ -34,9 +35,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 }
                 $finishedQuestsIDs[] = '0';
 
-                $time = time();
                 $arF = implode(',', array_map('intval', $finishedQuestsIDs));
-                $arUF = implode(',', array_map('intval', (array)$unfinishedQuestsIDs + (array)$finishedQuestsIDs));
+//                $arUF = implode(',', array_map('intval', (array)$unfinishedQuestsIDs + (array)$finishedQuestsIDs));
+                $arUF = implode(',', array_map('intval', $unfinishedQuestsIDs)).','.$arF;
+                $time = time();
                 $result =  $mainDb->query("SELECT * FROM quests WHERE level <= ".$_POST['level']." AND (date_start < ".$time." OR date_start = 0) AND (date_finish > ".$time." OR date_finish = 0) AND prev_quest_id IN (".$arF.") AND id NOT IN (".$arUF.")");
                 $quests = $result->fetchAll();
 
