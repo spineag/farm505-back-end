@@ -9,39 +9,27 @@ header("Content-Type: application/json; encoding=utf-8");
 
 $secret_key = 'pbJkDGDmNCcheNo6dZDe';
 
-$ar = array();
+$ar = [];
 $time = time();
 $input = $_POST;
-if ($input['item_id'] == 13) {
+if ($input['item_id'] == '13') {
     $db_r = $mainDb->query('SELECT * FROM data_starter_pack');
     if ($db_r) {
-        $arr = $db_r->fetchAll();
-        foreach ($arr as $value => $dict) {
-            $res = [];
-            $res['item_id'] = 13;
-            $res['soft_count'] = $dict['soft_count'];
-            $res['hard_count'] = $dict['hard_count'];
-
-            $resp[] = $res;
-        }
+        $r = $db_r->fetch();
+        $r['item_name'] = 'item_13';
+        $r['id'] = '13';
+        $r['url'] = 'http://505.ninja/images/icons/starter_pack_icon.png';
+        $r['cost_for_real'] = $r['new_cost'];
+        $ar[] = $r;
     }
-
 } else {
     $db_r = $mainDb->query('SELECT * FROM data_buy_money');
     while ($r = $db_r->fetch($db_r)) {
-//    if ($r['start_action'] > $time || $r['finish_action'] < $time)
-//    {
-//        $r['action'] = 0;
-//    }
-//    if (empty($r['version']))
-//    {
-//        $r['version'] = 0;
-//    }
         $r['item_name'] = 'item_' . $r['id'];
         $ar[] = $r;
     }
+}
 
-    $input = $_POST;
 // Проверка подписи
     $sig = $input['sig'];
     unset($input['sig']);
@@ -85,7 +73,7 @@ if ($input['item_id'] == 13) {
                         break;
                     }
                 }
-                if ($notFound) {
+                if ($isFound == false) {
                     $response['error'] = array(
                         'error_code' => 20,
                         'error_msg' => 'Товара не существует.',
@@ -165,5 +153,4 @@ if ($input['item_id'] == 13) {
 //    $json_data['message'] = 'Lolololololol';
 //    echo json_encode($json_data);
 //}
-}
 echo json_encode($response);
