@@ -1,27 +1,23 @@
 <?php
 define('SN', 'vk');
 require_once '../library/Application.php';
-
-$mainDb = Application::getInstance()->getMainDb(2);
-//$snCfg = Application::getInstance()->getSnCfg();
-
 header("Content-Type: application/json; encoding=utf-8");
 
+$mainDb = Application::getInstance()->getMainDb(2);
 $secret_key = 'pbJkDGDmNCcheNo6dZDe';
 
 $ar = [];
 $time = time();
 $input = $_POST;
-if ($input['item_id'] == '13') {
+if ($input['item'] == 'item_13') {
     $db_r = $mainDb->query('SELECT * FROM data_starter_pack');
-    if ($db_r) {
-        $r = $db_r->fetch();
-        $r['item_name'] = 'item_13';
-        $r['id'] = '13';
-        $r['url'] = 'http://505.ninja/images/icons/starter_pack_icon.png';
-        $r['cost_for_real'] = $r['new_cost'];
-        $ar[] = $r;
-    }
+    $r = $db_r->fetch();
+    $r['item_name'] = 'item_13';
+    $r['id'] = '13';
+    $r['url'] = 'http://505.ninja/images/icons/starter_pack_icon.png';
+    $r['cost_for_real'] = $r['new_cost'];
+    $r['count_getted'] = '_13';
+    $ar[] = $r;
 } else {
     $db_r = $mainDb->query('SELECT * FROM data_buy_money');
     while ($r = $db_r->fetch($db_r)) {
@@ -66,9 +62,10 @@ if ($input['item_id'] == '13') {
                         $isFound = true;
                         $response['response'] = array(
                             'item_id' => $v['id'],
-                            'title' => 'уопача ' + $v['count_getted'],
+//                            'title' => 'уопача ' + $v['count_getted'],
+                            'title' => '2017',
                             'photo_url' => $v['url'],
-                            'price' => $v['cost_for_real'],
+                            'price' => $v['cost_for_real']
                         );
                         break;
                     }
