@@ -16,7 +16,7 @@ if ($input['item'] == 'item_13') {
     $r['id'] = '13';
     $r['url'] = 'http://505.ninja/images/icons/starter_pack_icon.png';
     $r['cost_for_real'] = $r['new_cost'];
-    $r['count_getted'] = '_13';
+    $r['count_getted'] = 'Акция';
     $ar[] = $r;
 } else {
     $db_r = $mainDb->query('SELECT * FROM data_buy_money');
@@ -63,7 +63,7 @@ if ($input['item'] == 'item_13') {
                         $response['response'] = array(
                             'item_id' => $v['id'],
 //                            'title' => 'уопача ' + $v['count_getted'],
-                            'title' => '2017',
+                            'title' => $v['count_getted'],
                             'photo_url' => $v['url'],
                             'price' => $v['cost_for_real']
                         );
