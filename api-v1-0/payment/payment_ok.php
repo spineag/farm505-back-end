@@ -61,7 +61,7 @@ class Payment {
 //            throw new Exception("Bad request to DB!");
 //        }
         self::$catalog = array(
-            "1" => 15,
+            "1" => 20,
             "2" => 50,
             "3" => 100,
             "4" => 190,
