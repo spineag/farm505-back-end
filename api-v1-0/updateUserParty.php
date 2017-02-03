@@ -19,10 +19,17 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $shardDb->query('UPDATE user_party SET count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift'] . ' WHERE user_id =' . $_POST['userId']);
-                if (!$result) {
-                    $result = $shardDb->queryWithAnswerId('INSERT INTO user_party SET user_id=' . $userId . ', count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift']);
-                }
+                $result = $mainDb->query("SELECT * FROM user_party WHERE user_id =" . $userId);
+                if ($result) {
+                    $r = $result->fetch();
+                    $res = [];
+                    $res['id'] = $r['id'];
+                    $res['count_resource'] = $r['count_resource'];
+                    $res['took_gift'] = $r['took_gift'];
+                    if ($res['id'] == null)  $result = $shardDb->queryWithAnswerId('INSERT INTO user_party SET user_id=' . $userId . ', count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift']);
+                    else $result = $shardDb->query('UPDATE user_party SET count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift'] . ' WHERE user_id =' . $_POST['userId']);
+
+                } else $result = $shardDb->queryWithAnswerId('INSERT INTO user_party SET user_id=' . $userId . ', count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift']);
 
                 $json_data['message'] = '';
                 echo json_encode($json_data);
