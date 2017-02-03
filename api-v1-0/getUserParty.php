@@ -3,18 +3,19 @@
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
-$app = Application::getInstance();
-if (isset($_POST['channelId'])) {
-    $channelId = (int)$_POST['channelId'];
-} else $channelId = 2; // VK
-$mainDb = $app->getMainDb($channelId);
-
+if (isset($_POST['userId']) && !empty($_POST['userId'])) {
+    $app = Application::getInstance();
+    $userId = filter_var($_POST['userId']);
+    if (isset($_POST['channelId'])) {
+        $channelId = (int)$_POST['channelId'];
+    } else $channelId = 2; // VK
+    $shardDb = $app->getShardDb($userId, $channelId);
 try {
     $result = $shardDb->query("SELECT * FROM user_party WHERE user_id =" . $userId);
     if ($result) {
         $res = $result->fetch();
-        if (!count($res)) {
-            $result = $shardDb->query('INSERT INTO user_party SET user_id=' . $userId . ', count_resource = 0, took_gift = 0&0&0&0&0');
+        if (!$res) {
+            $result = $shardDb->query('INSERT INTO user_party SET user_id=' . $userId . ', count_resource = 0');
             $res = [];
             $res['id'] = $result[1];
             $res['count_resource'] = 0;
@@ -35,4 +36,11 @@ catch (Exception $e)
     $json_data['message'] = $e->getMessage();
     echo json_encode($json_data);
 }
-
+}
+else
+{
+    $json_data['id'] = 1;
+    $json_data['status'] = 's023';
+    $json_data['message'] = 'bad POST[userId]';
+    echo json_encode($json_data);
+}
