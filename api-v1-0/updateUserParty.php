@@ -26,7 +26,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $res['id'] = $r['id'];
                     $res['count_resource'] = $r['count_resource'];
                     $res['took_gift'] = $r['took_gift'];
-                    if ($res['id'] == null)  $result = $shardDb->queryWithAnswerId('INSERT INTO user_party SET user_id=' . $userId . ', count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift']);
+                    if ($res['id'] == null)  $result = $shardDb->query('INSERT INTO user_party SET user_id=' . $userId . ', count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift']);
                     else $result = $shardDb->query('UPDATE user_party SET count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift'] . ' WHERE user_id =' . $_POST['userId']);
 
                 } else $result = $shardDb->query('INSERT INTO user_party SET user_id=' . $userId . ', count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift']);
