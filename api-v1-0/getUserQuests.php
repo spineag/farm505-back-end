@@ -37,18 +37,15 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 //                        $memcache->set('getDataQuests'.$channelId, $dataAllQuests, MEMCACHED_DICT_TIME);
 //                    }
 
-                    $qIDs = [];
-                    $qIDsAll = [];
+                    $userQuestsIDs = [];
                     foreach ($quests as $value => $dict) {
-                        $qIDs[] = $dict['id'];
-                        $qIDsAll[] = $dict['quest_id'];
+                        $userQuestsIDs[] = $dict['quest_id'];
 //                        $quests[$value]['quest_data'] = $dataAllQuests[$dict['id']];
                         $result = $mainDb->query("SELECT * FROM quests WHERE id = ".$dict['quest_id']);
                         $quests[$value]['quest_data'] = $result->fetch();
                     }
                     //check for is_out_date via date_finish
-                    $q = $qIDs;
-                    $result = $mainDb->query("SELECT id FROM quests WHERE id IN (" . implode(',', array_map('intval', $q)) . ") AND " . time() . " > date_finish AND date_finish <> 0");
+                    $result = $mainDb->query("SELECT id FROM quests WHERE id IN (" . implode(',', array_map('intval', $userQuestsIDs)) . ") AND " . time() . " > date_finish AND date_finish <> 0");
                     $q = $result->fetchAll();
                     if (count($q)) {
                         $finished = [];
@@ -63,16 +60,21 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                             }
                         }
                         $quests = array_values($quests);
-                        $result = $shardDb->query("UPDATE user_quest SET is_out_date = 1 WHERE id IN (" . implode(',', array_map('intval', $finished)) . ")");
+                        $result = $shardDb->query("UPDATE user_quest SET is_out_date = 1 WHERE user_id = '.$userId.' AND id IN (" . implode(',', array_map('intval', $finished)) . ")");
+                        $result = $shardDb->query("UPDATE user_quest_task SET is_out_date = 1 WHERE user_id = '.$userId.' AND quest_id IN (" . implode(',', array_map('intval', $finished)) . ")");
+                        $key = array_search($id, $userQuestsIDs);
+                        if (!is_null($key) && $key !== false) {
+                            unset($userQuestsIDs[$key]);
+                        }
                     }
 
-                    $result = $shardDb->query("SELECT * FROM user_quest_task WHERE id IN (" . implode(',', array_map('intval', $qIDs)) . ")");
+                    $result = $shardDb->query("SELECT * FROM user_quest_task WHERE is_done=0 AND is_out_date=0 AND quest_id IN (" . implode(',', array_map('intval', $userQuestsIDs)) . ")");
                     $tasks = $result->fetchAll();
                     foreach ($tasks as $value => $dict) {
                         $result = $mainDb->query("SELECT * FROM quest_task WHERE quest_id = ".$dict['quest_id']);
                         $tasks[$value]['task_data'] = $result->fetch();
                     }
-                    $result = $mainDb->query("SELECT * FROM quest_award WHERE quest_id IN (" . implode(',', array_map('intval', $qIDsAll)) . ")");
+                    $result = $mainDb->query("SELECT * FROM quest_award WHERE quest_id IN (" . implode(',', array_map('intval', $userQuestsIDs)) . ")");
                     $awards = $result->fetchAll();
 
                 } else {
