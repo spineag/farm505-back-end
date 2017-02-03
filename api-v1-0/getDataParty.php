@@ -10,12 +10,9 @@ if (isset($_POST['channelId'])) {
 $mainDb = $app->getMainDb($channelId);
 
 try {
-//    $resp = [];
     $result = $mainDb->query("SELECT * FROM data_party");
     if ($result) {
-//        $arr = $result->fetchAll();
         $r = $result->fetch();
-//        foreach ($arr as $value => $dict) {
             $res = [];
             $res['id'] = $r['id'];
             $res['id_gift'] = $r['id_gift'];
@@ -26,7 +23,6 @@ try {
             $res['name'] = $r['name'];
             $res['description'] = $r['description'];
             $res['party_on'] = $r['party_on'];
-//            $resp[] = $res;
 
     } else {
         $json_data['id'] = 2;

@@ -10,16 +10,18 @@ if (isset($_POST['channelId'])) {
 $mainDb = $app->getMainDb($channelId);
 
 try {
-    $resp = [];
-    $result = $mainDb->query("SELECT * FROM user_party WHERE user_id =" . $userId);
+    $result = $shardDb->query("SELECT * FROM user_party WHERE user_id =" . $userId);
     if ($result) {
         $arr = $result->fetchAll();
-        foreach ($arr as $value => $dict) {
             $res = [];
-            $res['id'] = $dict['id'];
-            $res['count_resource'] = $dict['count_resource'];
-            $res['took_gift'] = $dict['took_gift'];
-            $resp[] = $res;
+            $res['id'] = $arr['id'];
+            $res['count_resource'] = $arr['count_resource'];
+            $res['took_gift'] = $arr['took_gift'];
+        if ($res['id'] == null) {
+            $result = $shardDb->queryWithAnswerId('INSERT INTO user_party SET user_id=' . $userId . ', count_resource =' . 0 .', took_gift =' . 0&0&0&0&0);
+            $res['id'] = 0;
+            $res['count_resource'] = 0;
+            $res['took_gift'] = 0&0&0&0&0;
         }
     } else {
         $json_data['id'] = 2;
@@ -27,7 +29,7 @@ try {
         throw new Exception("Bad request to DB!");
     }
 
-    $json_data['message'] = $resp;
+    $json_data['message'] = $res;
     echo json_encode($json_data);
 }
 catch (Exception $e)
