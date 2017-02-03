@@ -13,16 +13,7 @@ try {
     $result = $mainDb->query("SELECT * FROM data_party");
     if ($result) {
         $r = $result->fetch();
-            $res = [];
-            $res['id'] = $r['id'];
-            $res['id_gift'] = $r['id_gift'];
-            $res['type_gift'] = $r['type_gift'];
-            $res['count_gift'] = $r['count_gift'];
-            $res['count_to_gift'] = $r['count_to_gift'];
-            $res['time_to_end'] = $r['time_to_end'];
-            $res['name'] = $r['name'];
-            $res['description'] = $r['description'];
-            $res['party_on'] = $r['party_on'];
+//
 
     } else {
         $json_data['id'] = 2;
@@ -30,7 +21,7 @@ try {
         throw new Exception("Bad request to DB!");
     }
 
-    $json_data['message'] = $res;
+    $json_data['message'] = $r;
     echo json_encode($json_data);
 }
 catch (Exception $e)

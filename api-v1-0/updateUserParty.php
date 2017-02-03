@@ -29,7 +29,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     if ($res['id'] == null)  $result = $shardDb->queryWithAnswerId('INSERT INTO user_party SET user_id=' . $userId . ', count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift']);
                     else $result = $shardDb->query('UPDATE user_party SET count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift'] . ' WHERE user_id =' . $_POST['userId']);
 
-                } else $result = $shardDb->queryWithAnswerId('INSERT INTO user_party SET user_id=' . $userId . ', count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift']);
+                } else $result = $shardDb->query('INSERT INTO user_party SET user_id=' . $userId . ', count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift']);
 
                 $json_data['message'] = '';
                 echo json_encode($json_data);
