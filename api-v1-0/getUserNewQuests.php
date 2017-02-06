@@ -41,7 +41,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $arUF = implode(',', array_map('intval', $unfinishedQuestsIDs)) . ',' . $arF;
                 } else $arUF = $arF;
                 $time = time();
-                $result =  $mainDb->query("SELECT * FROM quests WHERE level <= ".$_POST['level']." AND (date_start < ".$time." OR date_start = 0) AND (date_finish > ".$time." OR date_finish = 0) AND use_it=1 AND prev_quest_id IN (".$arF.") AND id NOT IN (".$arUF.")");
+                $result =  $mainDb->query("SELECT * FROM quests WHERE level <= ".$_POST['level']." AND (date_start < ".$time." OR date_start = 0) AND 
+                        (date_finish > ".$time." OR date_finish = 0) AND use_it=1 AND prev_quest_id IN (".$arF.") AND id NOT IN (".$arUF.")");
                 $quests = $result->fetchAll();
 
                 $questsNew = [];
