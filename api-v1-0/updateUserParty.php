@@ -5,13 +5,14 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
+    $userId = filter_var($_POST['userId']);
     if (isset($_POST['channelId'])) {
         $channelId = (int)$_POST['channelId'];
     } else $channelId = 2; // VK
-    $mainDb = $app->getMainDb($channelId);
-
+    $shardDb = $app->getShardDb($userId, $channelId);
+    try {
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
-        $m = md5($_POST['userId'].$_POST['level'].$app->md5Secret());
+        $m = md5($_POST['userId'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
             $json_data['status'] = 's397';
@@ -19,17 +20,12 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $mainDb->query("SELECT * FROM user_party WHERE user_id =" . $userId);
-                if ($result) {
-                    $r = $result->fetch();
-                    $res = [];
-                    $res['id'] = $r['id'];
-                    $res['count_resource'] = $r['count_resource'];
-                    $res['took_gift'] = $r['took_gift'];
-                    if ($res['id'] == null)  $result = $shardDb->query('INSERT INTO user_party SET user_id=' . $userId . ', count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift']);
-                    else $result = $shardDb->query('UPDATE user_party SET count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift'] . ' WHERE user_id =' . $_POST['userId']);
-
-                } else $result = $shardDb->query('INSERT INTO user_party SET user_id=' . $userId . ', count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift']);
+                $result = $shardDb->query('UPDATE user_party SET count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift'] . ' WHERE user_id =' . $_POST['userId']);
+                if (!$result) {
+                    $json_data['id'] = 2;
+                    $json_data['status'] = 's340';
+                    throw new Exception("Bad request to DB!");
+                }
 
                 $json_data['message'] = '';
                 echo json_encode($json_data);
@@ -45,6 +41,13 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $json_data['message'] = 'bad sessionKey';
         echo json_encode($json_data);
     }
+}
+catch (Exception $e)
+{
+    $json_data['status'] = 's098';
+    $json_data['message'] = $e->getMessage();
+    echo json_encode($json_data);
+}
 }
 else
 {

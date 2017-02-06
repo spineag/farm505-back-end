@@ -15,7 +15,7 @@ try {
     if ($result) {
         $res = $result->fetch();
         if (!$res) {
-            $result = $shardDb->query('INSERT INTO user_party SET user_id=' . $userId . ', count_resource = 0');
+            $result = $shardDb->queryWithAnswerId('INSERT INTO user_party SET user_id=' . $userId);
             $res = [];
             $res['id'] = $result[1];
             $res['count_resource'] = 0;
