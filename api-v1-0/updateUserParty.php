@@ -11,7 +11,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     } else $channelId = 2; // VK
     $shardDb = $app->getShardDb($userId, $channelId);
     try {
-    if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
+    if ($app->checkSessionKey($userId, $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
@@ -20,7 +20,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                $result = $shardDb->query('UPDATE user_party SET count_resource =' . $_POST['countResource'] .', took_gift =' . $_POST['tookGift'] . ' WHERE user_id =' . $_POST['userId']);
+                $result = $shardDb->query('UPDATE user_party SET took_gift ="'.$_POST["tookGift"].'", count_resource ='.$_POST["countResource"].' WHERE user_id ='.$userId);
                 if (!$result) {
                     $json_data['id'] = 2;
                     $json_data['status'] = 's340';
