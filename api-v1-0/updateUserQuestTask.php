@@ -8,7 +8,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     if (isset($_POST['channelId'])) {
         $channelId = (int)$_POST['channelId'];
     } else $channelId = 2; // VK
-    $shardDb = $app->getShardDb($channelId);
+    $shardDb = $app->getShardDb($_POST['userId'], $channelId);
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$_POST['taskId'].$_POST['countDone'].$app->md5Secret());
