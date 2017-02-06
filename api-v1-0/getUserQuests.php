@@ -71,7 +71,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $result = $shardDb->query("SELECT * FROM user_quest_task WHERE user_id = ".$userId." AND is_done=0 AND is_out_date=0 AND quest_id IN (" . implode(',', array_map('intval', $userQuestsIDs)) . ")");
                     $tasks = $result->fetchAll();
                     foreach ($tasks as $value => $dict) {
-                        $result = $mainDb->query("SELECT * FROM quest_task WHERE quest_id = ".$dict['quest_id']);
+                        $result = $mainDb->query("SELECT * FROM quest_task WHERE id = ".$dict['task_id']);
                         $tasks[$value]['task_data'] = $result->fetch();
                     }
                     $result = $mainDb->query("SELECT * FROM quest_award WHERE quest_id IN (" . implode(',', array_map('intval', $userQuestsIDs)) . ")");
