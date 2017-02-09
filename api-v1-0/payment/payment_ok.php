@@ -73,7 +73,7 @@ class Payment {
             "10" => 240,
             "11" => 690,
             "12" => 1490,
-            "13" => 95
+            "13" => 1
         );
         return self::$catalog;
     }
@@ -155,6 +155,7 @@ class Payment {
         try {
             $time = date("Y-m-d H:i:s");
             $mainDb->query('INSERT INTO transactions SET uid='. $uid .', product_code='.$product_code.', time_try="'.$time.'"');
+            $mainDb->query('INSERT INTO transactions_lost SET uid='. $uid .', product_code='.$product_code.', time_buy='.time());
         } catch(Exception $e) {}
     }
 
