@@ -142,8 +142,10 @@ class OkSocialNetwork implements SocialNetworkInterface {
     private $secret_key;
 
     function __construct($socialNetworkParameters){
-        $this->app_id = $socialNetworkParameters["api_id"];
-        $this->secret_key = $socialNetworkParameters["secret_key"];
+//        $this->app_id = $socialNetworkParameters["api_id"];
+//        $this->secret_key = $socialNetworkParameters["secret_key"];
+        $this->app_id = "1248696832";
+        $this->secret_key = "864364A475EBF25367549586";
     }
     public function getUsers($socialNetworkUid) {
         $path = "http://api.odnoklassniki.ru/fb.do?";
@@ -185,7 +187,7 @@ class OkSocialNetwork implements SocialNetworkInterface {
         return $res;
     }
 
-    public function sendNotification($socialNetworkUid, $notif) {
+    public function sendNotification($arr, $notif) {
         if (is_array($notif)) {
             $expires = date("Y.m.d H:s", $notif['date_end']);
             $params = array(
@@ -195,11 +197,6 @@ class OkSocialNetwork implements SocialNetworkInterface {
                 'expires='.$expires,
                 'last_access_range='.$notif['last_access_range']
             );
-            if (!empty($socialNetworkUid)) {
-                foreach($socialNetworkUid as $param) {
-                    $params[] = $param;
-                }
-            }
 
             sort($params);
             $sig = md5(implode("", $params) . $this->secret_key);
@@ -212,13 +209,6 @@ class OkSocialNetwork implements SocialNetworkInterface {
                 'last_access_range='.$notif['last_access_range'],
                 'sig' => $sig
             );
-            if (!empty($socialNetworkUid)) {
-                foreach($socialNetworkUid as $param)
-                {
-                    $addToAllParams = explode('=', $param);
-                    $paramsAll[$addToAllParams[0]] = $addToAllParams[1];
-                }
-            }
             $curl = curl_init();
             curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_POST, 1);
