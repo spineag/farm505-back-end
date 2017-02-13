@@ -20,6 +20,7 @@ try {
             $res['id'] = $result[1];
             $res['count_resource'] = 0;
             $res['took_gift'] = "0&0&0&0&0";
+            $res['show_window'] = 0;
         }
     } else {
         $json_data['id'] = 2;
