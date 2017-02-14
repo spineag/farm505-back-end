@@ -87,6 +87,58 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $user['wall_order_item_time'] = gmdate("d", $uS['wall_order_item_time']);
                     $user['wall_train_item'] = gmdate("d", $uS['wall_train_item']);
                     $user['open_order'] = $u['open_order'];
+
+                    $result = $mainDb->query("SELECT * FROM transaction_lost WHERE uid=".$u['social_id']);
+                    $ar = $result->fetchAll();
+                    if (count($ar)) {
+                        $memcache = $app->getMemcache();
+                        $dataMoney = $memcache->get('getDataBuyMoney3'.$channelId);
+                        if (!$dataMoney) {
+                            $result = $mainDb->query("SELECT * FROM data_buy_money");
+                            $dataMoney = $result->fetchAll();
+                        }
+                        foreach ($ar as $key => $p) {
+                            if ($p['product_code'] == '13') {
+                                if (!$startPackData) {
+                                    $result = $mainDb->query("SELECT * FROM data_buy_money");
+                                    $startPackData = $result->fetch();
+                                }
+                                if ($startPackData['object_type'] == '8' || $startPackData['object_type'] == '7' || $startPackData['object_type'] == '5') { // RESOURCE, INSTRUMENT, PLANT
+                                    $result = $shardDb->query("SELECT count FROM user_resource WHERE user_id = ".$_POST['userId']." AND resource_id=".$startPackData['object_id']);
+                                    $ar2 = $result->fetch();
+                                    if (count($ar2)) {
+                                        $count = (int)$ar2['count'] + int($startPackData['object_count']);
+                                        $result = $shardDb->query("UPDATE user_resource SET count=".$count." WHERE user_id=".$_POST['userId']." AND resource_id=".$startPackData['object_id']);
+                                    } else {
+                                        $result = $shardDb->query('INSERT INTO user_resource SET user_id='.$_POST['userId'].', resource_id='.$startPackData['object_id'].', count='.$startPackData['object_count']);
+                                    }
+                                } else if ($startPackData['object_type'] == '4' || $startPackData['object_type'] == '9' || $startPackData['object_type'] == '10' ||
+                                    $startPackData['object_type'] == '30' || $startPackData['object_type'] == '31' || $startPackData['object_type'] == '32') {  // diff decors
+                                    $count = int($startPackData['object_count']);
+                                    if ($count < 1) $count = 1;
+                                    for ($x=0; $x<$count; $x++) {
+                                        $result = $shardDb->query('INSERT INTO user_building SET building_id = ' . $startPackData['object_id'] . ', user_id=' . $_POST['userId'] . ', pos_x=0, pos_y=0, in_inventory=1, is_flip=0, count_cell=0');
+                                    }
+                                }
+                                $user['hard_count'] = (int)$user['hard_count'] + (int)$startPackData['hard_count'];
+                                $user['soft_count'] = (int)$user['soft_count'] + (int)$startPackData['soft_count'];
+                                $result = $mainDb->query('UPDATE users SET hard_count='.$user['hard_count'].', soft_count = '.$user['soft_count'].' WHERE id='.$_POST['userId']);
+                            } else {
+                                foreach ($dataMoney as $k => $m) {
+                                    if ($m['id'] == $p['product_code']) {
+                                        if ($m['type_money'] == '1') {
+                                            $user['hard_count'] = (int)$user['hard_count'] + (int)$m['count_getted'];
+                                            $result = $mainDb->query('UPDATE users SET hard_count='.$user['hard_count'].' WHERE id='.$_POST['userId']);
+                                        } else {
+                                            $user['soft_count'] = (int)$user['soft_count'] + (int)$m['count_getted'];
+                                            $result = $mainDb->query('UPDATE users SET soft_count='.$user['soft_count'].' WHERE id='.$_POST['userId']);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        $result = $mainDb->query("DELETE FROM transaction_lost WHERE uid=".$u['social_id']);
+                    }
                 }
 
                 $check = (int)$user['ambar_max'] + (int)$user['sklad_max'] + (int)$user['ambar_level'] + (int)$user['sklad_level'] + (int)$user['hard_count'] + (int)$user['soft_count'] +
