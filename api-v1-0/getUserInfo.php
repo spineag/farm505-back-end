@@ -91,16 +91,12 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $result = $mainDb->query("SELECT * FROM transaction_lost WHERE uid=".$u['social_id']);
                     $ar = $result->fetchAll();
                     if (count($ar)) {
-                        $memcache = $app->getMemcache();
-                        $dataMoney = $memcache->get('getDataBuyMoney3'.$channelId);
-                        if (!$dataMoney) {
-                            $result = $mainDb->query("SELECT * FROM data_buy_money");
-                            $dataMoney = $result->fetchAll();
-                        }
+                        $result = $mainDb->query("SELECT * FROM data_buy_money");
+                        $dataMoney = $result->fetchAll();
                         foreach ($ar as $key => $p) {
                             if ($p['product_code'] == '13') {
                                 if (!$startPackData) {
-                                    $result = $mainDb->query("SELECT * FROM data_buy_money");
+                                    $result = $mainDb->query("SELECT * FROM data_starter_pack");
                                     $startPackData = $result->fetch();
                                 }
                                 if ($startPackData['object_type'] == '8' || $startPackData['object_type'] == '7' || $startPackData['object_type'] == '5') { // RESOURCE, INSTRUMENT, PLANT
@@ -134,6 +130,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                                             $result = $mainDb->query('UPDATE users SET soft_count='.$user['soft_count'].' WHERE id='.$_POST['userId']);
                                         }
                                     }
+                                    break;
                                 }
                             }
                         }
