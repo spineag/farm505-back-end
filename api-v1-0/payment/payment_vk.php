@@ -18,6 +18,15 @@ if ($input['item'] == 'item_13') {
     $r['cost_for_real'] = $r['new_cost'];
     $r['count_getted'] = 'Акция';
     $ar[] = $r;
+} else if ($input['item'] == 'item_14') {
+    $db_r = $mainDb->query('SELECT * FROM data_sale_pack');
+    $r = $db_r->fetch();
+    $r['item_name'] = 'item_14';
+    $r['id'] = '14';
+    $r['url'] = 'http://505.ninja/images/icons/starter_pack_icon.png';
+    $r['cost_for_real'] = $r['new_cost'];
+    $r['count_getted'] = 'Акция';
+    $ar[] = $r;
 } else {
     $db_r = $mainDb->query('SELECT * FROM data_buy_money');
     while ($r = $db_r->fetch($db_r)) {

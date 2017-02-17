@@ -10,7 +10,7 @@ if (isset($_POST['channelId'])) {
 $mainDb = $app->getMainDb($channelId);
 
 try {
-    $result = $mainDb->query("SELECT * FROM data_party");
+    $result = $mainDb->query("SELECT * FROM data_sale_pack");
     if ($result) {
         $r = $result->fetch();
 
