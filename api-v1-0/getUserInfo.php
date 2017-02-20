@@ -23,6 +23,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             try {
                 $result = $mainDb->query("SELECT * FROM users WHERE id =" . $_POST['userId']);
                 $u = $result->fetch();
+                $socialId = $u['social_id'];
                 $user = [];
                 $user['ambar_max'] = $u['ambar_max'];
                 $user['sklad_max'] = $u['sklad_max'];
@@ -89,17 +90,15 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $user['wall_train_item'] = gmdate("d", $uS['wall_train_item']);
                     $user['open_order'] = $u['open_order'];
 
-                    $result = $mainDb->query("SELECT * FROM transaction_lost WHERE uid=".$u['social_id']);
+                    $result = $mainDb->query("SELECT * FROM transaction_lost WHERE uid=".$socialId);
                     $ar = $result->fetchAll();
-                    if (count($ar)) {
+                    if ($ar && count($ar)) {
                         $result = $mainDb->query("SELECT * FROM data_buy_money");
                         $dataMoney = $result->fetchAll();
                         foreach ($ar as $key => $p) {
                             if ($p['product_code'] == '13') {
-                                if (!$startPackData) {
-                                    $result = $mainDb->query("SELECT * FROM data_starter_pack");
-                                    $startPackData = $result->fetch();
-                                }
+                                $result = $mainDb->query("SELECT * FROM data_starter_pack");
+                                $startPackData = $result->fetch();
                                 if ($startPackData['object_type'] == '8' || $startPackData['object_type'] == '7' || $startPackData['object_type'] == '5') { // RESOURCE, INSTRUMENT, PLANT
                                     $result = $shardDb->query("SELECT count FROM user_resource WHERE user_id = ".$_POST['userId']." AND resource_id=".$startPackData['object_id']);
                                     $ar2 = $result->fetch();
@@ -135,7 +134,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                                 }
                             }
                         }
-                        $result = $mainDb->query("DELETE FROM transaction_lost WHERE uid=".$u['social_id']);
+                        $result = $mainDb->query("DELETE FROM transaction_lost WHERE uid=".$socialId);
                     }
                 }
 
