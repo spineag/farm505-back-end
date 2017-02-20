@@ -64,6 +64,22 @@ class Application
         }
         return NULL;
     }
+
+    final public function getAllShardsDb($channelId) {
+        $mainDb = $this->getMainDb($channelId);
+        if ($channelId == 2) {
+            $c = 1;
+        } else if ($channelId == 3) {
+            $c = 2;
+        }
+        $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database` FROM game_shard ORDER BY shard_id LIMIT ".$c);
+        $ar = $res->fetchAll();
+        $shards = [];
+        foreach ($ar as $value => $dict) {
+            $shards[] = new OwnMySQLI($dict["host"], $dict["user"], $dict["pass"], $dict["database"]);
+        }
+        return $shards;
+    }
     
     final public function md5Secret() {
         return '505';
@@ -74,8 +90,11 @@ class Application
         $mainDb = $this->getMainDb($channelId);
         $result = $mainDb->query("SELECT id FROM users WHERE social_id =".$socialUId);
         $arr = $result->fetch();
-        $userId= $arr['id'];
-        if ($userId == false) $userId = 0;
+        if ($arr) {
+            $userId = $arr['id'];
+        } else {
+            $userId = 0;
+        }
 
         if ($userId > 0) {
             // update user last activity date
@@ -140,7 +159,6 @@ class Application
             if ($channelId == 3) { //for OK
                 $result = $shardDb->query('INSERT INTO user_info SET user_id='.$userId.', cutscene=0, open_order=0');
             } else if ($channelId == 2) {
-                $result = $mainDb->query('INSERT INTO users SET open_order=0 WHERE id='.$userId);
             }
 
             foreach ($arr as $value) {
