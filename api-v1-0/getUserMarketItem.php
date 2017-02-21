@@ -18,10 +18,16 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             $resp = [];
             $result = $mainDb->query("SELECT id, market_cell FROM users WHERE social_id =".$_POST['userSocialId']);
             $arr = $result->fetch();
+            if (!$arr || !$arr['id']) {
+                $json_data['id'] = 14;
+                $json_data['status'] = 's...';
+                $json_data['message'] = 'no user for this userSocialId';
+                echo json_encode($json_data);
+            }
             $idU = $arr['id'];
             $response['market_cell'] = $arr['market_cell'];
             $time = time() - TIME_GAP;
-            $shardDb->query("UPDATE user_market_item SET in_papper=0, time_in_papper = 0 WHERE user_id = ". $idU . "
+            $result = $shardDb->query("UPDATE user_market_item SET in_papper=0, time_in_papper = 0 WHERE user_id = ". $idU . "
             AND in_papper = 1 AND time_in_papper < " . $time);
 
             $result = $shardDb->query("SELECT * FROM user_market_item WHERE user_id =" . $idU);
@@ -64,7 +70,6 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             echo json_encode($json_data);
         }
     } else {
-        $result = $mainDb->query('UPDATE users SET test='.$_POST['sessionKey'].' WHERE id='.$_POST['userId']);
         $json_data['id'] = 13;
         $json_data['status'] = 's221';
         $json_data['message'] = 'bad sessionKey';
