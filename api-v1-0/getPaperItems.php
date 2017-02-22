@@ -32,6 +32,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $res['user_social_id'] = $arr['social_id'];
                 $res['level'] = $arr['level'];
                 $res['need_help'] = $app->checkNeedHelp($dict['user_id'], $channelId);
+                if ($res['need_help'] == 0) $res['need_help'] = $app->checkNeedHelpTrain($dict['user_id'], $channelId);
                 $resp[] = $res;
                 }
             } else {

@@ -92,6 +92,13 @@ class Application
         return $count;
     }
 
+    public function checkNeedHelpTrain($userId, $channelId = 2) {
+        $shardDb = $this->getShardDb($userId, $channelId);
+        $result = $shardDb->query("SELECT id FROM user_train_pack_item WHERE user_id =".$userId." AND want_help=1 AND help_id=0");
+        $count = $result->num();
+        return $count;
+    }
+
     public function getSocialId($userId, $channelId = 2) {
         $mainDb = $this->getMainDb($channelId);
         $result = $mainDb->select('users', 'social_id', ['id' => $userId], ['int']);

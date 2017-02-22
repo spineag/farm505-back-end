@@ -38,10 +38,10 @@ try {
                 $animalALL['cost2'] = $recipe['cost2'];
                 $animalALL['cost3'] = $recipe['cost3'];
                 $animalALL['build_id'] = $recipe['build_id'];
-                $animalALL['time_craft'] = $recipe['time_craft'];
+//                $animalALL['time_craft'] = $recipe['time_craft'];
                 $animalALL['craft_resource_id'] = $recipe['craft_resource_id'];
                 $animalALL['raw_resource_id'] = $recipe['raw_resource_id'];
-                $animalALL['cost_force'] = $recipe['cost_force'];
+//                $animalALL['cost_force'] = $recipe['cost_force'];
                 $animalALL['cost_new'] = $recipe['cost_new'];
                 $resp[] = $animalALL;
                 //new new new
