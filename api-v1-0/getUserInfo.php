@@ -133,8 +133,9 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                                     break;
                                 }
                             }
+                            $result = $mainDb->query("DELETE FROM transaction_lost WHERE id=".$p['id']);
+                            $result = $mainDb->query('UPDATE transactions SET getted=1 WHERE uid='.$userSocialId.' AND unitime='.$p['unitime']);
                         }
-                        $result = $mainDb->query("DELETE FROM transaction_lost WHERE uid=".$socialId);
                     }
                 }
 

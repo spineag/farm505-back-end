@@ -155,8 +155,9 @@ class Payment {
         $mainDb = Application::getInstance()->getMainDb(3);
         try {
             $time = date("Y-m-d H:i:s");
-            $mainDb->query('INSERT INTO transactions SET uid='. $uid .', product_code='.$product_code.', time_try="'.$time.'"');
-            $mainDb->query('INSERT INTO transaction_lost SET uid='. $uid .', product_code='.$product_code.', time_buy="'.$time.'"');
+            $t = time();
+            $mainDb->query('INSERT INTO transactions SET uid='. $uid .', product_code='.$product_code.', time_try="'.$time.'", unitime='.$t);
+            $mainDb->query('INSERT INTO transaction_lost SET uid='. $uid .', product_code='.$product_code.', time_buy="'.$time.'", unitime='.$t);
         } catch(Exception $e) {}
     }
 
