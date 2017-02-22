@@ -11,23 +11,23 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $mainDb = $app->getMainDb($channelId);
     try {
         if ($_POST['isPayed'] == '0') {
-            $result = $mainDb->query('SELECT * FROM transaction_lost WHERE uid=' . $userSocialId . ' AND product_code=' . $_POST['productCode']);
-            if ($result) {
-                $info = $result->fetch();
-                if ($info) {
-                    $res = 'FIND';
-                    $result = $mainDb->query('DELETE FROM transaction_lost WHERE id=' . $info['id']);
-                } else {
-                    $res = 'NO_ROW'; // no row in BD
-                }
+            $result = $mainDb->query('SELECT * FROM transaction_lost WHERE uid=' . $userSocialId . ' AND product_code=' . $_POST['productCode'].' ORDER BY unitime DESC LIMIT 1');
+            $q = $result->fetch();
+            if ($q) {
+                $res = 'FIND';
+                $result = $mainDb->query('DELETE FROM transaction_lost WHERE id=' . $q['id']);
+                $result = $mainDb->query('UPDATE transactions SET getted=1 WHERE uid='.$userSocialId.' AND unitime='.$q['unitime']);
             } else {
-                $json_data['id'] = 3;
-                $json_data['status'] = 's...';
-                throw new Exception("Bad request to DB!");
+                $res = 'NO_ROW'; // no row in BD
             }
         } else {
             $res = 'DELETED';
-            $result = $mainDb->query('DELETE FROM transaction_lost WHERE uid='.$userSocialId.' AND product_code='.$_POST['productCode'].' LIMIT 1');
+            $result = $mainDb->query('SELECT * FROM transaction_lost WHERE uid=' . $userSocialId . ' AND product_code=' . $_POST['productCode'].' ORDER BY unitime DESC LIMIT 1');
+            $q = $result->fetch();
+            if ($q) {
+                $result = $mainDb->query('DELETE FROM transaction_lost WHERE id='.$q['id']);
+                $result = $mainDb->query('UPDATE transactions SET getted=1 WHERE uid='.$userSocialId.' AND unitime='.$q['unitime']);
+            }
         }
 
         if ($result) {
