@@ -47,7 +47,7 @@ class Application
         }
     }
 
-    final public function getShardDb($uid, $channelId = 2) {
+    final public function getShardDb($uid, $channelId) {
         $memcached = $this->getMemcache();
         $shardKey = $channelId."shard_".$uid;
         $dbCfgShard = $memcached->get($shardKey);
@@ -63,6 +63,15 @@ class Application
             return new OwnMySQLI($dbCfgShard["host"], $dbCfgShard["user"], $dbCfgShard["pass"], $dbCfgShard["database"]);
         }
         return NULL;
+    }
+
+    final public function getShardDbByName($shardName, $channelId) {
+        $mainDb = $this->getMainDb($channelId);
+        $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database` FROM game_shard WHERE name =".$shardName);
+        $shard = $res->fetch();
+        if ($shard) {
+            return new OwnMySQLI($shard["host"], $shard["user"], $shard["pass"], $shard["database"]);
+        } else return NULL;
     }
 
     final public function getAllShardsDb($channelId) {
