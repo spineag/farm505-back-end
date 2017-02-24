@@ -20,7 +20,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $userId = filter_var($_POST['userId']);
             $shardDb = $app->getShardDb($userId, $channelId);
             try {
-                $result = $shardDb->query('UPDATE user_train_pack_item SET help_id=' . $_POST['helpId'] .' WHERE id=' . $_POST['id'] . 'AND is_full= 1');
+                $result = $shardDb->query('UPDATE user_train_pack_item SET help_id=' . $_POST['helpId'] .',want_help=0, is_full=1  WHERE id=' . $_POST['id']);
                 if (!$result) {
                     $json_data['id'] = 2;
                     $json_data['status'] = 's342';
