@@ -26,7 +26,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $q = $result->fetch();
             if ($q) {
                 $result = $mainDb->query('DELETE FROM transaction_lost WHERE id='.$q['id']);
-                $result = $mainDb->query('UPDATE transactions SET getted=1 WHERE uid='.$userSocialId.' AND unitime='.$q['unitime']);
+                $result = $mainDb->query('UPDATE transactions SET getted=1 WHERE product_code='.$_POST['productCode'].' AND unitime='.$q['unitime']);  // not use userSocialId because it has bugs.. hz why
             }
         }
 
