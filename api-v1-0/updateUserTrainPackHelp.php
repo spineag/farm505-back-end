@@ -3,46 +3,38 @@
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
-if (isset($_POST['userSocialIds']) && !empty($_POST['userSocialIds'])) {
+if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
     if (isset($_POST['channelId'])) {
         $channelId = (int)$_POST['channelId'];
     } else $channelId = 2; // VK
-    $mainDb = $app->getMainDb($channelId);
-    
+
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
-        $m = md5($_POST['userId'].$app->md5Secret());
+        $m = md5($_POST['userId'].$_POST['id'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
-            $json_data['status'] = 's415';
+            $json_data['status'] = 's405';
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {
+            $userId = filter_var($_POST['userId']);
+            $shardDb = $app->getShardDb($userId, $channelId);
             try {
-                $ids = explode("&", $_POST['userSocialIds']);
-                $ids = join(',', $ids);
-                $result = $mainDb->query("SELECT id, social_id, level FROM users WHERE social_id IN (".$ids.")");
-                $a = $result->fetchAll();
-                $arr = [];
-                foreach ($a as $value => $dict) {
-                    $b = [];
-                    $b['social_id'] = $dict['social_id'];
-                    $b['id'] = $dict['id'];
-                    $b['level'] = $dict['level'];
-                    $b['need_help'] = $app->checkNeedHelp($b['id'], $channelId);
-                    if ($b['need_help'] == 0) $b['need_help'] = $app->checkNeedHelpTrain($b['id'], $channelId);
-                    $arr[] = $b;
+                $result = $shardDb->query('UPDATE user_train_pack_item SET want_help=1 WHERE id=' . $_POST['id']);
+                if (!$result) {
+                    $json_data['id'] = 2;
+                    $json_data['status'] = 's342';
+                    throw new Exception("Bad request to DB!");
                 }
 
-                $json_data['message'] = $arr;
+                $json_data['message'] = '';
                 echo json_encode($json_data);
             } catch (Exception $e) {
-                $json_data['status'] = 's415';
+                $json_data['status'] = 's190';
                 $json_data['message'] = $e->getMessage();
                 echo json_encode($json_data);
             }
         }
-
     } else {
         $json_data['id'] = 13;
         $json_data['status'] = 's221';
@@ -53,7 +45,7 @@ if (isset($_POST['userSocialIds']) && !empty($_POST['userSocialIds'])) {
 else
 {
     $json_data['id'] = 1;
-    $json_data['status'] = 's073';
+    $json_data['status'] = 's191';
     $json_data['message'] = 'bad POST[userId]';
     echo json_encode($json_data);
 }

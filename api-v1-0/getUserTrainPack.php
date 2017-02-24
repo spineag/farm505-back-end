@@ -101,6 +101,8 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                     $item['count_money'] = $d['count_money'];
                     $item['count_resource'] = $d['count_resource'];
                     $item['is_full'] = $d['is_full'];
+                    $item['want_help'] = $d['want_help'];
+                    $item['help_id'] = $d['help_id'];
                     $pack['items'][] = $item;
                 }
             }
