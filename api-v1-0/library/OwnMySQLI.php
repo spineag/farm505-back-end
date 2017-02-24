@@ -218,6 +218,10 @@ class OwnMySQLI
         static::$_debug = $debug;
     }
 
+    public function getDatabaseName() { // use for shards
+        return $this->_params['database'];
+    }
+
     public function query($query)
     {
         mysqli_select_db($this->_linkIdentifier, $this->_database);
