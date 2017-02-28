@@ -6,14 +6,11 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 const TIME_GAP = 5 * 60 * 60;
 if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     $app = Application::getInstance();
-    if (isset($_POST['channelId'])) {
-        $channelId = (int)$_POST['channelId'];
-    } else $channelId = 2; // VK
+    $channelId = (int)$_POST['channelId'];
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $mainDb = $app->getMainDb($channelId);
         $userId = filter_var($_POST['userId']);
-        $shardDb = $app->getShardDb($userId, $channelId);
         try {
             $resp = [];
             $result = $mainDb->query("SELECT id, market_cell FROM users WHERE social_id =".$_POST['userSocialId']);
@@ -27,6 +24,8 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             $idU = $arr['id'];
             $response['market_cell'] = $arr['market_cell'];
             $time = time() - TIME_GAP;
+
+            $shardDb = $app->getShardDb($idU , $channelId);
             $result = $shardDb->query("UPDATE user_market_item SET in_papper=0, time_in_papper = 0 WHERE user_id = ". $idU . "
             AND in_papper = 1 AND time_in_papper < " . $time);
 
@@ -37,22 +36,17 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                     $result2 = $mainDb->query("SELECT social_id FROM users WHERE id =".$d['buyer_id']);
                     $arr = $result2->fetch();
                     $d['buyer_social_id'] = $arr['social_id'];
-               } else {
+                } else {
                     if ($_POST['userId'] == $idU) {
                         if (time() - (int)$d['time_start'] > 24 * 60 * 60) {
                             $result2 = $mainDb->query("SELECT id FROM users WHERE social_id = 1");
                             $arr = $result2->fetch();
-//                        $result = $shardDb->update(
-//                            'user_market_item',
-//                            ['buyer_id' => $arr['id'], 'time_sold' => time(), 'in_papper' => 0],
-//                            ['id' => $d['id']],
-//                            ['int', 'int','int'],
-//                            ['int']);
                             $result = $shardDb->query("UPDATE user_market_item SET buyer_id=" . $arr['id'] . ", time_sold=" . time() . ", in_papper=0 WHERE id=" . $d['id']);
                             $d['buyer_social_id'] = 1;
                             $d['buyer_id'] = $arr['id'];
                             $d['time_sold'] = time();
                             $d['in_papper'] = 0;
+                            $d['shard_name'] = $shardDb->getDatabaseName();
                         }
                     }
                 }

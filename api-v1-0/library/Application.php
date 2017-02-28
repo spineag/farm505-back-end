@@ -169,7 +169,6 @@ class Application
                 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'str', 'str']);
 
         $userId = $this->getUserId($channelId, $socialUId);
-        $arr = [31, 32, 21, 118];
         $shardDb = $this->getShardDb($userId, $channelId);
 
             if ($channelId == 3) { //for OK
@@ -177,11 +176,16 @@ class Application
             } else if ($channelId == 2) {
             }
 
-            foreach ($arr as $value) {
+            $arrIDs = [31, 32, 21, 118];
+            foreach ($arrIDs as $value) {
                 $result = $shardDb->insert('user_resource',
                     ['user_id' => $userId, 'resource_id' => $value, 'count' => 3],
                     ['int', 'int', 'int']);
             }
+        //add lopata
+        $result = $shardDb->insert('user_resource',
+            ['user_id' => $userId, 'resource_id' => 125, 'count' => 1],
+            ['int', 'int', 'int']);
 
             // add ridges and plant on them
             $resultRidge = $shardDb->insert('user_building',
