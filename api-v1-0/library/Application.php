@@ -305,6 +305,14 @@ class Application
         }
         return $this->_socialNetwork;
     }
+    
+    final public function test() {
+        $q = '';
+        foreach ($this->_cfg as $key => $dict) {
+            $q = $q.' '.$key;
+        }
+        return $q;
+    }
 
     final public function getRandomResource($userId, $channelId) {
         $mainDb = $this->getMainDb($channelId);
