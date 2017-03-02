@@ -46,10 +46,10 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                             $d['buyer_id'] = $arr['id'];
                             $d['time_sold'] = time();
                             $d['in_papper'] = 0;
-                            $d['shard_name'] = $shardDb->getDatabaseName();
                         }
                     }
                 }
+                $d['shard_name'] = $shardDb->getDatabaseName();
                 $resp[] = $d;
             }
 

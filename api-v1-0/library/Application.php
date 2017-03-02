@@ -67,10 +67,10 @@ class Application
 
     final public function getShardDbByName($shardName, $channelId) {
         $mainDb = $this->getMainDb($channelId);
-        $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database` FROM game_shard WHERE name =".$shardName);
+        $res = $mainDb->query("SELECT host, user, password FROM game_shard WHERE db_name = '".$shardName."'");
         $shard = $res->fetch();
         if ($shard) {
-            return new OwnMySQLI($shard["host"], $shard["user"], $shard["pass"], $shard["database"]);
+            return new OwnMySQLI($shard["host"], $shard["user"], $shard["password"], $shardName);
         } else return NULL;
     }
 
