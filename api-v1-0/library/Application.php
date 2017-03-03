@@ -76,10 +76,10 @@ class Application
 
     final public function getAllShardsDb($channelId) {
         $mainDb = $this->getMainDb($channelId);
-        if ($channelId == 2) {
+        if ($channelId == 1) {
             $c = 1;
         } else if ($channelId == 3) {
-            $c = 2;
+            $c = 3;
         }
         $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database` FROM game_shard ORDER BY shard_id LIMIT ".$c);
         $ar = $res->fetchAll();
