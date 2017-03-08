@@ -19,19 +19,7 @@ class Payment {
 
     // массив пар код продукта => цена
     private static $catalog = array();
-//        "1" => 15,
-//        "2" => 50,
-//        "3" => 100,
-//        "4" => 190,
-//        "5" => 490,
-//        "6" => 990,
-//        "7" => 30,
-//        "8" => 60,
-//        "9" => 90,
-//        "10" => 240,
-//        "11" => 690,
-//        "12" => 1490
-//    );
+
     // массив пар код ошибки => описание
     private static $errors = array(
         1 => "UNKNOWN: please, try again later. If error repeats, contact application support team.",
@@ -41,43 +29,25 @@ class Payment {
         104 => "PARAM_SIGNATURE: invalid signature. Please contact application support team."
     );
 
-    public static function fillCatalog() {
-//        $mainDb = Application::getInstance()->getMainDb(3);
-//        $result = $mainDb->query("SELECT * FROM data_buy_money");
-//        if ($result) {
-//            $dataMoney = $result->fetchAll();
-//        } else {
-//            $json_data['id'] = 666;
-//            $json_data['status'] = 's666';
-//            throw new Exception("Bad request to DB!");
-//        }
-//        if (!empty($dataMoney)) {
-//            foreach ($dataMoney as $key => $m) {
-//                self::$catalog[$m['id']] = $m['cost_for_real'];
-//            }
-//        } else {
-//            $json_data['id'] = 555;
-//            $json_data['status'] = 's555';
-//            throw new Exception("Bad request to DB!");
-//        }
-        self::$catalog = array(
-            "1" => 20,
-            "2" => 50,
-            "3" => 100,
-            "4" => 190,
-            "5" => 490,
-            "6" => 990,
-            "7" => 30,
-            "8" => 60,
-            "9" => 90,
-            "10" => 240,
-            "11" => 690,
-            "12" => 1490,
-            "13" => 85,
-            "14" => 80
-        );
-        return self::$catalog;
-    }
+//    public static function fillCatalog() {
+//        self::$catalog = array(
+//            "1" => 20,
+//            "2" => 50,
+//            "3" => 100,
+//            "4" => 190,
+//            "5" => 490,
+//            "6" => 990,
+//            "7" => 30,
+//            "8" => 60,
+//            "9" => 90,
+//            "10" => 240,
+//            "11" => 690,
+//            "12" => 1490,
+//            "13" => 85,
+//            "14" => 80
+//        );
+//        return self::$catalog;
+//    }
 
     // функция рассчитывает подпись для пришедшего запроса
     // подробнее про алгоритм расчета подписи можно посмотреть в документации (http://apiok.ru/wiki/pages/viewpage.action?pageId=42476522)
@@ -195,8 +165,33 @@ class Payment {
 * Обработка платежа начинается отсюда
 */
 if (array_key_exists("product_code", $_GET) && array_key_exists("amount", $_GET) && array_key_exists("sig", $_GET)){
-    $c = Payment::fillCatalog();
-    if (Payment::checkPayment($_GET["product_code"], $_GET["amount"])) {
+
+    $mainDb = Application::getInstance()->getMainDb(3);
+    $isGood = false;
+    if ($_GET["product_code"] == "13") {
+        $result = $mainDb->query("SELECT new_cost FROM data_starter_pack");
+        $a = $result->fetch();
+        if ((int)$a['new_cost'] == (int)$_GET['amount']) {
+            $isGood = true;
+        }
+    } else if ($_GET["product_code"] == "14") {
+        $result = $mainDb->query("SELECT new_cost FROM data_sale_pack");
+        $a = $result->fetch();
+        if ((int)$a['new_cost'] == (int)$_GET['amount']) {
+            $isGood = true;
+        }
+    } else {
+        $result = $mainDb->query("SELECT cost_for_real FROM data_buy_money WHERE id=".$_GET['product_code']);
+        $a = $result->fetch();
+        if ((int)$a['cost_for_real'] == (int)$_GET['amount']) {
+            $isGood = true;
+        }
+    }
+
+//    $c = Payment::fillCatalog();
+//    if (Payment::checkPayment($_GET["product_code"], $_GET["amount"])) {
+
+    if ($isGood) {
         if ($_GET["sig"] == Payment::calcSignature($_GET)) {
             Payment::saveTransaction($_GET["uid"], $_GET["product_code"]);
             Payment::returnPaymentOK();

@@ -17,34 +17,41 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         $m = md5($_POST['userId'].$app->md5Secret());
         if ($m != $_POST['hash']) {
             $json_data['id'] = 6;
-            $json_data['status'] = 's442';
+            $json_data['status'] = 's463';
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {
+
+            if ($channelId == 2) {
+                try {
+                    $result = $shardDb->query("SELECT id FROM user_quest group by user_id, quest_id having count(*)>1");
+                    $ar = $result->fetchAll();
+                    if ($ar) { // there are dublicates :(
+                        $arDubl = [];
+                        foreach ($ar as $value => $dict) {
+                            $arDubl[] = $dict['id'];
+                        }
+                        $dubl = implode(',', array_map('intval', $arDubl));
+                        $result = $shardDb->query("DELETE FROM user_quest WHERE user_id =" . $userId . " AND id IN " . $dubl . " AND date_finish='0'");
+                        $result = $shardDb->query("DELETE FROM user_quest_task WHERE user_id =" . $userId . " AND quest_id IN " . $dubl . " AND is_done=0 AND get_award=1");
+                    }
+                } catch (Exception $e) {
+                    $json_data['status'] = 's...';
+                    $json_data['message'] = $e->getMessage();
+                    echo json_encode($json_data);
+                }
+            }
+
             try {
                 $result = $shardDb->query("SELECT * FROM user_quest WHERE user_id =".$userId. " AND get_award = 0 AND is_out_date = 0");
                 $quests = $result->fetchAll();
                 if (count($quests)) {
-                    // get data quests
-//                    $dataAllQuests = $memcache->get('getDataQuests'.$channelId);
-//                    if (!$dataAllQuests) {
-//                        $dataAllQuests = [];
-//                        $result = $mainDb->query("SELECT * FROM quests");
-//                        $q = $result->fetchAll();
-//                        foreach ($q as $value => $dict) {
-//                            $dataAllQuests[$dict['id']] = $dict;
-//                        }
-//                        $memcache->set('getDataQuests'.$channelId, $dataAllQuests, MEMCACHED_DICT_TIME);
-//                    }
-
                     $userQuestsIDs = [];
                     foreach ($quests as $value => $dict) {
                         $userQuestsIDs[] = $dict['quest_id'];
-//                        $quests[$value]['quest_data'] = $dataAllQuests[$dict['id']];
                         $result = $mainDb->query("SELECT * FROM quests WHERE id = ".$dict['quest_id']);
                         $quests[$value]['quest_data'] = $result->fetch();
                     }
-                    //check for is_out_date via date_finish
                     $result = $mainDb->query("SELECT id FROM quests WHERE id IN (" . implode(',', array_map('intval', $userQuestsIDs)) . ") AND " . time() . " > date_finish AND date_finish <> 0");
                     $q = $result->fetchAll();
                     if (count($q)) {
