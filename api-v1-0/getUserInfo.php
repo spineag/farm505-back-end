@@ -74,7 +74,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $uS = $result->fetch();
                     $user['cut_scene'] = $uS['cutscene'];
                     $user['mini_scene'] = $uS['miniscene'];
-                    $user['language'] = $u['language_id'];
+                    $user['language'] = $uS['language_id'];
                     $user['daily_bonus_day'] = gmdate("d", $uS['daily_bonus_day']);
                     $user['count_daily_bonus'] = $uS['count_daily_bonus'];
                     if ($uS['mouse_day'] == '0') {
