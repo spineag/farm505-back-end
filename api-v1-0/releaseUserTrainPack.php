@@ -21,7 +21,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             $shardDb = $app->getShardDb($userId, $channelId);
             try {
                 $result = $shardDb->query('DELETE FROM user_train_pack WHERE user_id=' . $_POST['userId']);
-                $result2 = $shardDb->query('DELETE FROM user_train_pack_item WHERE user_train_pack_id=' . $_POST['id']);
+                $result2 = $shardDb->query('DELETE FROM user_train_pack_item WHERE user_id=' . $_POST['userId']);
                 if ($result && $result2) {
                     $json_data['message'] = '';
                     echo json_encode($json_data);

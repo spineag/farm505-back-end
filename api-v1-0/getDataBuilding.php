@@ -38,7 +38,7 @@ try {
                 $buildingItem['visible'] = $dict['visible'];
                 $buildingItem['start_action'] = $dict['start_action'];
                 $buildingItem['end_action'] = $dict['end_action'];
-
+                $buildingItem['text_id'] = $dict['text_id'];
                 switch ($dict['build_type']) {
                     case 1: // CHEST
                         $result = $mainDb->query("SELECT * FROM data_map_building WHERE building_id =" . $dict['id']);
