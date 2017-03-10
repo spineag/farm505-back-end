@@ -47,7 +47,7 @@ class Application
         }
     }
 
-    final public function getShardDb($uid, $channelId = 2) {
+    final public function getShardDb($uid, $channelId) {
         $memcached = $this->getMemcache();
         $shardKey = $channelId."shard_".$uid;
         $dbCfgShard = $memcached->get($shardKey);
@@ -65,12 +65,21 @@ class Application
         return NULL;
     }
 
+    final public function getShardDbByName($shardName, $channelId) {
+        $mainDb = $this->getMainDb($channelId);
+        $res = $mainDb->query("SELECT host, user, password FROM game_shard WHERE db_name = '".$shardName."'");
+        $shard = $res->fetch();
+        if ($shard) {
+            return new OwnMySQLI($shard["host"], $shard["user"], $shard["password"], $shardName);
+        } else return NULL;
+    }
+
     final public function getAllShardsDb($channelId) {
         $mainDb = $this->getMainDb($channelId);
         if ($channelId == 2) {
             $c = 1;
         } else if ($channelId == 3) {
-            $c = 2;
+            $c = 3;
         }
         $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database` FROM game_shard ORDER BY shard_id LIMIT ".$c);
         $ar = $res->fetchAll();
@@ -160,7 +169,6 @@ class Application
                 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'str', 'str']);
 
         $userId = $this->getUserId($channelId, $socialUId);
-        $arr = [31, 32, 21, 118];
         $shardDb = $this->getShardDb($userId, $channelId);
 
             if ($channelId == 3) { //for OK
@@ -168,11 +176,16 @@ class Application
             } else if ($channelId == 2) {
             }
 
-            foreach ($arr as $value) {
+            $arrIDs = [31, 32, 21, 118];
+            foreach ($arrIDs as $value) {
                 $result = $shardDb->insert('user_resource',
                     ['user_id' => $userId, 'resource_id' => $value, 'count' => 3],
                     ['int', 'int', 'int']);
             }
+        //add lopata
+        $result = $shardDb->insert('user_resource',
+            ['user_id' => $userId, 'resource_id' => 125, 'count' => 1],
+            ['int', 'int', 'int']);
 
             // add ridges and plant on them
             $resultRidge = $shardDb->insert('user_building',
@@ -291,6 +304,14 @@ class Application
             }
         }
         return $this->_socialNetwork;
+    }
+    
+    final public function test() {
+        $q = '';
+        foreach ($this->_cfg as $key => $dict) {
+            $q = $q.' '.$key;
+        }
+        return $q;
     }
 
     final public function getRandomResource($userId, $channelId) {

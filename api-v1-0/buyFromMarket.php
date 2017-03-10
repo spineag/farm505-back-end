@@ -6,10 +6,12 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
     $userId = filter_var($_POST['userId']);
-    if (isset($_POST['channelId'])) {
-        $channelId = (int)$_POST['channelId'];
-    } else $channelId = 2; // VK
-    $shardDb = $app->getShardDb($userId, $channelId);
+    $channelId = (int)$_POST['channelId'];
+    if ($_POST['shardName']) {
+        $shardDb = $app->getShardDbByName($_POST['shardName'], $channelId);
+    } else {
+        $shardDb = $app->getShardDb($userId, $channelId);  // should delete it
+    }
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$_POST['itemId'].$app->md5Secret());
