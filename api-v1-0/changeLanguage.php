@@ -8,14 +8,26 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $userId = filter_var($_POST['userId']);
     if (isset($_POST['channelId'])) {
         $channelId = (int)$_POST['channelId'];
-        $shardDb = $app->getShardDb($userId, $channelId);
-    } else {
-        $channelId = 2;
-        $mainDb = $app->getMainDb($channelId);
-    } // VK
+    } else $channelId = 2;//VK
     try {
-        if ($channelId == 2) $result = $mainDb->query("UPDATE users SET language=" . $_POST['languageId']. ' WHERE id=' . $_POST['userId']);
-        else $result = $shardDb->query("UPDATE user_info SET language=" . $_POST['languageId']. ' WHERE id=' . $_POST['userId']);
+        if ($channelId == 2) {
+            $mainDb = $app->getMainDb($channelId);
+            $result = $mainDb->query("UPDATE users SET language_id=" . $_POST['languageId']. ' WHERE id=' . $_POST['userId']);
+            if (!$result) {
+                $json_data['id'] = 2;
+                $json_data['status'] = 's341';
+                throw new Exception("Bad request to DB!");
+            }
+        }
+        else {
+            $shardDb = $app->getShardDb($_POST['userId'], $channelId);
+            $result = $shardDb->query("UPDATE user_info SET language_id=" . $_POST['languageId']. ' WHERE id=' . $_POST['userId']);
+            if (!$result) {
+                $json_data['id'] = 2;
+                $json_data['status'] = 's341';
+                throw new Exception("Bad request to DB!");
+            }
+        }
         if (!$result) {
             $json_data['id'] = 2;
             $json_data['status'] = 's341';
