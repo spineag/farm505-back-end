@@ -26,7 +26,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $result = $shardDb->query('UPDATE user_market_item SET in_papper=' . $_POST['inPapper'] . ', time_in_papper =' . $time . ' WHERE number_cell=' . $_POST['numberCell'] . ' AND user_id = ' . $userId);
                 if ($channelId == 2) {
                     $result = $mainDb->query('UPDATE users SET in_papper=' . $time . ' WHERE id=' . $_POST['userId']);
-                } else {
+                } else { // == 3 || == 4
                     $result = $shardDb->query('UPDATE user_info SET in_papper=' . $time . ' WHERE user_id=' . $_POST['userId']);
                 }
                 if (!$result) {

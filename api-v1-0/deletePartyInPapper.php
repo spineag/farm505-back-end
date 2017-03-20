@@ -22,10 +22,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $json_data['status'] = 's250';
                 throw new Exception("Bad request to DB!");
             }
-        }
-
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $json_data['status'] = 's060';
             $json_data['message'] = $e->getMessage();
             echo json_encode($json_data);

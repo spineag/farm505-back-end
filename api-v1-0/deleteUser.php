@@ -14,7 +14,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
 
     try {
 
-        if ($channelId == 3) {
+        if ($channelId == 3 || $channelId == 4) {
             $shardDb->query('DELETE FROM user_info WHERE user_id='.$_POST['userId']);
         }
         

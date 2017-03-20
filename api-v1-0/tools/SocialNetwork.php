@@ -267,3 +267,140 @@ class OkSocialNetwork implements SocialNetworkInterface {
     public function setCounters($usersAndCounters) { return false; }
     public function check_connection() { return "ok"; }
 }
+
+// -----------------------------------------------------------------------------------------------------
+
+class FBSocialNetwork implements SocialNetworkInterface {
+    private $app_id;
+    private $secret_key;
+
+    function __construct($socialNetworkParameters){
+//        $this->app_id = $socialNetworkParameters["api_id"];
+//        $this->secret_key = $socialNetworkParameters["secret_key"];
+        $this->app_id = "1936104599955682";
+        $this->secret_key = "dd3c1b11a323f01a3ac23a3482724c49";
+    }
+    public function getUsers($socialNetworkUid) {
+//        $path = "http://api.odnoklassniki.ru/fb.do?";
+//        $params = array(
+//            'application_key=' . $this->app_id,
+//            'uids=' . $socialNetworkUid,
+//            'format=JSON',
+//            'fields=first_name,last_name,gender,birthday,age,location',
+//            'method=users.getInfo'
+//        );
+//        sort($params);
+//        $sig = md5(implode("", $params) . $this->secret_key);
+//        $request = $path . implode("&", $params) . "&sig=".$sig;
+//        $page = file_get_contents($request);
+//        return json_decode($page, true);
+        return ''; 
+    }
+
+    public function isGroupMember($socialNetworkUid, $socialNetworkGroupId) {
+//        $path = "http://api.odnoklassniki.ru/fb.do?";
+//        $params = array('application_key=' . $this->app_id,
+//            'uid=' . $socialNetworkUid,
+//            'format=JSON',
+//            'method=group.getUserGroupsV2'
+//        );
+//        sort($params);
+//        $sig = md5(implode("", $params) . $this->secret_key);
+//        $request = $path . implode("&", $params) . "&sig=".$sig;
+//        $page = file_get_contents($request);
+//        $result = json_decode($page);
+//        $res['response'] = 0;
+//        $groups = $result->groups;
+//        if (!empty($groups)){
+//            foreach ($groups as $k){
+//                if ($k->groupId == $socialNetworkGroupId){
+//                    $res['response'] = 1;
+//                }
+//            }
+//        }
+//        return $res;
+        return false;
+    }
+
+    public function sendNotification($arr, $notif) {
+//        if (is_array($notif)) {
+//            $expires = date("Y.m.d H:s", $notif['date_end']);
+//            $params = array(
+//                'application_key=' . $this->app_id,
+//                'text='.$notif['message'],
+//                'format=json',
+//                'expires='.$expires,
+//                'last_access_range='.$notif['last_access_range']
+//            );
+//
+//            sort($params);
+//            $sig = md5(implode("", $params) . $this->secret_key);
+//            $url = "http://api.odnoklassniki.ru/api/notifications/sendMass";
+//            $paramsAll = array(
+//                'format' => 'json',
+//                'application_key' => $this->app_id,
+//                'text' => $notif['message'],
+//                'expires' => $expires,
+//                'last_access_range='.$notif['last_access_range'],
+//                'sig' => $sig
+//            );
+//            $curl = curl_init();
+//            curl_setopt($curl, CURLOPT_URL, $url);
+//            curl_setopt($curl, CURLOPT_POST, 1);
+//            curl_setopt($curl, CURLOPT_POSTFIELDS, $paramsAll);
+//            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+//            $result = curl_exec($curl);
+//            curl_close($curl);
+//            return $result;
+//        } else return false;
+        return false;
+    }
+
+    public function isBirthDay($date) {
+//        if (!empty($date)) {
+//            $data = explode("-", $date);
+//            $data = array_reverse($data);
+//            $day = date('d');
+//            $month = date('m');
+//            if ($data[0] == $day && $data[1] == $month){
+//                return true;
+//            }
+//        }
+        return false;
+    }
+
+    public function check_targeting($socialNetworkUid, $country, $age_range, $gender, $bdate) {
+//        $user = $this->getUsers($socialNetworkUid);
+//        $user = $user[0];
+//        if (!empty($country)) {
+//            if (!isset($user['location']['countryCode']) || !in_array($user['location']['countryCode'], explode(",", $country))) { return FALSE; }
+//        }
+//
+//        if (!empty($age_range)) {
+//            if (empty($bdate)) { return FALSE; }
+//            $bdate = explode("-", $bdate);
+//            if (empty($bdate[0])) return false;
+//            $year = date('Y');
+//            $u_age = $year - $bdate[0];
+//            $age = explode("-", $age_range);
+//            if ($u_age < $age[0] || $u_age > $age[1]) return false;
+//        }
+//        return true;
+        return false;
+    }
+
+    public function userSync($socialNetworkUid, $socialNetworkLevel, $socialNetworkXp) { return false; }
+    public function check_in_another_game($socialNetworkUid) { return NULL; }
+    public function getJavaScript() { return false; }
+    public function transactionChek($transaction_id) { return false; }
+    public function getFriendCount() { return 0; }
+    public function getFriends() { return false; }
+    public function getFriendsApp() { return false; }
+    public function getFriendsOnline() { return false; }
+    public function transactionCreate($price, $serviceId) { return false;}
+    public function addActivity($text) { return false; }
+    public function getSocialObject() { return false; }
+    public function setUserLevel($socialNetworkUid, $socialNetworkLevel) { return false; }
+    public function setCounters($usersAndCounters) { return false; }
+    public function check_connection() { return "ok"; }
+}

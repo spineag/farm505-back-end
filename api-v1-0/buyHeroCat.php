@@ -19,33 +19,11 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
             try {
-                if (isset($_POST['countAll']) && !empty($_POST['countAll'])) {
-                    $result = $mainDb->query('UPDATE users SET count_cats = '.$_POST['countAll'].' WHERE id = '.$_POST['userId']);
-                    if (!$result) {
-                        $json_data['id'] = 2;
-                        $json_data['status'] = 's239';
-                        throw new Exception("Bad request to DB!");
-                    }
-
-                    
-                } else { // need delete this
-
-                    $result = $mainDb->query("SELECT count_cats FROM users WHERE id =" . $_POST['userId']);
-                    if ($result) {
-                        $arr = $result->fetch();
-                        $count = $arr['count_cats'];
-                        $count = (int)$count + 1;
-                        $result = $mainDb->query('UPDATE users SET count_cats = ' . $count . ' WHERE id = ' . $_POST['userId']);
-                        if (!$result) {
-                            $json_data['id'] = 2;
-                            $json_data['status'] = 's239';
-                            throw new Exception("Bad request to DB!");
-                        }
-                    } else {
-                        $json_data['id'] = 1;
-                        $json_data['status'] = 's240';
-                        throw new Exception("Bad request to DB!");
-                    }
+                $result = $mainDb->query('UPDATE users SET count_cats = '.$_POST['countAll'].' WHERE id = '.$_POST['userId']);
+                if (!$result) {
+                    $json_data['id'] = 2;
+                    $json_data['status'] = 's239';
+                    throw new Exception("Bad request to DB!");
                 }
 
                 $json_data['message'] = '';

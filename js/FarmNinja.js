@@ -2,7 +2,7 @@ var FarmNinja = {
     user_sid: false,
     swf: {},
     version: -1,
-    channel: 2, // vk main
+    channel: 2,
 
     getVersion: function() {
         $.ajax({
@@ -61,6 +61,8 @@ var FarmNinja = {
                 st = '/client/farm' + this.version + '.swf';
             } else if (this.channel == 3) {
                 st = 'client_ok/farm' + this.version + '.swf';
+            } else if (this.channel  = 4) {
+                st = 'client_fb/farm' + this.version + '.swf';
             }
             swfobject.embedSWF(st, 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
         }

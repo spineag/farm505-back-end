@@ -27,7 +27,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                         $json_data['status'] = 's347';
                         throw new Exception("Bad request to DB!");
                     }
-                } else {
+                } else { // == 3 || == 4
                     $shardDb = $app->getShardDb($_POST['userId'], $channelId);
                     $result = $shardDb->query('UPDATE user_info SET wall_train_item = ' . $time . ' WHERE user_id = ' . $_POST['userId']);
                     if (!$result) {

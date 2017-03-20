@@ -6,9 +6,7 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
     $userId = filter_var($_POST['userId']);
-    if (isset($_POST['channelId'])) {
-        $channelId = (int)$_POST['channelId'];
-    } else $channelId = 2; // VK
+    $channelId = (int)$_POST['channelId'];
     $shardDb = $app->getShardDb($userId, $channelId);
     $mainDb = $app->getMainDb($channelId);
     $memcache = $app->getMemcache();
@@ -22,9 +20,10 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             echo json_encode($json_data);
         } else {
 
-            if ($channelId == 2) {
+            // remove duplicates
+//            if ($channel == 2) {
                 try {
-                    $result = $shardDb->query("SELECT id FROM user_quest group by user_id, quest_id having count(*)>1");
+                    $result = $shardDb->query("SELECT id FROM user_quest WHERE user_id = ".$userId." group by user_id, quest_id having count(*)>1");
                     $ar = $result->fetchAll();
                     if ($ar) { // there are dublicates :(
                         $arDubl = [];
@@ -36,11 +35,9 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                         $result = $shardDb->query("DELETE FROM user_quest_task WHERE user_id =" . $userId . " AND quest_id IN " . $dubl . " AND is_done=0 AND get_award=1");
                     }
                 } catch (Exception $e) {
-                    $json_data['status'] = 's...';
-                    $json_data['message'] = $e->getMessage();
-                    echo json_encode($json_data);
+
                 }
-            }
+//            }
 
             try {
                 $result = $shardDb->query("SELECT * FROM user_quest WHERE user_id =".$userId. " AND get_award = 0 AND is_out_date = 0");

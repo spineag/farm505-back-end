@@ -42,8 +42,10 @@ class Application
             return new OwnMySQLI(SERVER_DB, USER, PASSWORD, DB);
         } else if ($channelId == 3) {
             return new OwnMySQLI(SERVER_DB_OK, USER_OK, PASSWORD_OK, DB_OK);
+        } else if ($channelId == 4) {
+            return new OwnMySQLI(SERVER_DB_FB, USER_FB, PASSWORD_FB, DB_FB);
         } else {
-            return new OwnMySQLI(SERVER_DB, USER, PASSWORD, DB); // if unknown value
+            return new OwnMySQLI(SERVER_DB, USER, PASSWORD, DB);
         }
     }
 
@@ -80,6 +82,8 @@ class Application
             $c = 1;
         } else if ($channelId == 3) {
             $c = 3;
+        } else if ($channelId == 4) {
+            $c = 1;
         }
         $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database` FROM game_shard ORDER BY shard_id LIMIT ".$c);
         $ar = $res->fetchAll();
@@ -165,13 +169,13 @@ class Application
                 'yellow_count' => $const['YELLOW_COUNT'], 'red_count' => $const['RED_COUNT'],
                 'green_count' => $const['GREEN_COUNT'], 'blue_count' => $const['BLUE_COUNT'],
                 'xp' => 0, 'level' => 1, 'sex' => $sex, 'born_date' => $bornDate],
-            ['int', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int',
+            ['str', 'int', 'int', 'str', 'str', 'int', 'int', 'int', 'int', 'int',
                 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'str', 'str']);
 
         $userId = $this->getUserId($channelId, $socialUId);
         $shardDb = $this->getShardDb($userId, $channelId);
 
-            if ($channelId == 3) { //for OK
+            if ($channelId == 3 || $channelId == 4) { //for OK and FB
                 $result = $shardDb->query('INSERT INTO user_info SET user_id='.$userId.', cutscene=0, open_order=0');
             } else if ($channelId == 2) {
             }
@@ -301,6 +305,9 @@ class Application
             } else if ($channelId == 3) {
                 $socialNetwork = $this->_cfg["snOK"]["socialNetworkClass"];
                 $this->_socialNetwork = new $socialNetwork($this->_cfg["snOK"]);
+            } else if ($channelId == 4) {
+                $socialNetwork = $this->_cfg["snFB"]["socialNetworkClass"];
+                $this->_socialNetwork = new $socialNetwork($this->_cfg["snFB"]);
             }
         }
         return $this->_socialNetwork;

@@ -19,7 +19,7 @@ if (isset($_GET['uid']) && !empty($_GET['uid'])) {  // uid = social_id
 
             try {
                 if ($id >0) {
-                    if ($channelId == 3) $shardDb->query('DELETE FROM user_info WHERE user_id=' . $id);
+                    if ($channelId == 3 || $channelId == 4) $shardDb->query('DELETE FROM user_info WHERE user_id=' . $id);
 
                     $result = $shardDb->query('DELETE FROM user_animal WHERE user_id=' . $id);
 
