@@ -32,7 +32,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                         }
                         $dubl = implode(',', array_map('intval', $arDubl));
                         $result = $shardDb->query("DELETE FROM user_quest WHERE user_id =" . $userId . " AND id IN (" . $dubl . ") AND date_finish='0'");
-                        $result = $shardDb->query("DELETE FROM user_quest_task WHERE user_id =" . $userId . " AND quest_id IN (" . $dubl . ") AND is_done=0 AND get_award=1");
+                        $result = $shardDb->query("DELETE FROM user_quest_task WHERE user_id =" . $userId . " AND quest_id IN (" . $dubl . ") AND is_done=0");
                     }
                 } catch (Exception $e) {
 //                    $json_data['status'] = 's...';
