@@ -41,8 +41,8 @@ try {
                 $resourceItem['block_by_level'] = $dict['block_by_level'];
                 $resourceItem['order_type'] = $dict['order_type'];
                 $resourceItem['descript'] = $dict['descript'];
-                $buildingItem['text_id_name'] = $dict['text_id_name'];
-                $buildingItem['text_id_description'] = $dict['text_id_description'];
+                $resourceItem['text_id_name'] = $dict['text_id_name'];
+                $resourceItem['text_id_description'] = $dict['text_id_description'];
                 switch ($dict['resource_type']) {
                     case 5: // PLANT
                         //$result = $mainDb->select("data_plant", "*", "resource_id='".$dict['id']."'");
