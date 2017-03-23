@@ -79,7 +79,7 @@ class Application
     final public function getAllShardsDb($channelId) {
         $mainDb = $this->getMainDb($channelId);
         if ($channelId == 2) {
-            $c = 1;
+            $c = 2;
         } else if ($channelId == 3) {
             $c = 3;
         } else if ($channelId == 4) {
