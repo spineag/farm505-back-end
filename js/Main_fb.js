@@ -150,9 +150,30 @@ var SN = function (social) { // social == 4
                 link: 'https://apps.facebook.com/1936104599955682/'
             }, function(response) {
                 console.log(response);
+                if (response && !response.error) {
+                    that.flash().wallPostSave();
+                } else {
+                    that.flash().wallPostCancel();
+                }
             }
         );
     }
+
+    that.isInGroup = function(groupId, userId) {
+        console.log('FB: try isInGroup id: ' + groupId);
+        that.flash().isInGroupCallback(1);
+        // FB.api(     ---> better use groupId/members?limit=400 and check all users
+        //     "/" + userId + "/groups",
+        //     function (response) {
+        //         var status = 0;
+        //         if (response && !response.error) {
+        //             status = 1;
+        //         }
+        //         that.flash().isInGroupCallback(status);
+        //     }
+        // );
+
+    };
 };
 
 
