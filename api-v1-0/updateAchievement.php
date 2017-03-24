@@ -11,14 +11,14 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     } else $channelId = 2; // VK
     $shardDb = $app->getShardDb($userId, $channelId);
     try {
-        $result = $shardDb->query('SELECT * FROM user_achievement WHERE user_id =' . $userId .'AND achievement_id =' . $_POST['achievementId'] );
+        $result = $shardDb->query('SELECT * FROM user_achievement WHERE user_id =' . $userId . ' AND achievement_id =' . $_POST['achievementId']);
         if ($result) {
-            $res = $result->fetch();
-            if (!$res) {
-                $result = $shardDb->query('INSERT INTO user_achievement SET user_id=' . $userId . ', achievement_id=' . $_POST['achievementId'] . ', resource_count=' . $_POST['resourceCount']);
-            } else {
-                $result = $shardDb->query('UPDATE user_achievement SET resource_count=' . $_POST['resourceCount'] . ', took_gift = '. $_POST['tookGift'] .' WHERE user_id ='. $userId .'AND achievement_id =' . $_POST['achievementId']);
-            }
+        $res = $result->fetch();
+        if (!$res) {
+            $result = $shardDb->query('INSERT INTO user_achievement SET user_id=' . $userId . ', achievement_id=' . $_POST['achievementId'] . ', resource_count=' . $_POST['resourceCount']);
+        } else {
+            $result = $shardDb->query('UPDATE user_achievement SET resource_count=' . $_POST['resourceCount'] . ', took_gift = "' . $_POST['tookGift'] . '" WHERE user_id =' . $userId . ' AND achievement_id =' . $_POST['achievementId']);
+        }
         } else {
             $json_data['id'] = 2;
             $json_data['status'] = 's307';
