@@ -20,7 +20,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
             }
         } else { // == 3 || == 4
             $shardDb = $app->getShardDb($_POST['userId'], $channelId);
-            $result = $shardDb->query("UPDATE user_info SET language_id=" . $_POST['languageId']. ' WHERE id=' . $_POST['userId']);
+            $result = $shardDb->query("UPDATE user_info SET language_id=" . $_POST['languageId']. ' WHERE user_id=' . $_POST['userId']);
             if (!$result) {
                 $json_data['id'] = 2;
                 $json_data['status'] = 's341';

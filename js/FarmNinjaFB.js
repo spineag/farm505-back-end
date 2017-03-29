@@ -1,29 +1,24 @@
-var FarmNinja = {
+var FarmNinjaFB = {
     user_sid: false,
     swf: {},
     version: -1,
-    channel: 2,
     language: 1,
 
     getVersion: function() {
         $.ajax({
             type:'post',
             url:'../php/api-v1-0/getVersionClient.php',
-            data: "channelId=" + this.channel,
+            data: "channelId=4",
             response:'text',
             success:function (v) {
                 console.log('current version: ' + v);
-                FarmNinja.setVersion(v);
+                FarmNinjaFB.setVersion(v);
             },
             errrep:true,
             error:function(num) {
                 alert('error get client version');
             }
         })
-    },
-
-    setChannel: function(v) {
-        this.channel = v;
     },
 
     setVersion: function(v) {
@@ -43,7 +38,7 @@ var FarmNinja = {
             var flashvars = {
                 data: (url[1] ? '&' + url[1] : ''),
                 protocol: (document.location.protocol == 'https:') ? 'https' : 'http',
-                channel: this.channel,
+                channel: 4,
                 gacid: this.getUserGAcid()
             };
 
@@ -58,13 +53,7 @@ var FarmNinja = {
                 id: "farm_game",
                 name: "farm_game"
             };
-            var st;
-            if (this.channel == 2) {
-                st = '/client/farm' + this.version + '.swf';
-            } else if (this.channel == 3) {
-                st = 'client_ok/farm' + this.version + '.swf';
-            } 
-            swfobject.embedSWF(st, 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
+            swfobject.embedSWF('client_fb/farm' + this.version + '.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
         }
     },
 
@@ -75,7 +64,7 @@ var FarmNinja = {
             $('#no_player').css('display', 'block');
         }
         else {
-            document.getElementById("farm_game").style.display = "block";
+             // document.getElementById("farm_game").style.display = "block";
         }
     },
 
@@ -109,5 +98,61 @@ var FarmNinja = {
         var gacid = this.getUserGAcid();
         var flash =	document.getElementById("farm_game");
         flash.sendGAcidToAS(gacid);
+    },
+
+    checkUserLanguageForIFrame: function(userSocialId) {
+        console.log('checkUserLanguageForIFrame for userSocialId: ' + userSocialId);
+        $.ajax({
+            type:'post',
+            url:'../php/api-v1-0/getUserLanguage.php',
+            data: {channelId: 4, userSocialId: userSocialId},
+            response:'text',
+            success:function (v) {
+                console.log('iframe language: ' + v);
+                FarmNinjaFB.setLanguage(v);
+            },
+            errrep:true,
+            error:function(num) {
+                console.error('error get user language with NUM error: ' + num);
+                FarmNinjaFB.setLanguage(2);
+            }
+        })
+    },
+
+    setLanguage: function(v) {
+        v = parseInt(v);
+        this.language = v;
+        var bRU = document.getElementsByClassName('ru');
+        var bENG = document.getElementsByClassName('eng');
+        var langRU = document.getElementsByClassName('lang');
+        var langENG = document.getElementsByClassName('langENG');
+        langRU[0].style.display = 'block';
+        langENG[0].style.display = 'block';
+        if (v == 2) {
+            bRU[0].style.display = 'none';
+            bENG[0].style.display = 'block';
+        } else {
+            bRU[0].style.display = 'block';
+            bENG[0].style.display = 'none';
+        }
+    },
+
+    showLanguage: function() {
+        var dChange = document.getElementById('change_language');
+        if (dChange) dChange.style.display = 'block';
+        document.getElementById("farm_game").onOpenLanguage();
+    },
+
+    hideLanguage: function() {
+        var dChange = document.getElementById('change_language');
+        if (dChange) dChange.style.display = 'none';
+    },
+
+    chooseLanguage: function(v) {
+        hideLanguage();
+        if (v != this.language) {
+            console.log('change language to: ' + v);
+            document.getElementById("farm_game").changeLanguage(v);
+        }
     }
 };

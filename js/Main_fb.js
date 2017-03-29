@@ -3,6 +3,7 @@
 var SN = function (social) { // social == 4
     var that = this;
     var accessT = '';
+    var uSocialId = '';
 
     console.log('init fb social');
 
@@ -157,7 +158,7 @@ var SN = function (social) { // social == 4
                 }
             }
         );
-    }
+    };
 
     that.isInGroup = function(groupId, userId) {
         console.log('FB: try isInGroup id: ' + groupId);

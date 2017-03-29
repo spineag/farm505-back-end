@@ -7,13 +7,13 @@
 
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="/js/swfobject.js"></script>
-    <script type="text/javascript" src="/js/FarmNinja.js"></script>
+    <script type="text/javascript" src="/js/FarmNinjaFB.js"></script>
     <script type="text/javascript" src="/js/Main_fb.js"></script>
     <script type="text/javascript">
         var sn = new SN(4);
     </script>
 
-    <link type="text/css" href="/css/Main.css" rel="stylesheet"/>
+    <link type="text/css" href="/css/MainENG.css" rel="stylesheet"/>
 
     <script>
         function initGA() {
@@ -34,19 +34,31 @@
     <script> function makeWallPost(uid, message, url) { sn.makeWallPost(uid, message, url); }  </script>
     <script> function getTempUsersInfoById(uids) { sn.getTempUsersInfoById(uids); }  </script>
     <script> function isInGroup(groupId, userId) { sn.isInGroup(groupId, userId); }  </script>
-    <script> function reloadGame() { FarmNinja.reload(); }  </script>
+    <script> function checkUserLanguageForIFrame(userSocialId) { FarmNinjaFB.checkUserLanguageForIFrame(userSocialId); }  </script>
+    <script> function reloadGame() { FarmNinjaFB.reload(); }  </script>
+    <script> function hideLanguage() { FarmNinjaFB.hideLanguage(); }  </script>
 
 </head>
 
 <body>
 <div id="main_div" style="width:100%;">
     <nav style="width:1000px; margin:auto">
-        <ul>
-            <li><a href="#" class="one" onclick = 'sn.showInviteWindowAll();'></a></li>
-            <li><a href="https://www.ok.ru/group/55141755191315" class="two" target="_blank"></a></li>
-            <li><a href="https://www.ok.ru/group/55141755191315/topic/66119264865043" class="three" target="_blank"></a></li>
-            <li><a href="https://www.ok.ru/group/55141755191315/topic/66119413369619" class="four" target="_blank"></a></li>
-        </ul>
+        <div class = "ru">
+            <ul>
+                <li><a href="#" class="one" onclick = 'sn.showInviteWindowAll();'></a></li>
+                <li><a href="https://www.facebook.com/groups/173803746388449/" class="two" target="_blank"></a></li>
+                <li><a href="https://www.facebook.com/groups/173803746388449/" class="three" target="_blank"></a></li>
+                <li><a class="lang" onclick = 'FarmNinjaFB.showLanguage();'></a></li>
+            </ul>
+        </div>
+        <div class = "eng">
+            <ul>
+                <li><a href="#" class="oneENG" onclick = 'sn.showInviteWindowAll();'></a></li>
+                <li><a href="https://www.facebook.com/groups/173803746388449/" class="twoENG" target="_blank"></a></li>
+                <li><a href="https://www.facebook.com/groups/173803746388449/" class="threeENG" target="_blank"></a></li>
+                <li><a class="langENG" onclick = 'FarmNinjaFB.showLanguage();'></a></li>
+            </ul>
+        </div>
     </nav>
     <div id="line1px"></div>
 
@@ -62,10 +74,23 @@
             </div>
         </div>
     </div>
+
+
+    <div id="change_language" style="z-index: 3; position: absolute; left: 50%; top: 150px; display: none">
+        <div style="width:300px; height: 230px; background-color: #50b604; position: relative; left: -50%; border-radius: 5px; border-style: solid; border-width: 3px; border-color: #ffc000">
+            <p style="text-align: center;"><button onclick="FarmNinjaFB.chooseLanguage(2)">
+                <img src="/images/iframe/eng_f.png" style="vertical-align: middle">
+                <h2 style="margin-left: 10px; color: white">Play in English</h2></button></p>
+            <p style="text-align: center;"><button onclick="FarmNinjaFB.chooseLanguage(1)">
+                <img src="/images/iframe/ru_f.png" style="vertical-align: middle">
+                <h2 style="margin-left: 10px; color: white">Играть на русском языке</h2></button></p>
+        </div>>
+    </div>
+
+
 </div>
 <script>
-    FarmNinja.setChannel(4);
-    FarmNinja.getVersion();
+    FarmNinjaFB.getVersion();
 </script>
 </body>
 </html>
