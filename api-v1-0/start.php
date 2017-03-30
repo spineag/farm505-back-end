@@ -17,14 +17,23 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
         if ($uid < 1) {
             try {
                 if (isset($_POST['name']) && !empty($_POST['name'])) $name = $_POST['name'];
-                    else $name = 'undefined';
+                else $name = 'undefined';
                 if (isset($_POST['lastName']) && !empty($_POST['lastName'])) $lastName = $_POST['lastName'];
-                    else $lastName = 'Undefined';
+                else $lastName = 'Undefined';
                 if (isset($_POST['sex']) && !empty($_POST['sex'])) $sex = $_POST['sex'];
-                    else $sex = 'unisex';
+                else $sex = 'unisex';
                 if (isset($_POST['bornDate']) && !empty($_POST['bornDate'])) $bornDate = $_POST['bornDate'];
-                    else $bornDate = '01.01.2017';
-                $uid = $app->newUser($channelId, $socialUId, $name, $lastName, $sex, $bornDate);
+                else $bornDate = '01.01.2017';
+                if (isset($_POST['defaultLanguage']) && !empty($_POST['defaultLanguage'])) {
+                    $lang = (int)$_POST['defaultLanguage'];
+                } else {
+                    if ($channelId == 4) {
+                        $lang = 2;
+                    } else {
+                        $lang = 1;
+                    }
+                }
+                $uid = $app->newUser($channelId, $socialUId, $name, $lastName, $sex, $bornDate, $lang);
             } catch (Exception $e) {
                 $json_data['id'] = 2;
                 $json_data['status'] = '00000';

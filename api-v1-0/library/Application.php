@@ -138,7 +138,7 @@ class Application
         return $userSocialId;
     }
 
-    final public function newUser($channelId, $socialUId, $name = 'Vasia', $lname = 'Pupkin', $sex = 'w', $bornDate = '28.09.16') {
+    final public function newUser($channelId, $socialUId, $name = 'Vasia', $lname = 'Pupkin', $sex = 'w', $bornDate = '28.09.16', $lang='1') {
         $mainDb = $this->getMainDb($channelId);
         $const = [];
         $result = $mainDb->query('SELECT * FROM const');
@@ -176,8 +176,9 @@ class Application
         $shardDb = $this->getShardDb($userId, $channelId);
 
             if ($channelId == 3 || $channelId == 4) { //for OK and FB
-                $result = $shardDb->query('INSERT INTO user_info SET user_id='.$userId.', cutscene=0, open_order=0');
+                $result = $shardDb->query('INSERT INTO user_info SET user_id='.$userId.', cutscene=0, open_order=0, language_id='.$lang);
             } else if ($channelId == 2) {
+                // already updates ==1 by default value for row 'language_id'
             }
 
             $arrIDs = [31, 32, 21, 118];

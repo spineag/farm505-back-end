@@ -26,6 +26,9 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
         $r = $result->fetch();
         if ($r) {
             $lang = (int)$r['language_id'];
+            if ($channelId == 4 && $lang == 0) {
+                $lang = 2;
+            }
         }
     }
 

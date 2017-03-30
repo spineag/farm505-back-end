@@ -51,7 +51,7 @@ var SN = function (social) { // social == 4
                     var u = {};
                     FB.api("/" + userSocialId,
                         {access_token: accessT},
-                        {fields: 'last_name,first_name,gender,birthday,picture.width(100).height(100)'},
+                        {fields: 'last_name,first_name,gender,birthday,picture.width(100).height(100),locale'},
                         function (response) {
                             console.log('getProfileCallback_2 response: ' + response);
                             if (response && !response.error) {
@@ -59,10 +59,11 @@ var SN = function (social) { // social == 4
                                 u.last_name = response.last_name;
                                 u.gender = response.gender;
                                 u.birthday = response.birthday;
-
+                                u.locale = response.locale;
                                 u.picture = response.picture.data.url;
                                 u.id = userSocialId;
                                 that.flash().getProfileHandler(u);
+                                console.log('locale: ' + response.locale);
                                 // FB.api('/me/picture?type=normal', function (response) {
                                 //     console.log('getProfileCallback_3 response: ' + response);
                                 //     u.picture = response.data.url;
