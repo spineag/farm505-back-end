@@ -9,7 +9,9 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
     if (isset($_POST['channelId'])) {
         $channelId = (int)$_POST['channelId'];
     } else $channelId = 2; // VK
-    $shardDb = $app->getShardDb($userId, $channelId);
+
+    $visiteId = $app->getUserId($channelId,$_POST['userSocialId']);
+    $shardDb = $app->getShardDb($visiteId, $channelId);
 
     if ($app->checkSessionKey($_POST['userId'], $_POST['sessionKey'], $channelId)) {
         $m = md5($_POST['userId'].$_POST['userSocialId'].$_POST['id'].$app->md5Secret());
