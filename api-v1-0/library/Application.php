@@ -108,12 +108,6 @@ class Application
         } else {
             $userId = 0;
         }
-
-        if ($userId > 0) {
-            // update user last activity date
-            $result = $mainDb->update('users', ['last_visit_date' => time()], ['id' => $userId], ['int'], ['int']);
-        }
-
         return $userId;
     }
 
