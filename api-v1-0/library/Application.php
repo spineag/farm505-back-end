@@ -55,8 +55,11 @@ class Application
         $dbCfgShard = $memcached->get($shardKey);
         if (empty($dbCfgShard)) {
             $mainDb = $this->getMainDb($channelId);
-            $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database` FROM game_shard WHERE first_user_id <='".$uid."' AND last_user_id >='".$uid."'");
+            $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database`, active FROM game_shard WHERE first_user_id <='".$uid."' AND last_user_id >='".$uid."'");
             $dbCfgShard = $res->fetch();
+            if ((int)$res['active'] == 0) {
+                $result = $mainDb->query('UPDATE game_shard SET active=1 WHERE shard_id='.(int)$res['shard_id']);
+            }
             $time_out = 5 * 60;
             $memcached->set($shardKey, $dbCfgShard, $time_out);
         }
@@ -78,14 +81,7 @@ class Application
 
     final public function getAllShardsDb($channelId) {
         $mainDb = $this->getMainDb($channelId);
-        if ($channelId == 2) {
-            $c = 2;
-        } else if ($channelId == 3) {
-            $c = 3;
-        } else if ($channelId == 4) {
-            $c = 1;
-        }
-        $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database` FROM game_shard ORDER BY shard_id LIMIT ".$c);
+        $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database` FROM game_shard WHERE active=1");
         $ar = $res->fetchAll();
         $shards = [];
         foreach ($ar as $value => $dict) {
