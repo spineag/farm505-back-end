@@ -57,7 +57,7 @@ class Application
             $mainDb = $this->getMainDb($channelId);
             $res = $mainDb->query("SELECT shard_id, host, user, password as pass, db_name as `database`, active FROM game_shard WHERE first_user_id <='".$uid."' AND last_user_id >='".$uid."'");
             $dbCfgShard = $res->fetch();
-            if ((int)$res['active'] == 0) {
+            if ((int)$dbCfgShard['active'] == 0) {
                 $result = $mainDb->query('UPDATE game_shard SET active=1 WHERE shard_id='.(int)$res['shard_id']);
             }
             $time_out = 5 * 60;
