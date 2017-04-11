@@ -24,7 +24,7 @@ var SN = function (social) { // social == 4
             } else {
                 console.log('not auth');
             }
-        }, {scope:'user_friends,publish_actions'});
+        }, {scope:'publish_actions'});
     };
 
     (function(d, s, id){
@@ -145,9 +145,9 @@ var SN = function (social) { // social == 4
         console.log('FB: try get makeWallPost');
         FB.api('me/feed',
             'post',
-            {   message: message,
+            {   message: '',
                 picture :url,
-                description : "DESCRIPTION",
+                description : message,
                 name: 'WoollyValley',
                 link: 'https://apps.facebook.com/1936104599955682/'
             }, function(response) {
