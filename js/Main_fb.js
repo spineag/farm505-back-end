@@ -21,6 +21,12 @@ var SN = function (social) { // social == 4
                 console.log(response);
                 accessT = response.authResponse.accessToken;
                 console.log('at: ' + accessT);
+                try {
+                    FarmNinjaFB.getVersion();
+                } catch(err) {
+                    console.log('after init FB:: error with getVersion: ' + err);
+                }
+
             } else {
                 console.log('not auth');
             }
@@ -40,7 +46,7 @@ var SN = function (social) { // social == 4
     };
 
     that.getProfile = function(userSocialId) {
-        console.log('FB: try get user profile with id: ' + userSocialId);
+        console.log('FB: try get user profile with id');
         FB.api("/me",
             // {fields: 'id,last_name,first_name,gender,picture,birthday'},
             {access_token: accessT},
