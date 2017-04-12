@@ -24,7 +24,7 @@ var SN = function (social) { // social == 4
             } else {
                 console.log('not auth');
             }
-        }, {scope:'publish_actions'});
+        }, {scope:'publish_actions,user_friends'});
     };
 
     (function(d, s, id){
@@ -62,7 +62,11 @@ var SN = function (social) { // social == 4
                                 u.locale = response.locale;
                                 u.picture = response.picture.data.url;
                                 u.id = userSocialId;
-                                that.flash().getProfileHandler(u);
+                                try {
+                                    that.flash().getProfileHandler(u);
+                                } catch (err) {
+                                    console.log('getProfileHandler error: ' + err)
+                                }
                                 console.log('locale: ' + response.locale);
                                 // FB.api('/me/picture?type=normal', function (response) {
                                 //     console.log('getProfileCallback_3 response: ' + response);
@@ -85,7 +89,11 @@ var SN = function (social) { // social == 4
             function (response) {
                 console.log('getAllFriends response: ' + response);
                 if (response && !response.error) {
-                    that.flash().getAllFriendsHandler(response);
+                    try {
+                        that.flash().getAllFriendsHandler(response);
+                    } catch (err) {
+                        console.log('getAllFriendsHandler error: ' + err)
+                    }
                 }
             }
         );
@@ -99,7 +107,11 @@ var SN = function (social) { // social == 4
             function (response) {
                 console.log('getTempUsersInfoByIdCallback result: ' + response);
                 if (response && !response.error) {
-                    that.flash().getTempUsersInfoByIdHandler(response);
+                    try {
+                        that.flash().getTempUsersInfoByIdHandler(response);
+                    } catch (err) {
+                        console.log('getTempUsersInfoById error: ' + err)
+                    }
                 }
             }
         );
@@ -112,7 +124,11 @@ var SN = function (social) { // social == 4
             function (response) {
                 console.log('getAppUsersCallback data: ' + response);
                 if (response && !response.error) {
-                    that.flash().getAppUsersHandler(response);
+                    try {
+                        that.flash().getAppUsersHandler(response);
+                    } catch (err) {
+                        console.log('getAppUsersHandler error: ' + err)
+                    }
                 }
             }
         );
@@ -126,7 +142,11 @@ var SN = function (social) { // social == 4
             function (response) {
                 console.log('getFriendsByIds result: ' + response);
                 if (response && !response.error) {
-                    that.flash().getFriendsByIdsHandler(response);
+                    try {
+                        that.flash().getFriendsByIdsHandler(response);
+                    } catch (err) {
+                        console.log('getFriendsByIdsHandler error: ' + err)
+                    }
                 }
             }
         );
@@ -153,9 +173,17 @@ var SN = function (social) { // social == 4
             }, function(response) {
                 console.log(response);
                 if (response && !response.error) {
-                    that.flash().wallPostSave();
+                    try {
+                        that.flash().wallPostSave();
+                    } catch (err) {
+                        console.log('wallPostSave error: ' + err)
+                    }
                 } else {
-                    that.flash().wallPostCancel();
+                    try {
+                        that.flash().wallPostCancel();
+                    } catch (err) {
+                        console.log('wallPostCancel error: ' + err)
+                    }
                 }
             }
         );
