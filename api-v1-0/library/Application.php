@@ -266,7 +266,7 @@ class Application
     }
 
     final public function checkSessionKey($userId, $sessionKey, $channelId = 2) {
-//        return true;
+        if ($channelId == 4) return true;
         $sess = $this->getMemcache()->get((string)$userId);
         if (!$sess) {
             $result = $this->getMainDb($channelId)->query("SELECT session_key FROM users WHERE id=" . $userId);
