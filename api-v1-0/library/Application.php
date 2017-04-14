@@ -270,7 +270,7 @@ class Application
         $sess = $this->getMemcache()->get((string)$userId);
         if (!$sess) {
             $result = $this->getMainDb($channelId)->query("SELECT session_key FROM users WHERE id=" . $userId);
-            if (!$result) return true; // false
+            if (!$result) return true; 
             $arr = $result->fetch();
             $sess = $arr['session_key'];
             $this->getMemcache()->set((string)$userId, (string)$sess, MEMCACHED_DICT_TIME);
