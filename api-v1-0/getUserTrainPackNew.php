@@ -20,10 +20,13 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             $result = $shardDb->query("SELECT * FROM user_train_pack WHERE user_id =".$userId);
             $arrMainPack = $result->fetch();
             $isGood = true;
-            if (!$arrMainPack) $isGood = false;
-            $result = $shardDb->query("SELECT * FROM user_train_pack_item WHERE user_id =".$userId." AND user_train_pack_id=".$arr['id']);
-            $arrPacks = $result->fetchAll();
-            if (!$arrPacks) $isGood = false;
+            if ($arrMainPack) {
+                $result = $shardDb->query("SELECT * FROM user_train_pack_item WHERE user_id =" . $userId . " AND user_train_pack_id=" . $arrMainPack['id']);
+                $arrPacks = $result->fetchAll();
+                if (!$arrPacks) $isGood = false;
+            } else {
+                $isGood = false;
+            }
 
             if (!$isGood) {
                 $result = $shardDb->query('DELETE FROM user_train_pack WHERE user_id='.$userId);
