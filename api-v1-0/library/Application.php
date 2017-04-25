@@ -266,14 +266,13 @@ class Application
     }
 
     final public function checkSessionKey($userId, $sessionKey, $channelId = 2) {
-        if ($channelId == 4) return true;
-        $sess = $this->getMemcache()->get((string)$userId);
+        $sess = $this->getMemcache()->get((string)$userId.'ch'.$channelId);
         if (!$sess) {
             $result = $this->getMainDb($channelId)->query("SELECT session_key FROM users WHERE id=" . $userId);
             if (!$result) return true; 
             $arr = $result->fetch();
             $sess = $arr['session_key'];
-            $this->getMemcache()->set((string)$userId, (string)$sess, MEMCACHED_DICT_TIME);
+            $this->getMemcache()->set((string)$userId.'ch'.$channelId, (string)$sess, MEMCACHED_DICT_TIME);
         }
         if ((string)$sessionKey == (string)$sess || (string)$sess == '0') {
             return true;
