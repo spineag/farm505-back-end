@@ -29,7 +29,9 @@
     <script> function getAllFriends(userSocialId) { sn.getAllFriends(userSocialId); }  </script>
     <script> function getFriendsByIds(uids) { sn.getFriendsByIds(uids); }  </script>
     <script> function getAppUsers(userSocialId) { sn.getAppUsers(userSocialId); }  </script>
-    <script> function showInviteWindowAll() { sn.showInviteWindowAll(); }  </script>
+    <script> function showInviteWindowAll(lang) {
+        lang = typeof lang !== 'undefined' ?  lang : 2;
+        sn.showInviteWindowAll(lang); }  </script>
     <!--<script> function makePayment(txt, txt2, id, price) { sn.showPayment(txt, txt2, id, price); }  </script>-->
     <script> function makeWallPost(uid, message, url) { sn.makeWallPost(uid, message, url); }  </script>
     <script> function getTempUsersInfoById(uids) { sn.getTempUsersInfoById(uids); }  </script>
@@ -40,8 +42,8 @@
 
 </head>
 
-<body>
-<div id="main_div" style="width:100%;">
+<body class="game_body">
+<div id="main_div">
     <nav style="width:1000px; margin:auto">
         <div class = "ru">
             <ul>
@@ -60,7 +62,6 @@
             </ul>
         </div>
     </nav>
-    <div id="line1px"></div>
 
     <div id="gameContainer">
         <div id="flash_container">

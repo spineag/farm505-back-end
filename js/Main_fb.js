@@ -158,10 +158,12 @@ var SN = function (social) { // social == 4
         );
     };
 
-    that.showInviteWindowAll = function(userSocialId) {
+    that.showInviteWindowAll = function(lang) {
+        var st ='Давай играть вместе';
+        if (lang == 2) st = "Let's play together!";
         console.log('FB: try get showInviteWindowAll');
         FB.ui({method: 'apprequests',
-            message: 'Давай играть вместе'
+            message: st
         }, function(response){
             console.log(response);
         });

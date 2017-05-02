@@ -1,52 +1,67 @@
 
 body {
     margin: 0;
+    padding: 0;
+    height: 100%;
+    border:0;
 }
+
+#main-div {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* Hides scrollbar in IE */
+}
+
 ::selection {
     background: transparent;
 }
 
-#line1px {
+#gameContainer {
     margin: 0;
     padding: 0;
     width: 100%;
-    background: #ffc801;
-    height: 1px;
-}
-
-#gameContainer {
-    margin: 0 auto;
-    padding: 0;
-    height: 640px;
+    height: 100%;
 }
 
 #flash_container {
-    margin: 0 auto;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
 }
 
 #loader {
     background: #fff;
-    width: 1000px;
-    height: 640px;
-    line-height: 640px;
+    /*width: 1000px;*/
+    /*height: 640px;*/
+    height: 100%;
+    width: 100%;
+    /*line-height: 640px;*/
     text-align: center;
 }
 img {
     border: 0;
 }
 #no_player {
+    height: 100%;
+    width: 100%;
     display: none;
     padding-top: 0;
-    height: 0;
 }
 
 nav {
     display: block;
     margin: 0;
     padding: 0;
-    background-image: url(/images/iframe/iframe_top.png) ;
-    background-repeat: no-repeat;
-    height: 36px;
+    height: 28px;
     text-align: center;
 }
 ul {
@@ -75,7 +90,7 @@ a {
 .one {
     width: 136px;
     height: 24px;
-    margin: 12px 0 0 0;
+    margin: 4px 0 0 0;
     padding: 0;
     background-image: url(/images/iframe/iframe_bt_1.png);
     background-repeat: no-repeat;
@@ -86,7 +101,7 @@ a {
 .two {
     width: 91px;
     height: 24px;
-    margin: 12px 0 0 0;
+    margin: 4px 0 0 0;
     padding: 0;
     background-image: url(/images/iframe/iframe_bt_3.png);
     background-repeat: no-repeat;
@@ -97,7 +112,7 @@ a {
 .three {
     width: 91px;
     height: 24px;
-    margin: 12px 0 0 0;
+    margin: 4px 0 0 0;
     padding: 0;
     background-image: url(/images/iframe/iframe_bt_2.png);
     background-repeat: no-repeat;
@@ -109,7 +124,7 @@ a {
     display: none;
     width: 35px;
     height: 24px;
-    margin: 12px 0 0 0;
+    margin: 4px 0 0 0;
     padding: 0;
     background-image: url(/images/iframe/rusp_bt_eng.png);
     background-repeat: no-repeat;
@@ -121,7 +136,7 @@ a {
 .oneENG {
     width: 107px;
     height: 24px;
-    margin: 12px 0 0 0;
+    margin: 4px 0 0 0;
     padding: 0;
     background-image: url(/images/iframe/invite_friends_bt_eng.png);
     background-repeat: no-repeat;
@@ -132,7 +147,7 @@ a {
 .twoENG {
     width: 80px;
     height: 24px;
-    margin: 12px 0 0 0;
+    margin: 4px 0 0 0;
     padding: 0;
     background-image: url(/images/iframe/fan_page_bt_eng.png);
     background-repeat: no-repeat;
@@ -143,7 +158,7 @@ a {
 .threeENG {
     width: 67px;
     height: 24px;
-    margin: 12px 0 0 0;
+    margin: 4px 0 0 0;
     padding: 0;
     background-image: url(/images/iframe/support_bt_eng.png);
     background-repeat: no-repeat;
@@ -155,7 +170,7 @@ a {
     display: none;
     width: 35px;
     height: 24px;
-    margin: 12px 0 0 0;
+    margin: 4px 0 0 0;
     padding: 0;
     background-image: url(/images/iframe/engp_bt_eng.png);
     background-repeat: no-repeat;
