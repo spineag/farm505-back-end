@@ -64,13 +64,15 @@ var FarmNinjaFB = {
             $('#no_player').css('display', 'block');
         }
         else {
-            FarmNinjaFB.bodyResize();
+            console.log('on add swf callbackFn');
             window.onresize = FarmNinjaFB.bodyResize;
+
+            setTimeout(FarmNinjaFB.bodyResize, 500);
         }
     },
     
     bodyResize: function(event) {
-        var h = $('.game_body').height() - 37;
+        var h = $('.game_body').height() - 28;
         if (h < 600) h = 600;
         if (h > 1000) h = 1000;
         console.log('h: ' + h);
@@ -78,6 +80,8 @@ var FarmNinjaFB = {
     },
 
     reload: function () {
+        console.log('reload game');
+        window.onresize = null;
         $('#gameContainer').html('<div id="flash_container">' +
             '<div id="loader">' +
             '<img src="/images/ajax-loader.gif" />' +
