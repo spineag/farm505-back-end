@@ -53,7 +53,7 @@ var FarmNinjaFB = {
                 id: "farm_game",
                 name: "farm_game"
             };
-            swfobject.embedSWF('client_fb/farm' + this.version + '.swf', 'flash_container', '100%', '100%', '13.0', null, flashvars, params, attributes, this.callbackFn);
+            swfobject.embedSWF('client_fb/farm' + this.version + '.swf', 'flash_container', '100%', '640px', '13.0', null, flashvars, params, attributes, this.callbackFn);
         }
     },
 
@@ -66,14 +66,13 @@ var FarmNinjaFB = {
         else {
             console.log('on add swf callbackFn');
             window.onresize = FarmNinjaFB.bodyResize;
-
             setTimeout(FarmNinjaFB.bodyResize, 500);
         }
     },
     
     bodyResize: function(event) {
         var h = $('.game_body').height() - 28;
-        if (h < 600) h = 600;
+        if (h < 500) h = 500;
         if (h > 1000) h = 1000;
         console.log('h: ' + h);
         $('#farm_game').height(h);
