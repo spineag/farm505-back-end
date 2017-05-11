@@ -212,6 +212,24 @@ var SN = function (social) { // social == 4
         // );
 
     };
+
+    that.makePayment = function(packId) {
+        console.log('makePayment innnn');
+        var product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + ".html";
+        console.log('payment product: ' + product);
+        FB.ui({
+            method: 'pay',
+            action: 'purchaseitem',
+            product: product
+        }, function(response) {
+            console.log('Payment completed', response);
+            if(response.status && response.status == 'completed') {
+                that.flash().successPayment();
+            } else {
+                that.flash().failPayment();
+            }
+        } );
+    }
 };
 
 
