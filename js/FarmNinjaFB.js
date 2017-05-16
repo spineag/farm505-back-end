@@ -16,7 +16,7 @@ var FarmNinjaFB = {
             },
             errrep:true,
             error:function(num) {
-                alert('error get client version');
+                console.log('error get client version');
             }
         })
     },
@@ -64,7 +64,6 @@ var FarmNinjaFB = {
             $('#no_player').css('display', 'block');
         }
         else {
-            console.log('on add swf callbackFn');
             window.onresize = FarmNinjaFB.bodyResize;
             setTimeout(FarmNinjaFB.bodyResize, 500);
         }
@@ -113,7 +112,6 @@ var FarmNinjaFB = {
     },
 
     checkUserLanguageForIFrame: function(userSocialId) {
-        console.log('checkUserLanguageForIFrame for userSocialId: ' + userSocialId);
         $.ajax({
             type:'post',
             url:'../php/api-v1-0/getUserLanguage.php',
@@ -166,5 +164,21 @@ var FarmNinjaFB = {
             console.log('change language to: ' + v);
             document.getElementById("farm_game").changeLanguage(v);
         }
+    },
+    
+    saveAccessToken: function(uSocialId, aToken) {
+        $.ajax({
+            type:'post',
+            url:'../php/api-v1-0/onFBAccessToken.php',
+            data: {channelId: 4, userSocialId: uSocialId, accessToken: aToken},
+            response:'text',
+            success:function (v) {
+                console.log('on save aToken: ' + v);
+            },
+            errrep:true,
+            error:function(num) {
+                console.log('error save access token2: ' + num);
+            }
+        })
     }
 };

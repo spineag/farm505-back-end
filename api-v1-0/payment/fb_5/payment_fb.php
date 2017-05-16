@@ -1,22 +1,15 @@
 <?php
-define('SN', 'fb');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
 header("Content-Type: application/json; encoding=utf-8");
 
-// Skip these two lines if you're using Composer
-define('FACEBOOK_SDK_V4_SRC_DIR', 'facebook-php-sdk/src/Facebook/');
-require __DIR__ . '/facebook-php-sdk/autoload.php';
-
-use Facebook\FacebookSession;
-use Facebook\FacebookRequest;
-use Facebook\GraphObject;
-use Facebook\FacebookRequestException;
+session_start();
+require __DIR__ . '/php-graph-sdk-5.5/src/Facebook/autoload.php';
 
 $verify_token = "kapusta";
 $app_secret = "dd3c1b11a323f01a3ac23a3482724c49";
 $app_token = "567d08996291f371fc7def6a88a79314"; // ?? "YOUR_APP_ACCESS_TOKEN"
 $app_id = "1936104599955682";
-$server_url = "https://505.ninja/php/api-v1-0/payment/fb/";
+$server_url = "https://505.ninja/php/api-v1-0/payment/fb_5/";
 
 $pack_id_for_product = [
     $server_url.'pack1.html' => 1,
@@ -33,14 +26,7 @@ $pack_id_for_product = [
     $server_url.'pack12.html' => 12
 ];
 
-FacebookSession::setDefaultApplication(
-    $app_id,
-    $app_secret);
-
-
-$method = $_SERVER['REQUEST_METHOD'];
-
-if ($method == 'GET' && $_GET['hub_verify_token'] === $verify_token) {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_verify_token'] === $verify_token) {
     echo $_GET['hub_challenge'];
 } else {
     $data = file_get_contents("php://input");
@@ -50,17 +36,18 @@ if ($method == 'GET' && $_GET['hub_verify_token'] === $verify_token) {
         $payment_id = $json["entry"][0]["id"];
         try {
             $mainDb = Application::getInstance()->getMainDb(4);
-            $session = new FacebookSession($app_token);
-            $request = new FacebookRequest(
-                $session,
-                'GET',
-                '/'.$payment_id . '?fields=user,actions,items'
-            );
-            $response = $request->execute();
-            $result = $response->getGraphObject(GraphObject::className());
+            $fb = new Facebook\Facebook([
+                'app_id'                => $app_id,
+                'app_secret'            => $app_secret,
+                'default_graph_version' => 'v2.9',
+            ]);
+
+            $response = $fb->get('/'.$payment_id.'?fields=actions,items', $app_token); // fuck
+
+            $result = $response->getGraphObject();
             $actions = $result->getPropertyAsArray('actions');
+
             if( $actions[0]->getProperty('status') == 'completed' ){
-                $user = $result->getProperty('user')['id'];
                 $items = $result->getPropertyAsArray('items');
                 $product = $items[0]->getProperty('product');
                 $packId = $pack_id_for_product[$product];
@@ -69,6 +56,8 @@ if ($method == 'GET' && $_GET['hub_verify_token'] === $verify_token) {
 
                 $time = date("Y-m-d H:i:s");
                 $t = time();
+                $mainDb->query('INSERT INTO transactions SET uid='.$userSocialId.', product_code='.$packId.', time_try="'.$time.'", unitime='.$t);
+                $mainDb->query('INSERT INTO transaction_lost SET uid='.$userSocialId.', product_code='.$packId.', time_buy="'.$time.'", unitime='.$t);
             }
         } catch (FacebookRequestException $e) {
             error_log($e->getRawResponse());

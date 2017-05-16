@@ -10,18 +10,20 @@ var SN = function (social) { // social == 4
     window.fbAsyncInit = function() {
         FB.init({
             appId      : '1936104599955682',
-            xfbml      : false,
+            xfbml      : true,
             cookie     : true,
             status     : true,
-            version    : 'v2.8'
+            version    : 'v2.9'
         });
         FB.AppEvents.logPageView();
         FB.login(function(response) {
             if (response.authResponse) {
                 console.log(response);
                 accessT = response.authResponse.accessToken;
-                console.log('at: ' + accessT);
+                uSocialId = response.authResponse.userID;
                 try {
+                    console.log('userSocialId: ' + uSocialId);
+                    FarmNinjaFB.saveAccessToken(uSocialId, accessT);
                     FarmNinjaFB.getVersion();
                 } catch(err) {
                     console.log('after init FB:: error with getVersion: ' + err);
@@ -46,12 +48,10 @@ var SN = function (social) { // social == 4
     };
 
     that.getProfile = function(userSocialId) {
-        console.log('FB: try get user profile with id');
         FB.api("/me",
             // {fields: 'id,last_name,first_name,gender,picture,birthday'},
             {access_token: accessT},
             function (response) {
-                console.log('getProfileCallback_1 response: ' + response);
                 if (response && !response.error) {
                     userSocialId = response.id;
                     var u = {};
@@ -59,7 +59,6 @@ var SN = function (social) { // social == 4
                         {access_token: accessT},
                         {fields: 'last_name,first_name,gender,birthday,picture.width(100).height(100),locale'},
                         function (response) {
-                            console.log('getProfileCallback_2 response: ' + response);
                             if (response && !response.error) {
                                 u.first_name = response.first_name;
                                 u.last_name = response.last_name;
@@ -89,11 +88,9 @@ var SN = function (social) { // social == 4
     };
 
     that.getAllFriends = function(userSocialId) {
-        console.log('FB: try get getAllFriends with id: ' + userSocialId);
         FB.api("/" + userSocialId + "/friends",
             {fields: 'id,last_name,first_name,picture.width(100).height(100)'},
             function (response) {
-                console.log('getAllFriends response: ' + response);
                 if (response && !response.error) {
                     try {
                         that.flash().getAllFriendsHandler(response);
@@ -107,11 +104,9 @@ var SN = function (social) { // social == 4
 
     that.getTempUsersInfoById = function(uids) {
         var ids = uids.join();
-        console.log('FB: try get getTempUsersInfoById');
         FB.api("/ids=" + ids,
             {fields: 'id,last_name,first_name,picture.width(100).height(100)'},
             function (response) {
-                console.log('getTempUsersInfoByIdCallback result: ' + response);
                 if (response && !response.error) {
                     try {
                         that.flash().getTempUsersInfoByIdHandler(response);
@@ -124,11 +119,9 @@ var SN = function (social) { // social == 4
     };
 
     that.getAppUsers = function(userSocialId) {
-        console.log('FB: try get getAppUsers');
         FB.api("/1936104599955682",
             {"fields": "context.fields(friends_using_app)"},
             function (response) {
-                console.log('getAppUsersCallback data: ' + response);
                 if (response && !response.error) {
                     try {
                         that.flash().getAppUsersHandler(response);
@@ -142,11 +135,9 @@ var SN = function (social) { // social == 4
 
     that.getFriendsByIds = function(uids) {
         var ids = uids.join();
-        console.log('FB: try get getFriendsByIds');
         FB.api('/?ids='+ids,
             {fields: 'id,last_name,first_name,picture.width(100).height(100)'},
             function (response) {
-                console.log('getFriendsByIds result: ' + response);
                 if (response && !response.error) {
                     try {
                         that.flash().getFriendsByIdsHandler(response);
@@ -161,7 +152,6 @@ var SN = function (social) { // social == 4
     that.showInviteWindowAll = function(lang) {
         var st ='Давай играть вместе';
         if (lang == 2) st = "Let's play together!";
-        console.log('FB: try get showInviteWindowAll');
         FB.ui({method: 'apprequests',
             message: st
         }, function(response){
@@ -170,7 +160,6 @@ var SN = function (social) { // social == 4
     };
 
     that.makeWallPost = function(uid, message, url){
-        console.log('FB: try get makeWallPost');
         FB.api('me/feed',
             'post',
             {   message: '',
@@ -198,7 +187,6 @@ var SN = function (social) { // social == 4
     };
 
     that.isInGroup = function(groupId, userId) {
-        console.log('FB: try isInGroup id: ' + groupId);
         that.flash().isInGroupCallback(1);
         // FB.api(     ---> better use groupId/members?limit=400 and check all users
         //     "/" + userId + "/groups",
@@ -213,14 +201,16 @@ var SN = function (social) { // social == 4
 
     };
 
-    that.makePayment = function(packId) {
-        console.log('makePayment innnn');
+    that.makePayment = function(packId, userSocialId) {
         var product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + ".html";
         console.log('payment product: ' + product);
+        var requestID = String(userSocialId) + 'a' + String(Date.now());
+        console.log('requestID: ' + requestID);
         FB.ui({
             method: 'pay',
             action: 'purchaseitem',
-            product: product
+            product: product,
+            request_id: requestID
         }, function(response) {
             console.log('Payment completed', response);
             if(response.status && response.status == 'completed') {
