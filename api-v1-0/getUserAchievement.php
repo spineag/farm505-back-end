@@ -21,6 +21,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $res['achievement_id'] = $dict['achievement_id'];
                     $res['resource_count'] = $dict['resource_count'];
                     $res['took_gift'] = $dict['took_gift'];
+                    $res['show_panel'] = $dict['show_panel'];
                     $resp[] = $res;
                 }
             } else {
