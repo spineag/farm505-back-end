@@ -124,12 +124,12 @@ var FarmNinjaFB = {
             errrep:true,
             error:function(num) {
                 console.error('error get user language with NUM error: ' + num);
-                FarmNinjaFB.setLanguage(2);
             }
         })
     },
 
     setLanguage: function(v) {
+        console.log('setLanguage: ' + v);
         v = parseInt(v);
         this.language = v;
         var bRU = document.getElementsByClassName('ru');
@@ -165,20 +165,37 @@ var FarmNinjaFB = {
             document.getElementById("farm_game").changeLanguage(v);
         }
     },
-    
-    saveAccessToken: function(uSocialId, aToken) {
+
+    saveTransaction: function(usid, packId, requestId) {
         $.ajax({
             type:'post',
-            url:'../php/api-v1-0/onFBAccessToken.php',
-            data: {channelId: 4, userSocialId: uSocialId, accessToken: aToken},
+            url:'../php/api-v1-0/onFBTransactionSave.php',
+            data: {userSocialId: usid, packId: packId, requestId: requestId},
             response:'text',
             success:function (v) {
-                console.log('on save aToken: ' + v);
+                console.log('on save transaction');
             },
             errrep:true,
             error:function(num) {
-                console.log('error save access token2: ' + num);
+                console.error('error saveTransaction with NUM error: ' + num);
+            }
+        })
+    },
+
+    finishTransaction: function(requestId, status) {
+        $.ajax({
+            type:'post',
+            url:'../php/api-v1-0/onFBTransactionRelease.php',
+            data: {requestId: requestId, status: status},
+            response:'text',
+            success:function (v) {
+                console.log('on release transaction');
+            },
+            errrep:true,
+            error:function(num) {
+                console.error('error releaseTransaction with NUM error: ' + num);
             }
         })
     }
+    
 };
