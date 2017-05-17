@@ -17,10 +17,10 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             $json_data['message'] = 'wrong hash';
             echo json_encode($json_data);
         } else {
-            $userId = filter_var($_POST['userId']);
+            $userId = filter_var($app->getUserId($channelId,$_POST['awayUserSocialId']));
             $shardDb = $app->getShardDb($userId, $channelId);
             try {
-                $result = $shardDb->query('UPDATE user_tree SET state=' . $_POST['state'] . ', fixed_user_id=' . $_POST['userSocialId'] . ', time_start =' . time() . ' WHERE id=' . $_POST['id']);
+                $result = $shardDb->query('UPDATE user_tree SET state=' . $_POST['state'] . ', fixed_user_id=' . $_POST['awayUserSocialId'] . ', time_start =' . time() . ' WHERE id=' . $_POST['id']);
                 if (!$result) {
                     $json_data['id'] = 2;
                     $json_data['status'] = 's314';
