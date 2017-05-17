@@ -196,6 +196,24 @@ var FarmNinjaFB = {
                 console.error('error releaseTransaction with NUM error: ' + num);
             }
         })
+    },
+
+    getVersionForItem: function(name, callback) {
+        $.ajax({
+            type:'post',
+            url:'../php/api-v1-0/getVersionForItem.php',
+            data: {item: name},
+            response:'text',
+            success:function (v) {
+                console.log(name + ' version: ' + v);
+               callback(v);
+            },
+            errrep:true,
+            error:function(num) {
+                console.error('error getVersionForItem with NUM error: ' + num);
+                callback(1);
+            }
+        })
     }
     
 };

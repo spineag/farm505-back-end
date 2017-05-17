@@ -204,37 +204,37 @@ var SN = function (social) { // social == 4
     };
 
     that.makePayment = function(packId, userSocialId) {
-        var product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + ".html";
-        console.log('payment product: ' + product);
-        var requestID = String(userSocialId) + 'z' + String(Date.now());
-        FarmNinjaFB.saveTransaction(userSocialId, packId, requestID);
-        console.log('requestID: ' + requestID);
-
-        FB.ui({
-            method: 'pay',
-            action: 'purchaseitem',
-            product: product
-            // request_id: requestID
-        }, function(response) {
-            console.log('Payment completed', response);
-            if (response.status) {
-                if (response.status == 'completed') {
-                    that.flash().successPayment();
-                    FarmNinjaFB.finishTransaction(requestID, 'complete');
-                } else if (response.status == 'initiated') {
-                    console.log('payment initiated status');
-                } else if (response.status == 'failed') {
-                    that.flash().failPayment();
-                    FarmNinjaFB.finishTransaction(requestID, 'failed');
+        FarmNinjaFB.getVersionForItem("pack" + packId, function(v) {
+            var product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + ".html?v=" + v;
+            console.log('payment product: ' + product);
+            var requestID = String(userSocialId) + 'z' + String(Date.now());
+            FarmNinjaFB.saveTransaction(userSocialId, packId, requestID);
+            FB.ui({
+                method: 'pay',
+                action: 'purchaseitem',
+                product: product
+                // request_id: requestID
+            }, function (response) {
+                console.log('Payment completed', response);
+                if (response.status) {
+                    if (response.status == 'completed') {
+                        that.flash().successPayment();
+                        FarmNinjaFB.finishTransaction(requestID, 'complete');
+                    } else if (response.status == 'initiated') {
+                        console.log('payment initiated status');
+                    } else if (response.status == 'failed') {
+                        that.flash().failPayment();
+                        FarmNinjaFB.finishTransaction(requestID, 'failed');
+                    } else {
+                        console.log('response.status: ' + response.status);
+                        that.flash().failPayment();
+                        FarmNinjaFB.finishTransaction(requestID, response.status);
+                    }
                 } else {
-                    console.log('response.status: ' + response.status);
-                    that.flash().failPayment();
-                    FarmNinjaFB.finishTransaction(requestID, response.status);
+                    FarmNinjaFB.finishTransaction(requestID, 'cancel');
                 }
-            } else {
-                FarmNinjaFB.finishTransaction(requestID, 'cancel');
-            }
-        } );
+            });
+        });
     }
 };
 
