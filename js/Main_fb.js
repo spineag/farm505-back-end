@@ -206,14 +206,15 @@ var SN = function (social) { // social == 4
     that.makePayment = function(packId, userSocialId) {
         FarmNinjaFB.getVersionForItem("pack" + packId, function(v) {
             var product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + ".html?v=" + v;
-            console.log('payment product: ' + product);
             var requestID = String(userSocialId) + 'z' + String(Date.now());
+            // var product = "https://505.ninja/php/api-v1-0/payment/fb/fbPackData.php?v=" + v + "&p=" + packId + "&r=" + requestID;
+            console.log('payment product: ' + product);
             FarmNinjaFB.saveTransaction(userSocialId, packId, requestID);
             FB.ui({
                 method: 'pay',
                 action: 'purchaseitem',
-                product: product
-                // request_id: requestID
+                product: product,
+                request_id: requestID
             }, function (response) {
                 console.log('Payment completed', response);
                 if (response.status) {
