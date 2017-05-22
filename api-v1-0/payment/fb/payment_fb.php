@@ -49,17 +49,17 @@ if ($method == 'GET' && $_GET['hub_verify_token'] === $verify_token) {
     if( $json["object"] && $json["object"] == "payments" ) {
         $payment_id = $json["entry"][0]["id"];
         try {
-            $mainDb = Application::getInstance()->getMainDb(4);
-            $session = new FacebookSession($app_token);
-            $request = new FacebookRequest(
-                $session,
-                'GET',
-                '/'.$payment_id . '?fields=user,actions,items'
-            );
-            $response = $request->execute();
-            $result = $response->getGraphObject(GraphObject::className());
-            $actions = $result->getPropertyAsArray('actions');
-            if( $actions[0]->getProperty('status') == 'completed' ){
+//            $mainDb = Application::getInstance()->getMainDb(4);
+//            $session = new FacebookSession($app_token);
+//            $request = new FacebookRequest(
+//                $session,
+//                'GET',
+//                '/'.$payment_id . '?fields=user,actions,items'
+//            );
+//            $response = $request->execute();
+//            $result = $response->getGraphObject(GraphObject::className());
+//            $actions = $result->getPropertyAsArray('actions');
+//            if( $actions[0]->getProperty('status') == 'completed' ){
 //                $user = $result->getProperty('user')['id'];
 //                $items = $result->getPropertyAsArray('items');
 //                $product = $items[0]->getProperty('product');
@@ -69,7 +69,7 @@ if ($method == 'GET' && $_GET['hub_verify_token'] === $verify_token) {
 //
 //                $time = date("Y-m-d H:i:s");
 //                $t = time();
-            }
+//            }
         } catch (FacebookRequestException $e) {
             error_log($e->getRawResponse());
 //            $time = date("Y-m-d H:i:s");
