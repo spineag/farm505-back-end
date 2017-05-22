@@ -60,24 +60,24 @@ if ($method == 'GET' && $_GET['hub_verify_token'] === $verify_token) {
             $result = $response->getGraphObject(GraphObject::className());
             $actions = $result->getPropertyAsArray('actions');
             if( $actions[0]->getProperty('status') == 'completed' ){
-                $user = $result->getProperty('user')['id'];
-                $items = $result->getPropertyAsArray('items');
-                $product = $items[0]->getProperty('product');
-                $packId = $pack_id_for_product[$product];
-                if (!$user) $user = -1;
-                if (!$packId) $packId = -1;
-
-                $time = date("Y-m-d H:i:s");
-                $t = time();
+//                $user = $result->getProperty('user')['id'];
+//                $items = $result->getPropertyAsArray('items');
+//                $product = $items[0]->getProperty('product');
+//                $packId = $pack_id_for_product[$product];
+//                if (!$user) $user = -1;
+//                if (!$packId) $packId = -1;
+//
+//                $time = date("Y-m-d H:i:s");
+//                $t = time();
             }
         } catch (FacebookRequestException $e) {
             error_log($e->getRawResponse());
-            $time = date("Y-m-d H:i:s");
-            $mainDb->query('INSERT INTO trans_error SET message ='.$e->getRawResponse().', time_try="'.$time.'"');
+//            $time = date("Y-m-d H:i:s");
+//            $mainDb->query('INSERT INTO trans_error SET message ='.$e->getRawResponse().', time_try="'.$time.'"');
         } catch (\Exception $e) {
             error_log($e);
-            $time = date("Y-m-d H:i:s");
-            $mainDb->query('INSERT INTO trans_error SET message ='.$e->getRawResponse().', time_try="'.$time.'"');
+//            $time = date("Y-m-d H:i:s");
+//            $mainDb->query('INSERT INTO trans_error SET message ='.$e->getRawResponse().', time_try="'.$time.'"');
         }
     }
 }

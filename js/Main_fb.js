@@ -23,7 +23,6 @@ var SN = function (social) { // social == 4
                 uSocialId = response.authResponse.userID;
                 try {
                     console.log('userSocialId: ' + uSocialId);
-                    FarmNinjaFB.saveAccessToken(uSocialId, accessT);
                     FarmNinjaFB.getVersion();
                 } catch(err) {
                     console.log('after init FB:: error with getVersion: ' + err);
@@ -67,6 +66,11 @@ var SN = function (social) { // social == 4
                                 u.locale = response.locale;
                                 u.picture = response.picture.data.url;
                                 u.id = userSocialId;
+                                if (u.locale == 'ru_RU' || u.locale == 'be_BY' || u.locale == 'uk_UA') {
+                                    FarmNinjaFB.setLanguage(1);
+                                } else {
+                                    FarmNinjaFB.setLanguage(2);
+                                }
                                 try {
                                     that.flash().getProfileHandler(u);
                                 } catch (err) {
@@ -150,10 +154,8 @@ var SN = function (social) { // social == 4
     };
 
     that.showInviteWindowAll = function(lang) {
-        var st ='Давай играть вместе';
-        if (lang == 2) st = "Let's play together!";
         FB.ui({method: 'apprequests',
-            message: st
+            message: "Let's play together!"
         }, function(response){
             console.log(response);
         });
@@ -202,23 +204,38 @@ var SN = function (social) { // social == 4
     };
 
     that.makePayment = function(packId, userSocialId) {
-        var product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + ".html";
-        console.log('payment product: ' + product);
-        var requestID = String(userSocialId) + 'a' + String(Date.now());
-        console.log('requestID: ' + requestID);
-        FB.ui({
-            method: 'pay',
-            action: 'purchaseitem',
-            product: product,
-            request_id: requestID
-        }, function(response) {
-            console.log('Payment completed', response);
-            if(response.status && response.status == 'completed') {
-                that.flash().successPayment();
-            } else {
-                that.flash().failPayment();
-            }
-        } );
+        FarmNinjaFB.getVersionForItem("pack" + packId, function(v) {
+            var product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + ".html?v=" + v;
+            var requestID = String(userSocialId) + 'z' + String(Date.now());
+            // var product = "https://505.ninja/php/api-v1-0/payment/fb/fbPackData.php?v=" + v + "&p=" + packId + "&r=" + requestID;
+            console.log('payment product: ' + product);
+            FarmNinjaFB.saveTransaction(userSocialId, packId, requestID);
+            FB.ui({
+                method: 'pay',
+                action: 'purchaseitem',
+                product: product,
+                request_id: requestID
+            }, function (response) {
+                console.log('Payment completed', response);
+                if (response.status) {
+                    if (response.status == 'completed') {
+                        that.flash().successPayment();
+                        FarmNinjaFB.finishTransaction(requestID, 'complete');
+                    } else if (response.status == 'initiated') {
+                        console.log('payment initiated status');
+                    } else if (response.status == 'failed') {
+                        that.flash().failPayment();
+                        FarmNinjaFB.finishTransaction(requestID, 'failed');
+                    } else {
+                        console.log('response.status: ' + response.status);
+                        that.flash().failPayment();
+                        FarmNinjaFB.finishTransaction(requestID, response.status);
+                    }
+                } else {
+                    FarmNinjaFB.finishTransaction(requestID, 'cancel');
+                }
+            });
+        });
     }
 };
 

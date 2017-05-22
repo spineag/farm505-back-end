@@ -35,38 +35,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_verify_token'] === $verify
     if( $json["object"] && $json["object"] == "payments" ) {
         $payment_id = $json["entry"][0]["id"];
         try {
-            $mainDb = Application::getInstance()->getMainDb(4);
-            $fb = new Facebook\Facebook([
-                'app_id'                => $app_id,
-                'app_secret'            => $app_secret,
-                'default_graph_version' => 'v2.9',
-            ]);
-
-            $response = $fb->get('/'.$payment_id.'?fields=actions,items', $app_token); // fuck
-
-            $result = $response->getGraphObject();
-            $actions = $result->getPropertyAsArray('actions');
-
-            if( $actions[0]->getProperty('status') == 'completed' ){
-                $items = $result->getPropertyAsArray('items');
-                $product = $items[0]->getProperty('product');
-                $packId = $pack_id_for_product[$product];
-                if (!$user) $user = -1;
-                if (!$packId) $packId = -1;
-
-                $time = date("Y-m-d H:i:s");
-                $t = time();
-                $mainDb->query('INSERT INTO transactions SET uid='.$userSocialId.', product_code='.$packId.', time_try="'.$time.'", unitime='.$t);
-                $mainDb->query('INSERT INTO transaction_lost SET uid='.$userSocialId.', product_code='.$packId.', time_buy="'.$time.'", unitime='.$t);
-            }
+//            $mainDb = Application::getInstance()->getMainDb(4);
+//            $fb = new Facebook\Facebook([
+//                'app_id'                => $app_id,
+//                'app_secret'            => $app_secret,
+//                'default_graph_version' => 'v2.9',
+//            ]);
+//
+//            $response = $fb->get('/'.$payment_id.'?fields=actions,items', $app_token); // fuck
+//
+//            $result = $response->getGraphObject();
+//            $actions = $result->getPropertyAsArray('actions');
+//
+//            if( $actions[0]->getProperty('status') == 'completed' ){
+//                $items = $result->getPropertyAsArray('items');
+//                $product = $items[0]->getProperty('product');
+//                $packId = $pack_id_for_product[$product];
+//                if (!$user) $user = -1;
+//                if (!$packId) $packId = -1;
+//
+//                $time = date("Y-m-d H:i:s");
+//                $t = time();
+//                $mainDb->query('INSERT INTO transactions SET uid='.$userSocialId.', product_code='.$packId.', time_try="'.$time.'", unitime='.$t);
+//                $mainDb->query('INSERT INTO transaction_lost SET uid='.$userSocialId.', product_code='.$packId.', time_buy="'.$time.'", unitime='.$t);
+//            }
         } catch (FacebookRequestException $e) {
             error_log($e->getRawResponse());
-            $time = date("Y-m-d H:i:s");
-            $mainDb->query('INSERT INTO trans_error SET message ='.$e->getRawResponse().', time_try="'.$time.'"');
+//            $time = date("Y-m-d H:i:s");
+//            $mainDb->query('INSERT INTO trans_error SET message ='.$e->getRawResponse().', time_try="'.$time.'"');
         } catch (\Exception $e) {
             error_log($e);
-            $time = date("Y-m-d H:i:s");
-            $mainDb->query('INSERT INTO trans_error SET message ='.$e->getRawResponse().', time_try="'.$time.'"');
+//            $time = date("Y-m-d H:i:s");
+//            $mainDb->query('INSERT INTO trans_error SET message ='.$e->getRawResponse().', time_try="'.$time.'"');
         }
     }
 }
