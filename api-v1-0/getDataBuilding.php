@@ -100,6 +100,7 @@ try {
                         $buildingItem['filter'] = $decor['filter_type'];
                         $buildingItem['group'] = $decor['filter_group'];
                         $buildingItem['color'] = $decor['color'];
+                        $buildingItem['daily_bonus'] = $decor['daily_bonus'];
                         break;
                     case 9: // DECOR_FULL_FENCE
                         $result = $mainDb->query("SELECT * FROM data_decor WHERE building_id =" . $dict['id']);
