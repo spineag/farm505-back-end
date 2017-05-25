@@ -111,6 +111,9 @@ var SN = function (social) { // social == 4
         FB.api("/ids=" + ids,
             {fields: 'id,last_name,first_name,picture.width(100).height(100)'},
             function (response) {
+                // console.log("getTempUsersInfoById response: ");
+                // var str = JSON.stringify(response, null, 4);
+                // console.log(str);
                 if (response && !response.error) {
                     try {
                         that.flash().getTempUsersInfoByIdHandler(response);
@@ -143,6 +146,9 @@ var SN = function (social) { // social == 4
             {fields: 'id,last_name,first_name,picture.width(100).height(100)'},
             function (response) {
                 if (response && !response.error) {
+                    // console.log("getFriendsByIds response: ");
+                    // var str = JSON.stringify(response, null, 4);
+                    // console.log(str);
                     try {
                         that.flash().getFriendsByIdsHandler(response);
                     } catch (err) {

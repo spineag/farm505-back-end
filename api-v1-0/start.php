@@ -5,9 +5,7 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
     $app = Application::getInstance();
-    if (isset($_POST['channelId'])) {
-        $channelId = (int)$_POST['channelId'];
-    } else $channelId = 2; // VK
+    $channelId = (int)$_POST['channelId'];
     $memcache = $app->getMemcache();
     $mainDb = $app->getMainDb($channelId);
 
@@ -52,7 +50,13 @@ if (isset($_POST['idSocial']) && !empty($_POST['idSocial'])) {
         } else {
             $sess = '0';
         }
-        $result = $mainDb->query('UPDATE users SET session_key='.$sess.' WHERE id='.$uid);
+        if ($channelId == 4) {
+            if (isset($_POST['photo']) && !empty($_POST['photo'])) $photo = $_POST['photo'];
+                else $photo = 'unknown';
+            $result = $mainDb->query('UPDATE users SET session_key=' . $sess . ',photo_url="' . $photo . '" WHERE id=' . $uid);
+        } else {
+            $result = $mainDb->query('UPDATE users SET session_key=' . $sess . ' WHERE id=' . $uid);
+        }
         if (!$result) {
             $json_data['status'] = 's221';
             $json_data['message'] = $e->getMessage();
