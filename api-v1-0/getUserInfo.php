@@ -49,7 +49,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $user['starter_pack'] = $u['starter_pack'];
                 $user['sale_pack'] = $u['sale_pack'];
                 $user['day'] = time();
-                if ($channelId == 2) {
+                if ($channelId == 2) { // VK
                     $user['cut_scene'] = $u['cut_scene'];
                     $user['mini_scene'] = $u['mini_scene'];
                     $user['daily_bonus_day'] = gmdate("d", $u['daily_bonus_day']);
@@ -92,7 +92,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $user['wall_train_item'] = gmdate("d", $uS['wall_train_item']);
                     $user['open_order'] = $u['open_order'];
 
-                    if ($channelId == 3) {
+                    if ($channelId == 3) { // OK
                         $result = $mainDb->query("SELECT * FROM transaction_lost WHERE uid=" . $socialId);
                         $ar = $result->fetchAll();
                         if ($ar && count($ar)) {
@@ -177,6 +177,8 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                                 $result = $mainDb->query('UPDATE transactions SET getted=1 WHERE uid=' . $socialId . ' AND unitime=' . $p['unitime']);
                             }
                         }
+                    } else if ($channelId == 4) { // FB
+                        $user['next_time_invite'] = $u['next_time_invite'];
                     }
                 }
 
