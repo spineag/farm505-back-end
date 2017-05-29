@@ -5,6 +5,7 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
 
 $app = Application::getInstance();
 $channelId = (int)$_POST['channelId'];
+$memcache = $app->getMemcache();
 $mainDb = $app->getMainDb($channelId);
 
 try {
