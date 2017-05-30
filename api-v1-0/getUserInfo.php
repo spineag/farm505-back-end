@@ -178,7 +178,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                             }
                         }
                     } else if ($channelId == 4) { // FB
-                        $user['next_time_invite'] = $u['next_time_invite'];
+                        $user['next_time_invite'] = $uS['next_time_invite'];
                     }
                 }
 

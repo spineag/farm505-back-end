@@ -161,7 +161,8 @@ var SN = function (social) { // social == 4
 
     that.showInviteWindowAll = function(lang) {
         FB.ui({method: 'apprequests',
-            message: "Let's play together!"
+            message: "Let's play together!",
+            filters: ["app_non_users"]
         }, function(response){
             console.log(response);
         });
@@ -169,7 +170,9 @@ var SN = function (social) { // social == 4
 
     that.showInviteWindowViral = function() {
         FB.ui({method: 'apprequests',
-            message: "Let's play together!"
+            message: "Let's play together!",
+            filters: ["app_non_users"],
+            max_recipients: 20
         }, function(response){
             console.log(response);
             if (response.to) {
@@ -225,8 +228,10 @@ var SN = function (social) { // social == 4
     that.makePayment = function(packId, userSocialId) {
         // FarmNinjaFB.getVersionForItem("pack" + packId, function(v) { v=version
             var product;
-            if (packId == 13 || packId == 1) {
-                product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + "a.html";
+            if (packId == 1) {
+                product = "https://505.ninja/php/api-v1-0/payment/fb/pack1a.html";
+            } else if (packId == 13) {
+                product = "https://505.ninja/php/api-v1-0/payment/fb/pack13b.html";
             } else {
                 product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + ".html";
             }
