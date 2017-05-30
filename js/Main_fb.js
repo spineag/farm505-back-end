@@ -167,6 +167,14 @@ var SN = function (social) { // social == 4
         });
     };
 
+    that.showInviteWindowViral = function() {
+        FB.ui({method: 'apprequests',
+            message: "Let's play together!"
+        }, function(response){
+            console.log(response);
+        });
+    };
+
     that.makeWallPost = function(uid, message, url){
         FB.api('me/feed',
             'post',
@@ -210,8 +218,13 @@ var SN = function (social) { // social == 4
     };
 
     that.makePayment = function(packId, userSocialId) {
-        FarmNinjaFB.getVersionForItem("pack" + packId, function(v) {
-            var product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + ".html?v=" + v;
+        // FarmNinjaFB.getVersionForItem("pack" + packId, function(v) { v=version
+            var product;
+            if (packId == 13 || packId == 1) {
+                product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + "a.html";
+            } else {
+                product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + ".html";
+            }
             var requestID = String(userSocialId) + 'z' + String(Date.now());
             // var product = "https://505.ninja/php/api-v1-0/payment/fb/fbPackData.php?v=" + v + "&p=" + packId + "&r=" + requestID;
             console.log('payment product: ' + product);
@@ -241,7 +254,7 @@ var SN = function (social) { // social == 4
                     FarmNinjaFB.finishTransaction(requestID, 'cancel');
                 }
             });
-        });
+        // });
     }
 };
 
