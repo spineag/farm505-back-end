@@ -172,6 +172,11 @@ var SN = function (social) { // social == 4
             message: "Let's play together!"
         }, function(response){
             console.log(response);
+            if (response.to) {
+                that.flash().onViralInvite(response.to);
+            } else {
+                that.flash().onViralInvite([]);
+            }
         });
     };
 
