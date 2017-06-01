@@ -21,7 +21,7 @@ if (isset($_POST['userSocialIds']) && !empty($_POST['userSocialIds'])) {
             try {
                 $ids = explode("&", $_POST['userSocialIds']);
                 $ids = join(',', $ids);
-                $result = $mainDb->query("SELECT id, social_id, level FROM users WHERE social_id IN (".$ids.")");
+                $result = $mainDb->query("SELECT id, social_id, last_visit_date, level FROM users WHERE social_id IN (".$ids.")");
                 $a = $result->fetchAll();
                 $arr = [];
                 foreach ($a as $value => $dict) {
@@ -29,6 +29,7 @@ if (isset($_POST['userSocialIds']) && !empty($_POST['userSocialIds'])) {
                     $b['social_id'] = $dict['social_id'];
                     $b['id'] = $dict['id'];
                     $b['level'] = $dict['level'];
+                    $b['last_visit_date'] = $dict['last_visit_date'];
                     $b['need_help'] = $app->checkNeedHelp($b['id'], $channelId);
                     if ($b['need_help'] == 0) $b['need_help'] = $app->checkNeedHelpTrain($b['id'], $channelId);
                     $arr[] = $b;

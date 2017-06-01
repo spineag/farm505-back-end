@@ -2,22 +2,18 @@
 
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
-
+if (isset($_POST['userId']) && !empty($_POST['userId'])) {
     $app = Application::getInstance();
+    $userId = filter_var($_POST['userId']);
     if (isset($_POST['channelId'])) {
         $channelId = (int)$_POST['channelId'];
     } else $channelId = 2; // VK
-    $mainDb = $app->getMainDb($channelId);
+    $shardDb = $app->getShardDb($userId, $channelId);
     try {
-        $result = $mainDb->query("SELECT * FROM data_achievement");
+        $result = $shardDb->query("SELECT * FROM user_miss WHERE user_id =" . $userId);
         if ($result) {
             $arr = $result->fetchAll();
-        } else {
-            $json_data['id'] = 2;
-            $json_data['status'] = 's301';
-            throw new Exception("Bad request to DB!");
         }
-
         $json_data['message'] = $arr;
         echo json_encode($json_data);
     }
@@ -27,3 +23,9 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJ
         $json_data['message'] = $e->getMessage();
         echo json_encode($json_data);
     }
+} else {
+    $json_data['id'] = 1;
+    $json_data['status'] = 's023';
+    $json_data['message'] = 'bad POST[userId]';
+    echo json_encode($json_data);
+}

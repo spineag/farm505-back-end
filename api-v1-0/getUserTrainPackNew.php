@@ -56,22 +56,23 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                     }
                     $arr[] = $arrInfo;
                 }
-
+//                $XPCount = ((int)$arr[0]['order_xp'] + (int)$arr[1]['order_xp'] + (int)$arr[2]['order_xp']) / 2;
+//                $COINSCount = (int)$arr[1]['order_price'] + (int)$arr[1]['order_price'] + (int)$arr[2]['order_price'] + 10 / 2;
                 //find the result XPCount and COINSCount
-                $tempArr=[];
-                foreach($arr as $key=>$arrT){
-                    $tempArr[$key]=$arr['order_xp'];
-                }
-                array_multisort($tempArr, SORT_NUMERIC, $arr);
-                $XPCount = (int)$arr[1]['order_xp'] + (int)$arr[2]['order_xp'];
-                $COINSCount = (int)$arr[1]['order_price'] + (int)$arr[2]['order_price'];
+//                $tempArr=[];
+//                foreach($arr as $key=>$arrT){
+//                    $tempArr[$key]=$arr['order_xp'];
+//                }
+//                array_multisort($tempArr, SORT_NUMERIC, $arr);
+//                $XPCount = (int)$arr[1]['order_xp'] + (int)$arr[2]['order_xp'];
+//                $COINSCount = (int)$arr[1]['order_price'] + (int)$arr[2]['order_price'];
 
-                $result = $shardDb->queryWithAnswerId('INSERT INTO user_train_pack SET user_id='.$userId.', count_xp='.$XPCount.', count_money='.$COINSCount);
+                $result = $shardDb->queryWithAnswerId('INSERT INTO user_train_pack SET user_id='.$userId);//', count_xp='.$XPCount.', count_money='.$COINSCount);
                 $packId = $result[1];
                 $arrMainPack = [];
                 $arrMainPack['id'] = $packId;
-                $arrMainPack['count_xp'] = $XPCount;
-                $arrMainPack['count_money'] = $COINSCount;
+//                $arrMainPack['count_xp'] = $XPCount;
+//                $arrMainPack['count_money'] = $COINSCount;
 
                 if ($userLevel >= 20) {
                     $countCells = 4;
@@ -79,12 +80,14 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                     $countCells = 3;
                 }
                 $arrPacks = [];
+//                $arrTempCountResource = [];
                 for ($i = 0; $i < 3; $i++) {
                     if ($userLevel >= 20) {
                         $countResource = (int)rand($arr[$i]['big_count']/3*2, $arr[$i]['big_count']);
                     } else {
                         $countResource = (int)rand($arr[$i]['small_count']/3*2, $arr[$i]['small_count']);
                     }
+//                    $arrTempCountResource[] = $countResource;
                     for ($k = 0; $k < $countCells; $k++) {
                         $p = [];
                         $result = $shardDb->queryWithAnswerId('INSERT INTO user_train_pack_item SET user_id='.$userId.', user_train_pack_id='.$packId.', resource_id='.$arr[$i]['id'].',
@@ -101,11 +104,14 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
                     }
                 }
             }
+            $XPCount = ((int)$arrPacks[0]['count_xp']  + (int)$arrPacks[3]['count_xp'] + (int)$arrPacks[6]['count_xp']) / 2;
+            $COINSCount = ((int)$arrPacks[0]['count_money']  + (int)$arrPacks[3]['count_money'] + (int)$arrPacks[6]['count_money']) * .6;
+            $result = $shardDb->query('UPDATE user_train_pack SET count_xp =' . $XPCount .', count_money =' . $COINSCount . ' WHERE user_id=' . $userId);
 
             $pack = [];
             $pack['id'] = $arrMainPack['id'];
-            $pack['count_xp'] = $arrMainPack['count_xp'];
-            $pack['count_money'] = $arrMainPack['count_money'];
+            $pack['count_xp'] = $XPCount;
+            $pack['count_money'] = $COINSCount;
             $pack['items'] = [];
             foreach ($arrPacks as $key => $d) {
                 $item = [];
