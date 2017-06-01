@@ -4,23 +4,25 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php'
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/defaultResponseJSON.php');
 
 $app = Application::getInstance();
-if (isset($_POST['channelId'])) {
-    $channelId = (int)$_POST['channelId'];
-} else $channelId = 2; // VK
+$channelId = (int)$_POST['channelId'];
+$memcache = $app->getMemcache();
 $mainDb = $app->getMainDb($channelId);
 
 try {
-    $result = $mainDb->query("SELECT * FROM data_sale_pack");
-    if ($result) {
-        $r = $result->fetch();
-
-    } else {
-        $json_data['id'] = 2;
-        $json_data['status'] = 's307';
-        throw new Exception("Bad request to DB!");
+    $res = $memcache->get('getDataSalePack'.$channelId);
+    if (!$res) {
+        $result = $mainDb->query("SELECT * FROM data_sale_pack");
+        if ($result) {
+            $res = $result->fetch();
+            $memcache->set('getDataSalePack'.$channelId, $res, MEMCACHED_DICT_TIME);
+        } else {
+            $json_data['id'] = 2;
+            $json_data['status'] = 's307';
+            throw new Exception("Bad request to DB!");
+        }
     }
 
-    $json_data['message'] = $r;
+    $json_data['message'] = $res;
     echo json_encode($json_data);
 }
 catch (Exception $e)

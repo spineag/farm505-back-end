@@ -161,9 +161,25 @@ var SN = function (social) { // social == 4
 
     that.showInviteWindowAll = function(lang) {
         FB.ui({method: 'apprequests',
-            message: "Let's play together!"
+            message: "Let's play together!",
+            filters: ["app_non_users"]
         }, function(response){
             console.log(response);
+        });
+    };
+
+    that.showInviteWindowViral = function() {
+        FB.ui({method: 'apprequests',
+            message: "Let's play together!",
+            filters: ["app_non_users"],
+            max_recipients: 20
+        }, function(response){
+            console.log(response);
+            if (response.to) {
+                that.flash().onViralInvite(response.to);
+            } else {
+                that.flash().onViralInvite([]);
+            }
         });
     };
 
@@ -210,8 +226,15 @@ var SN = function (social) { // social == 4
     };
 
     that.makePayment = function(packId, userSocialId) {
-        FarmNinjaFB.getVersionForItem("pack" + packId, function(v) {
-            var product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + ".html?v=" + v;
+        // FarmNinjaFB.getVersionForItem("pack" + packId, function(v) { v=version
+            var product;
+            if (packId == 1) {
+                product = "https://505.ninja/php/api-v1-0/payment/fb/pack1a.html";
+            } else if (packId == 13) {
+                product = "https://505.ninja/php/api-v1-0/payment/fb/pack13b.html";
+            } else {
+                product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + ".html";
+            }
             var requestID = String(userSocialId) + 'z' + String(Date.now());
             // var product = "https://505.ninja/php/api-v1-0/payment/fb/fbPackData.php?v=" + v + "&p=" + packId + "&r=" + requestID;
             console.log('payment product: ' + product);
@@ -241,7 +264,7 @@ var SN = function (social) { // social == 4
                     FarmNinjaFB.finishTransaction(requestID, 'cancel');
                 }
             });
-        });
+        // });
     }
 };
 

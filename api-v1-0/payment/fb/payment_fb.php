@@ -19,7 +19,7 @@ $app_id = "1936104599955682";
 $server_url = "https://505.ninja/php/api-v1-0/payment/fb/";
 
 $pack_id_for_product = [
-    $server_url.'pack1.html' => 1,
+    $server_url.'pack1a.html' => 1,
     $server_url.'pack2.html' => 2,
     $server_url.'pack3.html' => 3,
     $server_url.'pack4.html' => 4,
