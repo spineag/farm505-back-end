@@ -43,7 +43,7 @@ try {
         array_splice($partyALL, 20);
     $resp = [];
     foreach ($partyALL as $key => $party) {
-        $result2 = $mainDb->query('SELECT social_id FROM users WHERE id =' . $party['user_id']);
+        $result2 = $mainDb->query('SELECT level, name, last_name, social_id, social_id FROM users WHERE id =' . $party['user_id']);
         $partyTWO = $result2->fetch();
         $res = [];
         $res['id'] = $party['id'];
@@ -52,6 +52,10 @@ try {
         $res['took_gift'] = $party['took_gift'];
         $res['count_resource'] = $party['count_resource'];
         $res['social_id'] = $partyTWO['social_id'];
+        $res['photo_url'] = $partyTWO['photo_url'];
+        $res['level'] = $partyTWO['level'];
+        $res['name'] = $partyTWO['name'];
+        $res['last_name'] = $partyTWO['last_name'];
         $resp[] = $res;
     }
         array_push($resp, $countYour);
