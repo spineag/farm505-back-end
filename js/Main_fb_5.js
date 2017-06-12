@@ -229,7 +229,7 @@ var SN = function (social) { // social == 4
         // FarmNinjaFB.getVersionForItem("pack" + packId, function(v) { v=version
             var product;
             if (packId < 13) {
-                product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + "b.html";
+                product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + "c.html";
             } else if (packId == 13) {
                 product = "https://505.ninja/php/api-v1-0/payment/fb/pack13b.html";
             } else if (packId == 14) {
