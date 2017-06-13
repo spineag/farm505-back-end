@@ -261,6 +261,7 @@ var SN = function (social) { // social == 4
                         FarmNinjaFB.finishTransaction(requestID, response.status);
                     }
                 } else {
+                    that.flash().failPayment();
                     FarmNinjaFB.finishTransaction(requestID, 'cancel');
                 }
             });
