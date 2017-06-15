@@ -108,10 +108,17 @@ if (isset($_POST['userSocialId']) && !empty($_POST['userSocialId'])) {
             $COINSCount = ((int)$arrPacks[0]['count_money']  + (int)$arrPacks[3]['count_money'] + (int)$arrPacks[6]['count_money']) * .6;
             $result = $shardDb->query('UPDATE user_train_pack SET count_xp =' . $XPCount .', count_money =' . $COINSCount . ' WHERE user_id=' . $userId);
 
+            $result = $shardDb->query("SELECT * FROM user_train WHERE user_id =" . $userId);
+
             $pack = [];
             $pack['id'] = $arrMainPack['id'];
             $pack['count_xp'] = $XPCount;
             $pack['count_money'] = $COINSCount;
+            if ($result) {
+                $arr = $result->fetch();
+                $pack['state'] = $arr['state'];
+                $pack['time_work'] = time() - $arr['time_start'];
+            }
             $pack['items'] = [];
             foreach ($arrPacks as $key => $d) {
                 $item = [];
