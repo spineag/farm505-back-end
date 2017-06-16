@@ -48,7 +48,6 @@ var SN = function (social) { // social == 4
 
     that.getProfile = function(userSocialId) {
         FB.api("/me",
-            // {fields: 'id,last_name,first_name,gender,picture,birthday'},
             {access_token: accessT},
             function (response) {
                 if (response && !response.error) {
@@ -78,12 +77,6 @@ var SN = function (social) { // social == 4
                                     console.log('getProfileHandler error: ' + err)
                                 }
                                 console.log('locale: ' + response.locale);
-                                // FB.api('/me/picture?type=normal', function (response) {
-                                //     console.log('getProfileCallback_3 response: ' + response);
-                                //     u.picture = response.data.url;
-                                //     u.id = userSocialId;
-                                //     that.flash().getProfileHandler(u);
-                                // });
                             }
                         }
                     );
@@ -234,7 +227,7 @@ var SN = function (social) { // social == 4
             } else if (packId == 13) {
                 product = "https://505.ninja/php/api-v1-0/payment/fb/pack13b.html";
             } else if (packId == 14) {
-                product = "https://505.ninja/php/api-v1-0/payment/fb/pack14.html";
+                product = "https://505.ninja/php/api-v1-0/payment/fb/pack14a.html";
             }
             var requestID = String(userSocialId) + 'z' + String(Date.now());
             // var product = "https://505.ninja/php/api-v1-0/payment/fb/fbPackData.php?v=" + v + "&p=" + packId + "&r=" + requestID;
