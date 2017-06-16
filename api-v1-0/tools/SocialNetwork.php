@@ -146,6 +146,7 @@ class OkSocialNetwork implements SocialNetworkInterface {
 //        $this->secret_key = $socialNetworkParameters["secret_key"];
         $this->app_id = "1248696832";
         $this->secret_key = "864364A475EBF25367549586";
+        $this->public_key = "CBALJOGLEBABABABA";
     }
     public function getUsers($socialNetworkUid) {
         $path = "http://api.odnoklassniki.ru/fb.do?";
@@ -191,9 +192,9 @@ class OkSocialNetwork implements SocialNetworkInterface {
         if (is_array($notif)) {
             $expires = date("Y.m.d H:s", $notif['date_end']);
             $params = array(
-                'application_key=' . $this->app_id,
+                'application_key='.$this->public_key,
                 'text='.$notif['message'],
-                'format=json',
+                'format='.'json',
                 'expires='.$expires,
                 'last_access_range='.$notif['last_access_range']
             );
@@ -203,10 +204,10 @@ class OkSocialNetwork implements SocialNetworkInterface {
             $url = "http://api.odnoklassniki.ru/api/notifications/sendMass";
             $paramsAll = array(
                 'format' => 'json',
-                'application_key' => $this->app_id,
+                'application_key' => $this->public_key,
                 'text' => $notif['message'],
                 'expires' => $expires,
-                'last_access_range='.$notif['last_access_range'],
+                'last_access_range' => $notif['last_access_range'],
                 'sig' => $sig
             );
             $curl = curl_init();
