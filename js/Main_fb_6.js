@@ -56,7 +56,7 @@ var SN = function (social) { // social == 4
                     var u = {};
                     FB.api("/" + userSocialId,
                         {access_token: accessT},
-                        {fields: 'last_name,first_name,gender,birthday,picture.width(100).height(100),locale'},
+                        {fields: 'last_name,first_name,gender,birthday,picture.width(100).height(100),locale,timezone'},
                         function (response) {
                             if (response && !response.error) {
                                 u.first_name = response.first_name;
@@ -66,6 +66,7 @@ var SN = function (social) { // social == 4
                                 u.locale = response.locale;
                                 u.picture = response.picture.data.url;
                                 u.id = userSocialId;
+                                u.timezone = response.timezone;
                                 if (u.locale == 'ru_RU' || u.locale == 'be_BY' || u.locale == 'uk_UA') {
                                     FarmNinjaFB.setLanguage(1);
                                 } else {
