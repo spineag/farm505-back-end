@@ -17,13 +17,11 @@ $fb = new Facebook\Facebook([
     'default_graph_version' => 'v2.9',
 ]);
 
-$txt = 'New event "Lexy\'s Day" just started. Collect eggs and get great rewards!';
+$txt = 'New event just started. Complete orders and get double XP!';
 
 $result = $mainDb->query("SELECT COUNT(social_id) as c FROM users");
 $ar = $result->fetch();
 $countAll = (int)$ar['c'];
-
-//echo $countAll;
 
 $idStart = 2;
 $idFinish = 102;
