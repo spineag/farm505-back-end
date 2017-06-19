@@ -65,7 +65,14 @@ var SN = function (social) { // social == 4
                                 u.locale = response.locale;
                                 u.picture = response.picture.data.url;
                                 u.id = userSocialId;
-                                u.timezone = response.timezone;
+                                if (response.timezone) {
+                                    var t = Number(response.timezone);
+                                    if (t < -12) t = t + 24;
+                                    if (t > 12) t = t - 24;
+                                    u.timezone = t;
+                                } else {
+                                    u.timezone = 0;
+                                }
                                 if (u.locale == 'ru_RU' || u.locale == 'be_BY' || u.locale == 'uk_UA') {
                                     FarmNinjaFB.setLanguage(1);
                                 } else {
