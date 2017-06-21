@@ -17,7 +17,7 @@ $fb = new Facebook\Facebook([
     'default_graph_version' => 'v2.9',
 ]);
 
-$txt = 'New event just started. Complete orders and get double XP!';
+$txt = 'Mark is running out of honey paints! Help Mark to collect as much honey as possible!';
 
 $result = $mainDb->query("SELECT COUNT(social_id) as c FROM users");
 $ar = $result->fetch();
