@@ -34,7 +34,18 @@ $lastTime2 = time() - 172800; // 2 days
 $result = $mainDb->query("SELECT social_id FROM users WHERE last_visit_date > ".$lastTime1." AND last_visit_date < ".$lastTime2." AND (timezone = ".$t1." || timezone = ".$t2.")");
 $ar = $result->fetchAll();
 
-$text = 'Today is a good day!';
+$r = rand(1, 5);
+if ($r == 1) {
+    $text = 'Where have you been for so long? We have missed you so much here in Woolly Valley!';
+} elseif ($r == 2) {
+    $text = 'Hello! We\'ve missed you so much here in the Woolly Valley!';
+} elseif ($r == 3) {
+    $text = 'Visit the Handicraft Land now! We do need you help!';
+} elseif ($r == 4) {
+    $text = 'Visit the Woolly Valley! There are new and profitable orders in the Market this time!';
+} else {
+    $text = 'We haven\'t seen you for so long! All the citizens of the Handicraft Land are waiting for you to come around for a visit!';
+}
 
 if ($ar) {
     $ids = [];
