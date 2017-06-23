@@ -70,6 +70,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     $user['wall_order_item_time'] = gmdate("d", $u['wall_order_item_time']);
                     $user['wall_train_item'] = gmdate("d", $u['wall_train_item']);
                     $user['open_order'] = $u['open_order'];
+                    $user['announcement'] = $u['announcement'];
                 } else { // == 3 || == 4 
                     $result = $shardDb->query("SELECT * FROM user_info WHERE user_id =" . $_POST['userId']);
                     $uS = $result->fetch();
@@ -83,6 +84,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                     } else {
                         $user['mouse_day'] = gmdate("d", $uS['mouse_day']);
                     }
+                    $user['announcement'] = $uS['announcement'];
                     $user['mouse_count'] = $uS['mouse_count'];
                     $user['time_paper'] = $uS['time_paper'];
                     $user['in_papper'] = $uS['in_papper'];
