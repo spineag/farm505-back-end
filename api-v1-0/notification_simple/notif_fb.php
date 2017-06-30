@@ -17,22 +17,33 @@ $fb = new Facebook\Facebook([
     'default_graph_version' => 'v2.9',
 ]);
 
-$txt = 'Mark is running out of honey paints! Help Mark to collect as much honey as possible!';
+$lastTime = time() - 259200; // 3 days
+$txt = 'Let\'s go back to game asap! Woolly Valley has launched a new event for you. Meet a Independence Day event!';
 
-$result = $mainDb->query("SELECT COUNT(social_id) as c FROM users");
-$ar = $result->fetch();
-$countAll = (int)$ar['c'];
+$arAll = [];
+$result = $mainDb->query('SELECT social_id FROM users WHERE last_visit_date >'.$lastTime.' AND level >= 6 AND social_id');
+$ar = $result->fetchAll();
+$arAll = $ar;
 
-$idStart = 2;
-$idFinish = 102;
-while ($countAll > 0) {
-    usleep(250000);
-    $result = $mainDb->query("SELECT social_id FROM users WHERE id > ".$idStart." AND id <= $idFinish");
-    $ar = $result->fetchAll();
-    if ($ar) {
-        foreach ($ar as $key => $value) {
+$result = $mainDb->query('SELECT social_id FROM users WHERE timezone >= -10 AND timezone <= -4');
+$ar = $result->fetchAll();
+$arAll = array_merge($arAll, $ar);
+
+$result = $mainDb->query('SELECT social_id FROM users WHERE sale_pack = 1 OR starter_pack = 1');
+$ar = $result->fetchAll();
+$arAll = array_merge($arAll, $ar);
+
+$result = $mainDb->query('SELECT social_id FROM farm_fb.users WHERE id IN (SELECT user_id FROM farm_fb_1.user_party where count_resource > 14)');
+$ar = $result->fetchAll();
+$arAll = array_merge($arAll, $ar);
+
+while (count($arLL) > 1) {
+    usleep(200000);
+    $arr = array_splice($arAll,0,50);
+    if ($arr) {
+        foreach ($arr as $key => $value) {
             try {
-                if ($value['social_id'] && $value['social_id'] != 'null') {
+                if ($value['social_id'] && $value['social_id'] != 'null' && $value['social_id'] != '1') {
                     $sendNotif = $fb->post('/' . $value['social_id'] . '/notifications', array('href' => '?notif', 'template' => $txt), $app_token);
                 }
             } catch (Exception $e) {
@@ -40,9 +51,32 @@ while ($countAll > 0) {
             }
         }
     }
-    $countAll = $countAll - 100;
-    $idStart = $idStart + 100;
-    $idFinish = $idFinish + 100;
 }
+
+//$result = $mainDb->query("SELECT COUNT(social_id) as c FROM users");
+//$ar = $result->fetch();
+//$countAll = (int)$ar['c'];
+//
+//$idStart = 2;
+//$idFinish = 102;
+//while ($countAll > 0) {
+//
+//    $result = $mainDb->query("SELECT social_id FROM users WHERE id > ".$idStart." AND id <= $idFinish AND last_visit_date >".$lastTime);
+//    $ar = $result->fetchAll();
+//    if ($ar) {
+//        foreach ($ar as $key => $value) {
+//            try {
+//                if ($value['social_id'] && $value['social_id'] != 'null') {
+//                    $sendNotif = $fb->post('/' . $value['social_id'] . '/notifications', array('href' => '?notif', 'template' => $txt), $app_token);
+//                }
+//            } catch (Exception $e) {
+//
+//            }
+//        }
+//    }
+//    $countAll = $countAll - 100;
+//    $idStart = $idStart + 100;
+//    $idFinish = $idFinish + 100;
+//}
 
 
