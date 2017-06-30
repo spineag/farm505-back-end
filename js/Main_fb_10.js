@@ -234,7 +234,7 @@ var SN = function (social) { // social == 4
             } else if (packId == 13) {
                 product = "https://505.ninja/php/api-v1-0/payment/fb/pack13b.html";
             } else if (packId == 14) {
-                product = "https://505.ninja/php/api-v1-0/payment/fb/pack14a.html";
+                product = "https://505.ninja/php/api-v1-0/payment/fb/pack14b.html";
             }
             var requestID = String(userSocialId) + 'z' + String(Date.now());
             // var product = "https://505.ninja/php/api-v1-0/payment/fb/fbPackData.php?v=" + v + "&p=" + packId + "&r=" + requestID;
