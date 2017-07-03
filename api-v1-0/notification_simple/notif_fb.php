@@ -21,7 +21,7 @@ $lastTime = time() - 259200; // 3 days
 $txt = 'Let\'s go back to game asap! Woolly Valley has launched a new event for you. Meet a Independence Day event!';
 
 $arAll = [];
-$result = $mainDb->query('SELECT social_id FROM users WHERE last_visit_date >'.$lastTime.' AND level >= 6 AND social_id');
+$result = $mainDb->query('SELECT social_id FROM users WHERE last_visit_date >'.$lastTime.' AND level >= 6');
 $ar = $result->fetchAll();
 $arAll = $ar;
 
@@ -33,11 +33,9 @@ $result = $mainDb->query('SELECT social_id FROM users WHERE sale_pack = 1 OR sta
 $ar = $result->fetchAll();
 $arAll = array_merge($arAll, $ar);
 
-$result = $mainDb->query('SELECT social_id FROM farm_fb.users WHERE id IN (SELECT user_id FROM farm_fb_1.user_party where count_resource > 14)');
-$ar = $result->fetchAll();
-$arAll = array_merge($arAll, $ar);
-
-while (count($arLL) > 1) {
+$countSend = 0;
+$errors = 0;
+while (count($arAll) > 1) {
     usleep(200000);
     $arr = array_splice($arAll,0,50);
     if ($arr) {
@@ -45,13 +43,15 @@ while (count($arLL) > 1) {
             try {
                 if ($value['social_id'] && $value['social_id'] != 'null' && $value['social_id'] != '1') {
                     $sendNotif = $fb->post('/' . $value['social_id'] . '/notifications', array('href' => '?notif', 'template' => $txt), $app_token);
+                    $countSend++;
                 }
             } catch (Exception $e) {
-
+                    $errors++;
             }
         }
     }
 }
+echo 'count:'.$countSend.'  errors:'.$errors;
 
 //$result = $mainDb->query("SELECT COUNT(social_id) as c FROM users");
 //$ar = $result->fetch();
