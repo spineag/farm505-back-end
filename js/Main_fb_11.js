@@ -31,7 +31,7 @@ var SN = function (social) { // social == 4
             } else {
                 console.log('not auth');
             }
-        }, {scope:'publish_actions,user_friends'});
+        }, {scope:'user_friends,publish_actions', return_scopes: true});
     };
 
     (function(d, s, id){
@@ -96,7 +96,8 @@ var SN = function (social) { // social == 4
         FB.api("/" + userSocialId + "/friends",
             {fields: 'id,last_name,first_name,picture.width(100).height(100)'},
             function (response) {
-                if (response && !response.error) {
+                console.log('getAllFriends response: ', response);
+                if (response) {
                     try {
                         that.flash().getAllFriendsHandler(response);
                     } catch (err) {
@@ -115,11 +116,12 @@ var SN = function (social) { // social == 4
                 // console.log("getTempUsersInfoById response: ");
                 // var str = JSON.stringify(response, null, 4);
                 // console.log(str);
-                if (response && !response.error) {
+                if (response) {
                     try {
                         that.flash().getTempUsersInfoByIdHandler(response);
                     } catch (err) {
-                        console.log('getTempUsersInfoById error: ' + err)
+                        console.log('getTempUsersInfoById error: ' + err);
+                        console.log(response);
                     }
                 }
             }
@@ -130,11 +132,13 @@ var SN = function (social) { // social == 4
         FB.api("/1936104599955682",
             {"fields": "context.fields(friends_using_app)"},
             function (response) {
-                if (response && !response.error) {
+                console.log('getAppFriends response: ', response);
+                if (response) {
                     try {
                         that.flash().getAppUsersHandler(response);
                     } catch (err) {
-                        console.log('getAppUsersHandler error: ' + err)
+                        console.log('getAppUsersHandler error: ' + err);
+                        console.log(response);
                     }
                 }
             }
@@ -153,7 +157,8 @@ var SN = function (social) { // social == 4
                     try {
                         that.flash().getFriendsByIdsHandler(response);
                     } catch (err) {
-                        console.log('getFriendsByIdsHandler error: ' + err)
+                        console.log('getFriendsByIdsHandler error: ' + err);
+                        console.log(response);
                     }
                 }
             }
@@ -198,13 +203,15 @@ var SN = function (social) { // social == 4
                     try {
                         that.flash().wallPostSave();
                     } catch (err) {
-                        console.log('wallPostSave error: ' + err)
+                        console.log('wallPostSave error: ' + err);
+                        console.log(response);
                     }
                 } else {
                     try {
                         that.flash().wallPostCancel();
                     } catch (err) {
-                        console.log('wallPostCancel error: ' + err)
+                        console.log('wallPostCancel error: ' + err);
+                        console.log(response);
                     }
                 }
             }
@@ -237,7 +244,6 @@ var SN = function (social) { // social == 4
                 product = "https://505.ninja/php/api-v1-0/payment/fb/pack14b.html";
             }
             var requestID = String(userSocialId) + 'z' + String(Date.now());
-            // var product = "https://505.ninja/php/api-v1-0/payment/fb/fbPackData.php?v=" + v + "&p=" + packId + "&r=" + requestID;
             console.log('payment product: ' + product);
             FarmNinjaFB.saveTransaction(userSocialId, packId, requestID);
             FB.ui({
@@ -261,6 +267,9 @@ var SN = function (social) { // social == 4
                         that.flash().failPayment();
                         FarmNinjaFB.finishTransaction(requestID, response.status);
                     }
+                } else if (response.error_code) {
+                    that.flash().failPayment();
+                    FarmNinjaFB.finishTransaction(requestID, response.error_code + ': ' +response.error_message);
                 } else {
                     that.flash().failPayment();
                     FarmNinjaFB.finishTransaction(requestID, 'cancel');

@@ -12,7 +12,7 @@ if ($curHour == 8 || $curHour == 14) {
 
     $vkTimeRestriction = time() - 2592000; // 1 Month
     $vkTimeOffline = time() - 172800; // 2 days
-    $db = $mainDb->query("SELECT social_id FROM users WHERE last_visit_date > " . $vkTimeRestriction . " AND last_visit_date < " . $vkTimeOffline . " ORDER BY RAND() DESC LIMIT 1000");
+    $db = $mainDb->query("SELECT social_id FROM users WHERE last_visit_date > " . $vkTimeRestriction . " AND last_visit_date < " . $vkTimeOffline);
     $ar = $db->fetchAll();
     foreach ($ar as $key => $value) {
         $users[] = $value['social_id'];

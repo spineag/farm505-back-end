@@ -20,6 +20,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
         } else {
             try {
                 $result = $shardDb->query('UPDATE user_quest SET date_finish = '.time().', is_done = 1 WHERE id='.$_POST['dbID']);
+                $result = $shardDb->query('UPDATE user_quest_task SET is_done = 1 WHERE user_id='.$_POST["userId"].' AND quest_id='.$_POST["dbID"]);
                 if (!$result) {
                     $json_data['id'] = 2;
                     $json_data['status'] = 's449';
