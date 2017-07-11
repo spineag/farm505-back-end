@@ -16,7 +16,7 @@ var SN = function (social) { // social == 3
     that.flash = function(){
         return document.getElementById("farm_game");
     };
-
+    
     that.getProfile = function(userSocialId, params) {
         var fields = params.join();
         console.log('OK: try get user profile');

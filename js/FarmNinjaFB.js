@@ -4,11 +4,11 @@ var FarmNinjaFB = {
     version: -1,
     language: 1,
 
-    getVersion: function() {
+    getVersion: function(uSocialId) {
         $.ajax({
             type:'post',
             url:'../php/api-v1-0/getVersionClient.php',
-            data: "channelId=4",
+            data: "channelId=4&userSocialId="+uSocialId,
             response:'text',
             success:function (v) {
                 console.log('current version: ' + v);

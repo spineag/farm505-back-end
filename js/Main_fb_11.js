@@ -23,7 +23,7 @@ var SN = function (social) { // social == 4
                 uSocialId = response.authResponse.userID;
                 try {
                     console.log('userSocialId: ' + uSocialId);
-                    FarmNinjaFB.getVersion();
+                    FarmNinjaFB.getVersion(uSocialId);
                 } catch(err) {
                     console.log('after init FB:: error with getVersion: ' + err);
                 }

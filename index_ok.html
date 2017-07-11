@@ -8,7 +8,7 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript" src="//api.ok.ru/js/fapi5.js"></script>
     <script type="text/javascript" src="/js/swfobject.js"></script>
-    <script type="text/javascript" src="/js/FarmNinja.js"></script>
+    <script type="text/javascript" src="/js/FarmNinjaOK.js"></script>
     <script type="text/javascript" src="/js/Main_ok.js"></script>
     <script type="text/javascript">
         var sn = new SN(3);
@@ -36,7 +36,7 @@
     <script> function makeWallPost(uid, message, url) { sn.makeWallPost(uid, message, url); }  </script>
     <script> function getTempUsersInfoById(uids, params) { sn.getTempUsersInfoById(uids, params); }  </script>
     <script> function isInGroup(groupId, userId) { sn.isInGroup(groupId, userId); }  </script>
-    <script> function reloadGame() { FarmNinja.reload(); }  </script>
+    <script> function reloadGame() { FarmNinjaOK.reload(); }  </script>
 
 </head>
 
@@ -66,8 +66,7 @@
     </div>
     </div>
 <script>
-    FarmNinja.setChannel(3);
-    FarmNinja.getVersion();
+    FarmNinjaOK.initOK();
 </script>
 </body>
 </html>

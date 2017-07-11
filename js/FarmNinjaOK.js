@@ -1,11 +1,11 @@
-var FarmNinja = {
+var FarmNinjaOK = {
     user_sid: false,
     swf: {},
     version: -1,
-    channel: 2,
+    channel: 3,
     language: 1,
 
-    init: function () {
+    initOK: function () {
         var url = document.location.toString().split('?');
         var flashvars = {
             data: (url[1] ? '&' + url[1] : ''),
@@ -26,13 +26,15 @@ var FarmNinja = {
             name: "farm_game"
         };
         if (this.version == -1) {
-            var st = "channelId=2";
             var arrStr = params.flashvars.data.split("&");
             var t = '0';
+            var wasFind = false;
             for (var i = 0; i < arrStr.length; i++) {
                 t = arrStr[i];
-                if (t.indexOf('viewer_id=') != -1) { t = t.substring(10); st = st + "&userSocialId=" + t;  break;  }
+                if (t.indexOf('logged_user_id=') != -1) { wasFind = true;  break;  }
             }
+            var st = "channelId=3";
+            if (wasFind) {  t = t.substring(15); st = st + "&userSocialId=" + t; }
             $.ajax({
                 type: 'post',
                 url: '../php/api-v1-0/getVersionClient.php',
@@ -48,7 +50,7 @@ var FarmNinja = {
                             '<img src="https://505.ninja/images/404/window404.png" alt="На ремонте" />' +
                             '</div>' +
                             '</div>');
-                    } else swfobject.embedSWF('client/farm' + this.version + '.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
+                    } else swfobject.embedSWF('client_ok/farm' + this.version + '.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
                 },
                 errrep: true,
                 error: function (num) {
@@ -56,7 +58,7 @@ var FarmNinja = {
                 }
             });
         } else {
-            swfobject.embedSWF('client/farm' + this.version + '.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
+            swfobject.embedSWF('client_ok/farm' + this.version + '.swf', 'flash_container', '100%', 640, '13.0', null, flashvars, params, attributes, this.callbackFn);
         }
     },
 
@@ -82,7 +84,7 @@ var FarmNinja = {
             '</a>' +
             '</div>' +
             '</div>');
-        this.init();
+        this.initOK();
     },
 
     getUserGAcid: function () {
