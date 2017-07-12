@@ -4,6 +4,25 @@ var SN = function (social) { // social == 4
     var that = this;
     var accessT = '';
     var uSocialId = '';
+    var browserName = '0';
+    var versionBrowser = '0';
+    var OS = '0';
+    var dataBrowser = [ { string: navigator.userAgent, subString: "Chrome", identity: "Chrome" },
+                        { string: navigator.userAgent, subString: "OmniWeb", versionSearch: "OmniWeb/", identity: "OmniWeb" },
+                        { string: navigator.vendor, subString: "Apple", identity: "Safari", versionSearch: "Version" },
+                        { prop: window.opera, identity: "Opera", versionSearch: "Version" },
+                        { string: navigator.vendor, subString: "iCab", identity: "iCab" },
+                        { string: navigator.vendor, subString: "KDE",  identity: "Konqueror" },
+                        { string: navigator.userAgent, subString: "Firefox", identity: "Firefox" },
+                        { string: navigator.vendor, subString: "Camino", identity: "Camino" },
+                        { string: navigator.userAgent, subString: "Netscape", identity: "Netscape" }, /* For Newer Netscapes (6+) */
+                        { string: navigator.userAgent, subString: "MSIE", identity: "Internet Explorer", versionSearch: "MSIE" },
+                        { string: navigator.userAgent, subString: "Gecko", identity: "Mozilla", versionSearch: "rv" },
+                        { string: navigator.userAgent, subString: "Mozilla", identity: "Netscape", versionSearch: "Mozilla"} ];  /* For Older Netscapes (4-) */
+    var dataOS = [  { string: navigator.platform, subString: "Win", identity: "Windows" },
+                    { string: navigator.platform, subString: "Mac", identity: "Mac" },
+                    { string: navigator.userAgent, subString: "iPhone", identity: "iPhone/iPod" },
+                    { string: navigator.platform, subString: "Linux", identity: "Linux" } ];
 
     console.log('init fb social');
 
@@ -27,7 +46,11 @@ var SN = function (social) { // social == 4
                 } catch(err) {
                     console.log('after init FB:: error with getVersion: ' + err);
                 }
-
+                try {
+                    that.findBrowser();
+                } catch(err) {
+                    console.log('findBrowser error: ' + err);
+                }
             } else {
                 console.log('not auth');
             }
@@ -44,6 +67,34 @@ var SN = function (social) { // social == 4
 
     that.flash = function(){
         return document.getElementById("farm_game");
+    };
+
+    that.findBrowser = function() {
+        browserName = that.searchString(dataBrowser) || "An unknown browser";
+        versionBrowser = that.searchVersion(navigator.userAgent) || that.searchVersion(navigator.appVersion) || "an unknown version";
+        OS = that.searchString(dataOS) || "an unknown OS";
+        // console.log('browser: ' + browserName);
+        // console.log('browser version: ' + versionBrowser);
+        // console.log('OS: ' + OS);
+    };
+
+    that.searchString = function (data) {
+        for (var i=0;i<data.length;i++) {
+            var dataString = data[i].string;
+            var dataProp = data[i].prop;
+            this.versionSearchString = data[i].versionSearch || data[i].identity;
+            if (dataString) {
+                if (dataString.indexOf(data[i].subString) != -1)
+                    return data[i].identity;
+            } else if (dataProp)
+                return data[i].identity;
+        }
+    };
+
+    that.searchVersion = function(dataString) {
+        var index = dataString.indexOf(this.versionSearchString);
+        if (index == -1) return;
+        return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
     };
 
     that.getProfile = function(userSocialId) {
@@ -113,9 +164,6 @@ var SN = function (social) { // social == 4
         FB.api("/ids=" + ids,
             {fields: 'id,last_name,first_name,picture.width(100).height(100)'},
             function (response) {
-                // console.log("getTempUsersInfoById response: ");
-                // var str = JSON.stringify(response, null, 4);
-                // console.log(str);
                 if (response) {
                     try {
                         that.flash().getTempUsersInfoByIdHandler(response);
@@ -151,9 +199,6 @@ var SN = function (social) { // social == 4
             {fields: 'id,last_name,first_name,picture.width(100).height(100)'},
             function (response) {
                 if (response && !response.error) {
-                    // console.log("getFriendsByIds response: ");
-                    // var str = JSON.stringify(response, null, 4);
-                    // console.log(str);
                     try {
                         that.flash().getFriendsByIdsHandler(response);
                     } catch (err) {
@@ -245,7 +290,7 @@ var SN = function (social) { // social == 4
             }
             var requestID = String(userSocialId) + 'z' + String(Date.now());
             console.log('payment product: ' + product);
-            FarmNinjaFB.saveTransaction(userSocialId, packId, requestID);
+            FarmNinjaFB.saveTransaction(userSocialId, packId, requestID, browserName, versionBrowser, OS);
             FB.ui({
                 method: 'pay',
                 action: 'purchaseitem',

@@ -166,11 +166,11 @@ var FarmNinjaFB = {
         }
     },
 
-    saveTransaction: function(usid, packId, requestId) {
+    saveTransaction: function(usid, packId, requestId, browserName, versionBrowser, OS) {
         $.ajax({
             type:'post',
             url:'../php/api-v1-0/onFBTransactionSave.php',
-            data: {userSocialId: usid, packId: packId, requestId: requestId},
+            data: {userSocialId: usid, packId: packId, requestId: requestId, browserName: browserName, versionBrowser: versionBrowser, OS: OS},
             response:'text',
             success:function (v) {
                 console.log('on save transaction');
