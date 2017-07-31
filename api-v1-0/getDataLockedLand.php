@@ -17,18 +17,18 @@ $mainDb = $app->getMainDb($channelId);
 $memcache = $app->getMemcache();
 
 try {
-    if ($channelId == 2) {
-        $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id = " . $_POST['userId']);
-        $u = $result->fetchAll();
-        $u = $u[0]['unlocked_land'];
-        $arrLocked = explode("&", $u);
-    } else { // == 3 || == 4
-        $shardDb = $app->getShardDb($_POST['userId'], $channelId);
-        $result = $shardDb->query("SELECT unlocked_land FROM user_info WHERE user_id = " . $_POST['userId']);
-        $u = $result->fetchAll();
-        $u = $u[0]['unlocked_land'];
-        $arrLocked = explode("&", $u);
-    }
+//    if ($channelId == 2) {
+//        $result = $mainDb->query("SELECT unlocked_land FROM users WHERE id = " . $_POST['userId']);
+//        $u = $result->fetchAll();
+//        $u = $u[0]['unlocked_land'];
+//        $arrLocked = explode("&", $u);
+//    } else { // == 3 || == 4
+//        $shardDb = $app->getShardDb($_POST['userId'], $channelId);
+//        $result = $shardDb->query("SELECT unlocked_land FROM user_info WHERE user_id = " . $_POST['userId']);
+//        $u = $result->fetchAll();
+//        $u = $u[0]['unlocked_land'];
+//        $arrLocked = explode("&", $u);
+//    }
 
     $lands = $memcache->get('getDataLockedLand'.$channelId);
     if (!$lands) {
@@ -45,7 +45,7 @@ try {
     $resp = [];
     if (!empty($lands)) {
         foreach ($lands as $key => $land) {
-            if (in_array($land['map_building_id'], $arrLocked)) continue;
+//            if (in_array($land['map_building_id'], $arrLocked)) continue;
             $resp[] = $land;
         }
     } else {
