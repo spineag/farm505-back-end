@@ -298,7 +298,7 @@ var SN = function (social) { // social == 4
                 request_id: requestID
             }, function (response) {
                 console.log('Payment completed', response);
-                if (response.status) {
+                if (response && response.status) {
                     if (response.status == 'completed') {
                         that.flash().successPayment();
                         FarmNinjaFB.finishTransaction(requestID, 'complete');
@@ -312,9 +312,12 @@ var SN = function (social) { // social == 4
                         that.flash().failPayment();
                         FarmNinjaFB.finishTransaction(requestID, response.status);
                     }
-                } else if (response.error_code) {
+                } else if (response && response.error_code) {
                     that.flash().failPayment();
-                    FarmNinjaFB.finishTransaction(requestID, response.error_code + ': ' +response.error_message);
+                    FarmNinjaFB.finishTransaction(requestID, response.error_code + ': ' + response.error_message);
+                } else if (!response) {
+                    that.flash().failPayment();
+                    FarmNinjaFB.finishTransaction(requestID, 'null response');
                 } else {
                     that.flash().failPayment();
                     FarmNinjaFB.finishTransaction(requestID, 'cancel');

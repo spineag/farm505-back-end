@@ -18,7 +18,7 @@ $fb = new Facebook\Facebook([
 ]);
 
 $lastTime = time() - 259200; // 3 days
-$txt = 'Molly needs lots of milk! Hurry up to collect as much milk as you can. Eventually you can exchange it for unique prizes.';
+$txt = 'Let\'s organize a huge summer Pancake Breakfast in the Handicraft Land!';
 
 $arAll = [];
 $result = $mainDb->query('SELECT social_id FROM users WHERE last_visit_date >'.$lastTime.' AND level >= 6');

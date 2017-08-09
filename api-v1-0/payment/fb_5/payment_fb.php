@@ -2,9 +2,9 @@
 include_once($_SERVER['DOCUMENT_ROOT'] . '/php/api-v1-0/library/Application.php');
 header("Content-Type: application/json; encoding=utf-8");
 
-session_start();
 require $_SERVER['DOCUMENT_ROOT'] . '/php/fb-php-graph-sdk-5.5/src/Facebook/autoload.php';
 
+session_start();
 $verify_token = "kapusta";
 $app_id = "1936104599955682";
 $app_secret = "dd3c1b11a323f01a3ac23a3482724c49";
@@ -23,7 +23,9 @@ $pack_id_for_product = [
     $server_url.'pack9.html' => 9,
     $server_url.'pack10.html' => 10,
     $server_url.'pack11.html' => 11,
-    $server_url.'pack12.html' => 12
+    $server_url.'pack12.html' => 12,
+    $server_url.'pack13.html' => 13,
+    $server_url.'pack14.html' => 14
 ];
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_verify_token'] === $verify_token) {
@@ -32,41 +34,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['hub_verify_token'] === $verify
     $data = file_get_contents("php://input");
     $json = json_decode($data, true);
 
+
     if( $json["object"] && $json["object"] == "payments" ) {
         $payment_id = $json["entry"][0]["id"];
         try {
-//            $mainDb = Application::getInstance()->getMainDb(4);
-//            $fb = new Facebook\Facebook([
-//                'app_id'                => $app_id,
-//                'app_secret'            => $app_secret,
-//                'default_graph_version' => 'v2.9',
-//            ]);
-//
-//            $response = $fb->get('/'.$payment_id.'?fields=actions,items', $app_token); // fuck
-//
-//            $result = $response->getGraphObject();
-//            $actions = $result->getPropertyAsArray('actions');
-//
-//            if( $actions[0]->getProperty('status') == 'completed' ){
-//                $items = $result->getPropertyAsArray('items');
-//                $product = $items[0]->getProperty('product');
-//                $packId = $pack_id_for_product[$product];
-//                if (!$user) $user = -1;
-//                if (!$packId) $packId = -1;
-//
-//                $time = date("Y-m-d H:i:s");
-//                $t = time();
-//                $mainDb->query('INSERT INTO transactions SET uid='.$userSocialId.', product_code='.$packId.', time_try="'.$time.'", unitime='.$t);
-//                $mainDb->query('INSERT INTO transaction_lost SET uid='.$userSocialId.', product_code='.$packId.', time_buy="'.$time.'", unitime='.$t);
-//            }
+            $mainDb = Application::getInstance()->getMainDb(4);
+            $time = date("Y-m-d H:i:s");
+            $mainDb->query('INSERT INTO trabsaction_webhooks SET request_id="'.$payment_id.'", message = "before check 2", time_try="'.$time.'", is_error=0');
+
+            $fb = new Facebook\Facebook([
+                'app_id'                => $app_id,
+                'app_secret'            => $app_secret,
+                'default_graph_version' => 'v2.10',
+            ]);
+            $mainDb->query('INSERT INTO trabsaction_webhooks SET request_id="'.$payment_id.'", message = "before check 3", time_try="'.$time.'", is_error=0');
+//            $response = $fb->get('/'.$payment_id.'?fields=actions', $app_token);
+            $response = $fb->get('/'.$payment_id, $app_token);
+
+            $mainDb->query('INSERT INTO trabsaction_webhooks SET request_id="'.$payment_id.'", message = '.$response.', time_try="'.$time.'", is_error=2');
+            $result = $response->getGraphObject();
+            $actions = $result->getPropertyAsArray('actions');
+            $actions = $result->getPropertyAsArray('actions');
+            $payment_id = $result->getField('request_id');
+            $mainDb->query('INSERT INTO trabsaction_webhooks SET request_id="'.$payment_id.'", message = '.$actions[0]->getProperty('status').', time_try="'.$time.'", is_error=0');
+            if( $actions[0]->getProperty('status') == 'completed' ){
+                $mainDb->query('INSERT INTO trabsaction_webhooks SET request_id="'.$payment_id.'", message = "completed2", time_try="'.$time.'", is_error=0');
+            } else {
+                $mainDb->query('INSERT INTO trabsaction_webhooks SET request_id="'.$payment_id.'", message = '.$result.', time_try="'.$time.'", is_error=0');
+            }
         } catch (FacebookRequestException $e) {
-            error_log($e->getRawResponse());
-//            $time = date("Y-m-d H:i:s");
-//            $mainDb->query('INSERT INTO trans_error SET message ='.$e->getRawResponse().', time_try="'.$time.'"');
+            $mainDb->query('INSERT INTO trabsaction_webhooks SET request_id="'.$payment_id.'", message ='.$e->getRawResponse().', time_try="'.$time.'", is_error=1');
         } catch (\Exception $e) {
-            error_log($e);
-//            $time = date("Y-m-d H:i:s");
-//            $mainDb->query('INSERT INTO trans_error SET message ='.$e->getRawResponse().', time_try="'.$time.'"');
+            $mainDb->query('INSERT INTO trabsaction_webhooks SET request_id="'.$payment_id.'", message ='.$e->getRawResponse().', time_try="'.$time.'", is_error=1');
         }
     }
 }

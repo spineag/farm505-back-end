@@ -14,7 +14,8 @@ use Facebook\FacebookRequestException;
 
 $verify_token = "kapusta";
 $app_secret = "dd3c1b11a323f01a3ac23a3482724c49";
-$app_token = "567d08996291f371fc7def6a88a79314"; // ?? "YOUR_APP_ACCESS_TOKEN"
+//$app_token = "567d08996291f371fc7def6a88a79314"; // ?? "YOUR_APP_ACCESS_TOKEN"
+$app_token = "1936104599955682|BJ5JAYUV8FSdztyc3MW2lHVbXoU";
 $app_id = "1936104599955682";
 $server_url = "https://505.ninja/php/api-v1-0/payment/fb/";
 
@@ -30,7 +31,9 @@ $pack_id_for_product = [
     $server_url.'pack9.html' => 9,
     $server_url.'pack10.html' => 10,
     $server_url.'pack11.html' => 11,
-    $server_url.'pack12.html' => 12
+    $server_url.'pack12.html' => 12,
+    $server_url.'pack13.html' => 13,
+    $server_url.'pack14.html' => 14
 ];
 
 FacebookSession::setDefaultApplication(
@@ -45,39 +48,35 @@ if ($method == 'GET' && $_GET['hub_verify_token'] === $verify_token) {
 } else {
     $data = file_get_contents("php://input");
     $json = json_decode($data, true);
+    // json["entry"][0] = { id, time, () };
 
     if( $json["object"] && $json["object"] == "payments" ) {
         $payment_id = $json["entry"][0]["id"];
+        $mainDb = Application::getInstance()->getMainDb(4);
+        $time = date("Y-m-d H:i:s");
         try {
-//            $mainDb = Application::getInstance()->getMainDb(4);
-//            $session = new FacebookSession($app_token);
-//            $request = new FacebookRequest(
-//                $session,
-//                'GET',
-//                '/'.$payment_id . '?fields=user,actions,items'
-//            );
-//            $response = $request->execute();
-//            $result = $response->getGraphObject(GraphObject::className());
-//            $actions = $result->getPropertyAsArray('actions');
-//            if( $actions[0]->getProperty('status') == 'completed' ){
-//                $user = $result->getProperty('user')['id'];
-//                $items = $result->getPropertyAsArray('items');
-//                $product = $items[0]->getProperty('product');
-//                $packId = $pack_id_for_product[$product];
-//                if (!$user) $user = -1;
-//                if (!$packId) $packId = -1;
-//
-//                $time = date("Y-m-d H:i:s");
-//                $t = time();
-//            }
+            $session = new FacebookSession($app_token);
+            $request = new FacebookRequest(
+                $session,
+                'GET',
+                '/'.$payment_id,
+                array(
+                    'fields' => 'request_id,actions,user'
+                )
+            );
+            $response = $request->execute();
+            $result = $response->getGraphObject(GraphObject::className());
+            $actions = $result->getPropertyAsArray('actions');
+            if( $actions[0]->getProperty('status') == 'completed' ) {
+                $request_id = $result->getProperty('request_id');
+                $user = $result->getProperty('user')->getProperty('id');
+                $mainDb->query('INSERT INTO trabsaction_webhooks SET request_id="'.$request_id.'", message = "completed", time_try="'.$time.'", 
+                user_social_id = "'.$user.'", payment_id="'.$payment_id.'"');
+            }
         } catch (FacebookRequestException $e) {
-            error_log($e->getRawResponse());
-//            $time = date("Y-m-d H:i:s");
-//            $mainDb->query('INSERT INTO trans_error SET message ='.$e->getRawResponse().', time_try="'.$time.'"');
-        } catch (\Exception $e) {
-            error_log($e);
-//            $time = date("Y-m-d H:i:s");
-//            $mainDb->query('INSERT INTO trans_error SET message ='.$e->getRawResponse().', time_try="'.$time.'"');
+            $mainDb->query('INSERT INTO trabsaction_webhooks SET payment_id="'.$payment_id.'", message ="'.$e->getRawResponse().'", time_try="'.$time.'"');
+        } catch (Exception $e) {
+            $mainDb->query('INSERT INTO trabsaction_webhooks SET payment_id="'.$payment_id.'", message ="'.$e->getRawResponse().'", time_try="'.$time.'"');
         }
     }
 }

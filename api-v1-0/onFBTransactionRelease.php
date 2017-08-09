@@ -9,4 +9,7 @@ $channelId = 4;
 
 $mainDb = $app->getMainDb($channelId);
 $result = $mainDb->query('UPDATE transactions SET status="'.$status.'" WHERE request_id="'.$requestId.'"');  // not use userSocialId because it has bugs.. hz why
+if (!$result) {
+    $result = $mainDb->query('INSERT INTO transactions SET request_id="'.$requestId.'", status="wtf_error"');
+}
 echo '';
