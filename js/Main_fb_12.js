@@ -8,21 +8,21 @@ var SN = function (social) { // social == 4
     var versionBrowser = '0';
     var OS = '0';
     var dataBrowser = [ { string: navigator.userAgent, subString: "Chrome", identity: "Chrome" },
-                        { string: navigator.userAgent, subString: "OmniWeb", versionSearch: "OmniWeb/", identity: "OmniWeb" },
-                        { string: navigator.vendor, subString: "Apple", identity: "Safari", versionSearch: "Version" },
-                        { prop: window.opera, identity: "Opera", versionSearch: "Version" },
-                        { string: navigator.vendor, subString: "iCab", identity: "iCab" },
-                        { string: navigator.vendor, subString: "KDE",  identity: "Konqueror" },
-                        { string: navigator.userAgent, subString: "Firefox", identity: "Firefox" },
-                        { string: navigator.vendor, subString: "Camino", identity: "Camino" },
-                        { string: navigator.userAgent, subString: "Netscape", identity: "Netscape" }, /* For Newer Netscapes (6+) */
-                        { string: navigator.userAgent, subString: "MSIE", identity: "Internet Explorer", versionSearch: "MSIE" },
-                        { string: navigator.userAgent, subString: "Gecko", identity: "Mozilla", versionSearch: "rv" },
-                        { string: navigator.userAgent, subString: "Mozilla", identity: "Netscape", versionSearch: "Mozilla"} ];  /* For Older Netscapes (4-) */
+        { string: navigator.userAgent, subString: "OmniWeb", versionSearch: "OmniWeb/", identity: "OmniWeb" },
+        { string: navigator.vendor, subString: "Apple", identity: "Safari", versionSearch: "Version" },
+        { prop: window.opera, identity: "Opera", versionSearch: "Version" },
+        { string: navigator.vendor, subString: "iCab", identity: "iCab" },
+        { string: navigator.vendor, subString: "KDE",  identity: "Konqueror" },
+        { string: navigator.userAgent, subString: "Firefox", identity: "Firefox" },
+        { string: navigator.vendor, subString: "Camino", identity: "Camino" },
+        { string: navigator.userAgent, subString: "Netscape", identity: "Netscape" }, /* For Newer Netscapes (6+) */
+        { string: navigator.userAgent, subString: "MSIE", identity: "Internet Explorer", versionSearch: "MSIE" },
+        { string: navigator.userAgent, subString: "Gecko", identity: "Mozilla", versionSearch: "rv" },
+        { string: navigator.userAgent, subString: "Mozilla", identity: "Netscape", versionSearch: "Mozilla"} ];  /* For Older Netscapes (4-) */
     var dataOS = [  { string: navigator.platform, subString: "Win", identity: "Windows" },
-                    { string: navigator.platform, subString: "Mac", identity: "Mac" },
-                    { string: navigator.userAgent, subString: "iPhone", identity: "iPhone/iPod" },
-                    { string: navigator.platform, subString: "Linux", identity: "Linux" } ];
+        { string: navigator.platform, subString: "Mac", identity: "Mac" },
+        { string: navigator.userAgent, subString: "iPhone", identity: "iPhone/iPod" },
+        { string: navigator.platform, subString: "Linux", identity: "Linux" } ];
 
     console.log('init fb social');
 
@@ -280,49 +280,49 @@ var SN = function (social) { // social == 4
 
     that.makePayment = function(packId, userSocialId) {
         // FarmNinjaFB.getVersionForItem("pack" + packId, function(v) { v=version
-            var product;
-            if (packId < 13) {
-                product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + "c.html";
-            } else if (packId == 13) {
-                product = "https://505.ninja/php/api-v1-0/payment/fb/pack13b.html";
-            } else if (packId == 14) {
-                product = "https://505.ninja/php/api-v1-0/payment/fb/pack14c.html";
-            }
-            var requestID = String(userSocialId) + 'z' + String(Date.now());
-            console.log('payment product: ' + product);
-            FarmNinjaFB.saveTransaction(userSocialId, packId, requestID, browserName, versionBrowser, OS);
-            FB.ui({
-                method: 'pay',
-                action: 'purchaseitem',
-                product: product,
-                request_id: requestID
-            }, function (response) {
-                console.log('Payment completed', response);
-                if (response && response.status) {
-                    if (response.status == 'completed') {
-                        that.flash().successPayment();
-                        FarmNinjaFB.finishTransaction(requestID, 'complete');
-                    } else if (response.status == 'initiated') {
-                        console.log('payment initiated status');
-                    } else if (response.status == 'failed') {
-                        that.flash().failPayment();
-                        FarmNinjaFB.finishTransaction(requestID, 'failed');
-                    } else {
-                        console.log('response.status: ' + response.status);
-                        that.flash().failPayment();
-                        FarmNinjaFB.finishTransaction(requestID, response.status);
-                    }
-                } else if (response && response.error_code) {
+        var product;
+        if (packId < 13) {
+            product = "https://505.ninja/php/api-v1-0/payment/fb/pack" + packId + "c.html";
+        } else if (packId == 13) {
+            product = "https://505.ninja/php/api-v1-0/payment/fb/pack13b.html";
+        } else if (packId == 14) {
+            product = "https://505.ninja/php/api-v1-0/payment/fb/pack14c.html";
+        }
+        var requestID = String(userSocialId) + 'z' + String(Date.now());
+        console.log('payment product: ' + product);
+        FarmNinjaFB.saveTransaction(userSocialId, packId, requestID, browserName, versionBrowser, OS);
+        FB.ui({
+            method: 'pay',
+            action: 'purchaseitem',
+            product: product,
+            request_id: requestID
+        }, function (response) {
+            console.log('Payment completed', response);
+            if (response && response.status) {
+                if (response.status == 'completed') {
+                    that.flash().successPayment();
+                    FarmNinjaFB.finishTransaction(requestID, 'complete');
+                } else if (response.status == 'initiated') {
+                    console.log('payment initiated status');
+                } else if (response.status == 'failed') {
                     that.flash().failPayment();
-                    FarmNinjaFB.finishTransaction(requestID, response.error_code + ': ' + response.error_message);
-                } else if (!response) {
-                    that.flash().failPayment();
-                    FarmNinjaFB.finishTransaction(requestID, 'null response');
+                    FarmNinjaFB.finishTransaction(requestID, 'failed');
                 } else {
+                    console.log('response.status: ' + response.status);
                     that.flash().failPayment();
-                    FarmNinjaFB.finishTransaction(requestID, 'cancel');
+                    FarmNinjaFB.finishTransaction(requestID, response.status);
                 }
-            });
+            } else if (response && response.error_code) {
+                that.flash().failPayment();
+                FarmNinjaFB.finishTransaction(requestID, response.error_code + ': ' + response.error_message);
+            } else if (!response) {
+                that.flash().failPayment();
+                FarmNinjaFB.finishTransaction(requestID, 'null response');
+            } else {
+                that.flash().failPayment();
+                FarmNinjaFB.finishTransaction(requestID, 'cancel');
+            }
+        });
         // });
     }
 };
