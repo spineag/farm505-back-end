@@ -21,6 +21,7 @@ if (isset($_POST['userId']) && !empty($_POST['userId'])) {
                 $res['count_resource'] = 0;
                 $res['took_gift'] = "0&0&0&0&0";
                 $res['show_window'] = 0;
+                $res['id_party'] = 1;
             }
         } else {
             $json_data['id'] = 2;
